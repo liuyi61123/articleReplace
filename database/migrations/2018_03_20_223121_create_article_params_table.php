@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticlesTable extends Migration
+class CreateArticleParamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('article_params', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('template_id')->comment('模板id');
-            $table->string('title')->comment('文章标题');
-            $table->text('description')->comment('文章描述');
-            $table->text('content')->comment('文章内容');
+            $table->string('name')->comment('参数名称');
+            $table->text('content')->comment('参数内容');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('article_params');
     }
 }

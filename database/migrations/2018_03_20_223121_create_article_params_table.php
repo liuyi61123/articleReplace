@@ -15,6 +15,7 @@ class CreateArticleParamsTable extends Migration
     {
         Schema::create('article_params', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('article_id')->comment('文章id');
             $table->string('name')->comment('参数名称');
             $table->text('content')->comment('参数内容');
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Articles;
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
@@ -41,11 +41,26 @@ class ArticlesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,Article $article)
     {
-        //
+        $article_data = $request->only('template_id','title','keywords','description','content');
+        $article->fill($article_data);
+        $article->save();
+        //遍历参数集合
+        $param_names = $request->input('param_names');
+        $param_contents = $request->input('param_contents');
+        $param_data = array();
+        for($i=0;$i<count($param_names);$i++){
+            $param_data[$i] = [
+                'name'=>$param_names[$i],
+                'content'=>$param_contents[$i]
+            ];
+        }
+        $article->params()->createMany($param_data);
+        dd($article);
     }
 
     /**

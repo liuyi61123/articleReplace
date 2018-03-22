@@ -47397,12 +47397,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            numbers: [{ id: 0 }],
+            params: [{
+                id: 0,
+                name: '',
+                content: ''
+            }],
             index: 0
         };
     },
@@ -47411,15 +47414,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addParam: function addParam() {
             //添加参数
             this.index++;
-            Vue.set(this.numbers, this.numbers.length, { id: this.index });
-            console.log(this.index);
-            console.log(this.numbers);
+            Vue.set(this.params, this.params.length, { id: this.index, name: '', content: '' });
         },
-        deleteParam: function deleteParam(id) {
+        deleteParam: function deleteParam(index) {
             //删除参数
-            this.numbers.splice(this.numbers.find(function (number) {
-                return number.id === id;
-            }), 1);
+            this.params.splice(index, 1);
         }
     }
 });
@@ -47454,13 +47453,66 @@ var render = function() {
     _c(
       "div",
       { staticClass: "card-body" },
-      _vm._l(_vm.numbers, function(number) {
+      _vm._l(_vm.params, function(param, index) {
         return _c("div", {}, [
-          _c("p", [_vm._v(_vm._s(number.id))]),
+          _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: param.name,
+                  expression: "param.name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                required: "",
+                name: "param_names[]",
+                placeholder: "参数名称{$param}"
+              },
+              domProps: { value: param.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(param, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
           _vm._v(" "),
-          _vm._m(0, true),
-          _vm._v(" "),
-          _vm._m(1, true),
+          _c("div", { staticClass: "form-group" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: param.content,
+                  expression: "param.content"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                required: "",
+                name: "param_contents[]",
+                rows: "5",
+                cols: "30",
+                placeholder: "需要替换的内容,一行一个"
+              },
+              domProps: { value: param.content },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(param, "content", $event.target.value)
+                }
+              }
+            })
+          ]),
           _vm._v(" "),
           _c(
             "button",
@@ -47469,7 +47521,7 @@ var render = function() {
               attrs: { type: "button" },
               on: {
                 click: function($event) {
-                  _vm.deleteParam(number.id)
+                  _vm.deleteParam(index)
                 }
               }
             },
@@ -47480,39 +47532,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          name: "param_names[]",
-          placeholder: "参数名称{$param}"
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: {
-          name: "param_contents[]",
-          rows: "5",
-          cols: "30",
-          placeholder: "需要替换的内容,一行一个"
-        }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

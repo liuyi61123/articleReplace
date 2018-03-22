@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
-class ArticlesController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Instantiate a new controller instance.
@@ -64,23 +64,34 @@ class ArticlesController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 生产文章并导出
      *
-     * @param  \App\Models\Articles  $articles
      * @return \Illuminate\Http\Response
      */
-    public function show(Articles $articles)
+    public function export()
     {
         //
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
-     * @param  \App\Models\Articles  $articles
+     * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function edit(Articles $articles)
+    public function show(Article $article)
+    {
+        //
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Article  $Article
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Article $article)
     {
         //
     }
@@ -89,10 +100,10 @@ class ArticlesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Articles  $articles
+     * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Articles $articles)
+    public function update(Request $request, Article $article)
     {
         //
     }
@@ -100,10 +111,10 @@ class ArticlesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Articles  $articles
+     * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Articles $articles)
+    public function destroy(Article $Article)
     {
         //
     }

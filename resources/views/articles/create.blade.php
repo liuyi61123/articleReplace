@@ -46,6 +46,7 @@
         </div>
     </form>
 </div>
+<example-component></example-component>
 @endsection
 @section('scripts')
 <script type="text/javascript"  src="{{ asset('js/module.js') }}"></script>

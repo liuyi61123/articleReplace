@@ -7,8 +7,7 @@
 
 require('./bootstrap');
 
-// window.Vue = require('vue');
-import Vue from 'vue';
+window.Vue = require('vue');
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
@@ -22,6 +21,7 @@ Vue.use(ElementUI);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('param-setting', require('./components/ParamSetting.vue'));
+Vue.component('create-edit-article', require('./components/CreateEditArticle.vue'));
 
 const app = new Vue({
     el: '#app'

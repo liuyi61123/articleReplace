@@ -26,22 +26,20 @@ class Article extends Model
      * 导出文件
      */
      public function export($article){
+         //先将文章按照格式拼接
+         $text = $article->title.PHP_EOL.$article->keywords.PHP_EOL.$article->description.PHP_EOL.$article->content;
+         $params = $article->params;
 
-        $params = $article->params;
-
-        //计算要替换的内容
-        foreach ($params as $param) {
-            $contents = explode(PHP_EOL, $param->content);
-            foreach ($contents as $content) {
-                $text['title'] =  str_replace($param->name,$content,$article->title);
-                $text['keywords]'] = str_replace($param->name,$content,$article->keywords);
-                $text['description'] = str_replace($param->name,$content,$article->description);
-                $text['content'] = str_replace($param->name,$content,$article->content);
-                $text = implode(PHP_EOL, $text);
+         $texts = array();
+         //计算要替换的内容
+         foreach ($params as $param) {
+             $contents = explode(PHP_EOL, $param->content);
+             foreach ($contents as $content) {
+                $texts['title'] =  str_replace($param->name,$content,$text);
                 //生成文件
                 Storage::put($content.time.'.txt',$text);
-            }
-        }
+             }
+         }
 
      }
 }

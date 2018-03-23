@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
-class ArticleController extends Controller
+class ArticlesController extends Controller
 {
     /**
      * Instantiate a new controller instance.
@@ -45,7 +45,7 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,Article $article)
-    {
+    {   return response()->json($request->all());
         $article_data = $request->only('template_id','title','keywords','description','content');
         $article->fill($article_data);
         $article->save();
@@ -60,17 +60,7 @@ class ArticleController extends Controller
             ];
         }
         $article->params()->createMany($param_data);
-        dd($article);
-    }
-
-    /**
-     * 生产文章并导出
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function export()
-    {
-        //
+        return response()->json($article);
     }
 
     /**
@@ -114,7 +104,7 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $Article)
+    public function destroy(Article $article)
     {
         //
     }

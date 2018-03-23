@@ -16,13 +16,14 @@
 </head>
 <body>
     <div id="app" class="{{ route_class() }}-page">
-        @include('layouts._header')
-
-        <main class="py-4">
-            @yield('content')
-        </main>
-
-        @include('layouts._footer')
+        <el-container>
+            @include('layouts._header')
+            <!-- @include('layouts._aside') -->
+            <el-main>
+                @yield('content')
+            </el-main>
+            @include('layouts._footer')
+        </el-container>
     </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

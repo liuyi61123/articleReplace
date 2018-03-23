@@ -1,5 +1,1 @@
-<footer class="footer">
-    <div class="container">
-        
-    </div>
-</footer>
+<el-footer></el-footer>

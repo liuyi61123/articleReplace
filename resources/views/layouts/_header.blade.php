@@ -1,3 +1,4 @@
+<el-header>
 <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
@@ -43,3 +44,4 @@
         </div>
     </div>
 </nav>
+</el-header>

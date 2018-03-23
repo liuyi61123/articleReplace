@@ -101,10 +101,26 @@
                .then((response)=> {
                     console.log(response);
                     this.loading = false;
+                    let message = {};
+                    if(response.data.status == 200){
+                        message = {
+                            message: '成功生成',
+                            type: 'success'
+                        };
+                    }else{
+                        message = {
+                            message: '失败',
+                            type: 'error'
+                        };
+                    }
+                    this.$message(message);
+
+
                })
                .catch((error)=>{
                    console.log(error);
                    this.loading = false;
+                   this.$message.error('错了哦，这是一条错误消息');
                });
 
             },

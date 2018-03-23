@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 76);
@@ -93524,9 +93524,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/articles', this.article).then(function (response) {
                 console.log(response);
                 _this.loading = false;
+                var message = {};
+                if (response.data.status == 200) {
+                    message = {
+                        message: '成功生成',
+                        type: 'success'
+                    };
+                } else {
+                    message = {
+                        message: '失败',
+                        type: 'error'
+                    };
+                }
+                _this.$message(message);
             }).catch(function (error) {
                 console.log(error);
                 _this.loading = false;
+                _this.$message.error('错了哦，这是一条错误消息');
             });
         },
         addParam: function addParam() {

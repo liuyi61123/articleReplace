@@ -16,7 +16,7 @@ function route_class()
      $params = $article['params'];
      $text = $article['title'].PHP_EOL.$article['keywords'].PHP_EOL.$article['description'].PHP_EOL.$article['content'];
 
-     $file_base_path = 'articles/'.$article['id'].'/';
+     $file_base_path = 'public/articles/'.$article['id'].'/';
      $num = count($params);
      $texts = array();
      switch ($num) {
@@ -28,7 +28,6 @@ function route_class()
                  $file_path = $file_base_path.$content0.'.txt';
                  Storage::put($file_path,$replace_text);
              }
-             return true;
              break;
          case '2':
              $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
@@ -42,7 +41,6 @@ function route_class()
                       Storage::put($file_path,$replace_text);
                   }
              }
-             return true;
              break;
          case '3':
              $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
@@ -61,12 +59,13 @@ function route_class()
                        }
                   }
              }
-             return true;
              break;
 
          default:
              return false;
              break;
      }
-     $zipper->make('test.zip')->folder( storage_path('app').$file_base_path)->close();
+     $files = glob('storage/articles/'.$article['id'].'/'.'*.txt');
+     $zipper->make('storage/articles/'.$article['id'].'/'.'articles.zip')->add($files)->close();
+     return true;
  }

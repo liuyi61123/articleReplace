@@ -58,7 +58,7 @@ class ArticlesController extends Controller
         $data = $request->all();
         $data['id'] = $article->id;
         $res = export($data);
-        return response()->json(['res'=>1,$article]);
+        return response()->json(['status'=>200]);
     }
 
     /**

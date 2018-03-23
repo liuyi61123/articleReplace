@@ -93506,7 +93506,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 description: '',
                 content: '',
                 params: [{
-                    id: 0,
                     name: '',
                     content: ''
                 }]
@@ -93533,7 +93532,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addParam: function addParam() {
             //添加参数
             this.paramsIndex++;
-            Vue.set(this.article.params, this.article.params.length, { id: this.paramsIndex, name: '', content: '' });
+            Vue.set(this.article.params, this.article.params.length, { name: '', content: '' });
         },
         deleteParam: function deleteParam(index) {
             //删除参数

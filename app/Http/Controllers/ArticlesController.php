@@ -45,22 +45,20 @@ class ArticlesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,Article $article)
-    {   return response()->json($request->all());
+    {
         $article_data = $request->only('template_id','title','keywords','description','content');
         $article->fill($article_data);
         $article->save();
-        //遍历参数集合
-        $param_names = $request->input('param_names');
-        $param_contents = $request->input('param_contents');
-        $param_data = array();
-        for($i=0;$i<count($param_names);$i++){
-            $param_data[$i] = [
-                'name'=>$param_names[$i],
-                'content'=>$param_contents[$i]
-            ];
-        }
-        $article->params()->createMany($param_data);
-        return response()->json($article);
+
+        //遍历参数集合,并保存
+        $params = $request->input('params');
+        $article->params()->createMany($params);
+
+        //计算参数
+        $data = $request->all();
+        $data['id'] = $article->id;
+        $res = export($data);
+        return response()->json(['res'=>1,$article]);
     }
 
     /**

@@ -99,9 +99,15 @@ class ArticlesController extends Controller
      * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function edit(Article $article)
+    public function edit(Request $request,$id)
     {
-        return view('articles.edit');
+        if ($request->ajax()) {
+            //渲染列表
+            $article = Article::with('params')->find($id);
+            return response()->json($article);
+        }else{
+            return view('articles.edit',compact('id'));
+        }
     }
 
     /**
@@ -113,7 +119,24 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        $article_data = $request->only('template_id','title','keywords','description','content');
+        $article->fill($article_data);
+        $article->save();
+
+        //删除关联的参数
+        $params = $request->input('params');
+        ArticleParam::where('article_id',$article->id)->delete();
+        //保存
+        $article->params()->createMany($params);
+
+        //删除原文件后，重新生成
+        $directory = 'public/articles/'.$article->id;
+        Storage::deleteDirectory($directory);
+        //计算参数
+        $data = $request->all();
+        $data['id'] = $article->id;
+        $res = export($data);
+        return response()->json(['status'=>200]);
     }
 
     /**

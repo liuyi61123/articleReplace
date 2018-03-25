@@ -93118,10 +93118,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['message'],
+    data: function data() {
+        return {};
+    },
     mounted: function mounted() {
-        console.log('Component mounted.');
+        console.log(this.message);
     }
 });
 
@@ -93139,7 +93144,11 @@ var render = function() {
     _c(
       "div",
       { staticClass: "card-body" },
-      [_c("el-button", { attrs: { type: "primary", icon: "el-icon-delete" } })],
+      [
+        _c("p", [_vm._v(_vm._s(_vm.message))]),
+        _vm._v(" "),
+        _c("el-button", { attrs: { type: "primary", icon: "el-icon-delete" } })
+      ],
       1
     )
   ])
@@ -93605,6 +93614,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['id'],
     data: function data() {
         return {
             templates: [{
@@ -93635,28 +93645,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.loading = true;
-            //表单提交
-            axios.post('/articles', this.article).then(function (response) {
-                console.log(response);
-                _this.loading = false;
-                var message = {};
-                if (response.data.status == 200) {
-                    _this.$message({
-                        message: '成功生成',
-                        type: 'success'
-                    });
-                    window.location.href = "/articles";
-                } else {
-                    _this.$message({
-                        message: '失败',
-                        type: 'error'
-                    });
-                }
-            }).catch(function (error) {
-                console.log(error);
-                _this.loading = false;
-                _this.$message.error('错了哦，这是一条错误消息');
-            });
+            if (this.id) {
+                //表单提交
+                axios.put('/articles/' + this.id, this.article).then(function (response) {
+                    console.log(response);
+                    _this.loading = false;
+                    var message = {};
+                    if (response.data.status == 200) {
+                        _this.$message({
+                            message: '修改生成',
+                            type: 'success'
+                        });
+                        window.location.href = "/articles";
+                    } else {
+                        _this.$message({
+                            message: '修改失败',
+                            type: 'error'
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    _this.loading = false;
+                    _this.$message.error('错了哦，这是一条错误消息');
+                });
+            } else {
+                //表单提交
+                axios.post('/articles', this.article).then(function (response) {
+                    console.log(response);
+                    _this.loading = false;
+                    var message = {};
+                    if (response.data.status == 200) {
+                        _this.$message({
+                            message: '成功生成',
+                            type: 'success'
+                        });
+                        window.location.href = "/articles";
+                    } else {
+                        _this.$message({
+                            message: '失败',
+                            type: 'error'
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    _this.loading = false;
+                    _this.$message.error('错了哦，这是一条错误消息');
+                });
+            }
         },
         addParam: function addParam() {
             //添加参数
@@ -93666,6 +93701,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteParam: function deleteParam(index) {
             //删除参数
             this.article.params.splice(index, 1);
+        }
+    },
+    created: function created() {
+        var _this2 = this;
+
+        if (this.id) {
+            //加载table数据
+            axios.get('/articles/' + this.id + '/edit').then(function (response) {
+                console.log(response);
+                _this2.article = response.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 });

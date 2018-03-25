@@ -63,6 +63,7 @@
 
 <script>
     export default {
+        props:['id'],
         data () {
             return {
                 templates:[
@@ -96,31 +97,57 @@
         methods: {
             submitFrom(){
                 this.loading = true;
-                //表单提交
-                axios.post('/articles',this.article)
-               .then((response)=> {
-                    console.log(response);
-                    this.loading = false;
-                    let message = {};
-                    if(response.data.status == 200){
-                        this.$message({
-                            message: '成功生成',
-                            type: 'success'
-                        });
-                        window.location.href="/articles";
-                    }else{
-                        this.$message({
-                            message: '失败',
-                            type: 'error'
-                        });
-                    }
-               })
-               .catch((error)=>{
-                   console.log(error);
-                   this.loading = false;
-                   this.$message.error('错了哦，这是一条错误消息');
-               });
-
+                if(this.id){
+                    //表单提交
+                    axios.put('/articles/'+this.id,this.article)
+                   .then((response)=> {
+                        console.log(response);
+                        this.loading = false;
+                        let message = {};
+                        if(response.data.status == 200){
+                            this.$message({
+                                message: '修改生成',
+                                type: 'success'
+                            });
+                            window.location.href="/articles";
+                        }else{
+                            this.$message({
+                                message: '修改失败',
+                                type: 'error'
+                            });
+                        }
+                   })
+                   .catch((error)=>{
+                       console.log(error);
+                       this.loading = false;
+                       this.$message.error('错了哦，这是一条错误消息');
+                   });
+                }else{
+                    //表单提交
+                    axios.post('/articles',this.article)
+                   .then((response)=> {
+                        console.log(response);
+                        this.loading = false;
+                        let message = {};
+                        if(response.data.status == 200){
+                            this.$message({
+                                message: '成功生成',
+                                type: 'success'
+                            });
+                            window.location.href="/articles";
+                        }else{
+                            this.$message({
+                                message: '失败',
+                                type: 'error'
+                            });
+                        }
+                   })
+                   .catch((error)=>{
+                       console.log(error);
+                       this.loading = false;
+                       this.$message.error('错了哦，这是一条错误消息');
+                   });
+                }
             },
             addParam(){
                 //添加参数
@@ -130,6 +157,19 @@
             deleteParam(index){
                 //删除参数
                 this.article.params.splice(index, 1);
+            }
+        },
+        created(){
+            if(this.id){
+                //加载table数据
+                axios.get('/articles/'+this.id+'/edit')
+                .then((response)=> {
+                    console.log(response);
+                    this.article = response.data;
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
             }
         }
     }

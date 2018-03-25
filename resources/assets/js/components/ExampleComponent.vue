@@ -4,6 +4,7 @@
         测试
       </div>
       <div class="card-body">
+          <p>{{message}}</p>
         <el-button type="primary" icon="el-icon-delete"></el-button>
       </div>
     </div>
@@ -11,8 +12,14 @@
 
 <script>
     export default {
+        props:['message'],
+        data(){
+            return {
+
+            };
+        },
         mounted() {
-            console.log('Component mounted.')
+            console.log(this.message)
         }
     }
 </script>

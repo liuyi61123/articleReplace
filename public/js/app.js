@@ -93339,7 +93339,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }).catch(function (error) {
             console.log(error);
         });
-        console.log(this.tableData);
     }
 });
 
@@ -93645,53 +93644,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.loading = true;
-            if (this.id) {
-                //表单提交
-                axios.put('/articles/' + this.id, this.article).then(function (response) {
-                    console.log(response);
-                    _this.loading = false;
-                    var message = {};
-                    if (response.data.status == 200) {
-                        _this.$message({
-                            message: '修改生成',
-                            type: 'success'
-                        });
-                        window.location.href = "/articles";
-                    } else {
-                        _this.$message({
-                            message: '修改失败',
-                            type: 'error'
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log(error);
-                    _this.loading = false;
-                    _this.$message.error('错了哦，这是一条错误消息');
-                });
-            } else {
-                //表单提交
-                axios.post('/articles', this.article).then(function (response) {
-                    console.log(response);
-                    _this.loading = false;
-                    var message = {};
-                    if (response.data.status == 200) {
-                        _this.$message({
-                            message: '成功生成',
-                            type: 'success'
-                        });
-                        window.location.href = "/articles";
-                    } else {
-                        _this.$message({
-                            message: '失败',
-                            type: 'error'
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log(error);
-                    _this.loading = false;
-                    _this.$message.error('错了哦，这是一条错误消息');
-                });
-            }
+            // 发送 POST 请求
+            axios({
+                method: this.id ? 'put' : 'post',
+                url: this.id ? '/articles/' + this.id : '/articles',
+                data: this.article
+            }).then(function (response) {
+                _this.loading = false;
+                var message = {};
+                if (response.data.status == 200) {
+                    _this.$message({
+                        message: '修改生成',
+                        type: 'success'
+                    });
+                    window.location.href = "/articles";
+                } else {
+                    _this.$message({
+                        message: '修改失败',
+                        type: 'error'
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                _this.loading = false;
+                _this.$message.error('错了哦，这是一条错误消息');
+            });
         },
         addParam: function addParam() {
             //添加参数
@@ -93707,7 +93684,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this2 = this;
 
         if (this.id) {
-            //加载table数据
+            //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
                 console.log(response);
                 _this2.article = response.data;
@@ -93938,7 +93915,6 @@ var render = function() {
                   _vm._l(_vm.article.params, function(param, index) {
                     return _c(
                       "div",
-                      {},
                       [
                         _c(
                           "el-form-item",

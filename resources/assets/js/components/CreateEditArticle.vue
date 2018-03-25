@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="text item">
-                        <div class="" v-for="(param,index) in article.params">
+                        <div v-for="(param,index) in article.params">
                             <el-form-item>
                                 <el-input v-model="param.name" placeholder="参数名称{$param}"></el-input>
                             </el-form-item>
@@ -97,11 +97,13 @@
         methods: {
             submitFrom(){
                 this.loading = true;
-                if(this.id){
-                    //表单提交
-                    axios.put('/articles/'+this.id,this.article)
-                   .then((response)=> {
-                        console.log(response);
+                // 发送 POST 请求
+                axios({
+                    method: this.id?'put':'post',
+                    url: this.id?'/articles/'+this.id:'/articles',
+                    data:this.article
+                })
+                .then((response)=> {
                         this.loading = false;
                         let message = {};
                         if(response.data.status == 200){
@@ -122,32 +124,6 @@
                        this.loading = false;
                        this.$message.error('错了哦，这是一条错误消息');
                    });
-                }else{
-                    //表单提交
-                    axios.post('/articles',this.article)
-                   .then((response)=> {
-                        console.log(response);
-                        this.loading = false;
-                        let message = {};
-                        if(response.data.status == 200){
-                            this.$message({
-                                message: '成功生成',
-                                type: 'success'
-                            });
-                            window.location.href="/articles";
-                        }else{
-                            this.$message({
-                                message: '失败',
-                                type: 'error'
-                            });
-                        }
-                   })
-                   .catch((error)=>{
-                       console.log(error);
-                       this.loading = false;
-                       this.$message.error('错了哦，这是一条错误消息');
-                   });
-                }
             },
             addParam(){
                 //添加参数
@@ -161,7 +137,7 @@
         },
         created(){
             if(this.id){
-                //加载table数据
+                //读取要编辑的文章数据
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
                     console.log(response);

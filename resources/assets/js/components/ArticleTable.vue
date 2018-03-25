@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="20">
-        <el-col :span="16">
+        <el-col :span="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>文章列表</span>
@@ -117,7 +117,6 @@
             .catch((error)=>{
                 console.log(error);
             });
-            console.log(this.tableData);
         }
     }
 </script>

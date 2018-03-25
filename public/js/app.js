@@ -93357,7 +93357,7 @@ var render = function() {
     [
       _c(
         "el-col",
-        { attrs: { span: 16 } },
+        { attrs: { span: 24 } },
         [
           _c("el-card", { staticClass: "box-card" }, [
             _c(

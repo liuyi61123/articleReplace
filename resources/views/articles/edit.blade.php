@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <article-table></article-table>
+    <create-edit-article></create-edit-article>
 @endsection

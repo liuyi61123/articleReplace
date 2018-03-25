@@ -28923,7 +28923,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_element_ui___default.a);
  */
 
 Vue.component('example-component', __webpack_require__(192));
-Vue.component('param-setting', __webpack_require__(195));
+Vue.component('article-table', __webpack_require__(195));
 Vue.component('create-edit-article', __webpack_require__(198));
 
 var app = new Vue({
@@ -93180,7 +93180,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\ParamSetting.vue"
+Component.options.__file = "resources\\assets\\js\\components\\ArticleTable.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -93189,9 +93189,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b7c1ab0c", Component.options)
+    hotAPI.createRecord("data-v-25484b6f", Component.options)
   } else {
-    hotAPI.reload("data-v-b7c1ab0c", Component.options)
+    hotAPI.reload("data-v-25484b6f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -93227,29 +93227,110 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            params: [{
-                id: 0,
-                name: '',
-                content: ''
-            }],
-            index: 0
+            tableData: []
         };
     },
 
     methods: {
-        addParam: function addParam() {
-            //添加参数
-            this.index++;
-            Vue.set(this.params, this.params.length, { id: this.index, name: '', content: '' });
+        //新建
+        createArticle: function createArticle() {
+            window.location.href = "/articles/create";
         },
-        deleteParam: function deleteParam(index) {
-            //删除参数
-            this.params.splice(index, 1);
+
+        //编辑
+        editArtivle: function editArtivle(index, row) {
+            window.location.href = "/articles/" + row.id + "/edit";
+        },
+
+        //导出zip
+        exportArtivle: function exportArtivle(index, row) {
+            window.location.href = "/articles/export/" + row.id;
+        },
+
+        //删除
+        deleteArtivle: function deleteArtivle(index, row) {
+            var _this = this;
+
+            axios.delete('/articles/' + row.id).then(function (response) {
+                console.log(response);
+                var message = {};
+                if (response.data.status == 200) {
+                    _this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    //重新加载数据
+                    _this.tableData.splice(index, 1);
+                } else {
+                    _this.$message({
+                        message: '删除失败',
+                        type: 'error'
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                _this.loading = false;
+                _this.$message.error('错了哦，这是一条错误消息');
+            });
         }
+    },
+    created: function created() {
+        var _this2 = this;
+
+        //加载table数据
+        axios.get('/articles?p=1').then(function (response) {
+            console.log(response);
+            _this2.tableData = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+        console.log(this.tableData);
     }
 });
 
@@ -93261,106 +93342,140 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header clearfix" }, [
-      _c("span", { staticClass: "float-left" }, [_vm._v("参数设置")]),
-      _vm._v(" "),
+  return _c(
+    "el-row",
+    { attrs: { gutter: 20 } },
+    [
       _c(
-        "button",
-        {
-          staticClass: "btn btn-success btn-sm float-right",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              _vm.addParam()
-            }
-          }
-        },
-        [_vm._v("添加参数")]
+        "el-col",
+        { attrs: { span: 16 } },
+        [
+          _c("el-card", { staticClass: "box-card" }, [
+            _c(
+              "div",
+              {
+                staticClass: "clearfix",
+                attrs: { slot: "header" },
+                slot: "header"
+              },
+              [
+                _c("span", [_vm._v("文章列表")]),
+                _vm._v(" "),
+                _c(
+                  "el-button",
+                  {
+                    staticStyle: { float: "right" },
+                    attrs: { type: "success", size: "small" },
+                    on: {
+                      click: function($event) {
+                        _vm.createArticle()
+                      }
+                    }
+                  },
+                  [_vm._v("新建")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "text item" },
+              [
+                _c(
+                  "el-table",
+                  {
+                    staticStyle: { width: "100%" },
+                    attrs: { data: _vm.tableData, border: "" }
+                  },
+                  [
+                    _c("el-table-column", {
+                      attrs: { type: "selection", width: "55" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "id", label: "Id", width: "180" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "template_id",
+                        label: "模板",
+                        width: "180"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "title", label: "标题", width: "180" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "keywords", label: "关键字" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { fixed: "right", label: "操作", width: "250" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { size: "mini", type: "primary" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.editArtivle(scope.$index, scope.row)
+                                    }
+                                  }
+                                },
+                                [_vm._v("编辑")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { size: "mini", type: "warning" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.exportArtivle(scope.$index, scope.row)
+                                    }
+                                  }
+                                },
+                                [_vm._v("导出")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { size: "mini", type: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteArtivle(scope.$index, scope.row)
+                                    }
+                                  }
+                                },
+                                [_vm._v("删除")]
+                              )
+                            ]
+                          }
+                        }
+                      ])
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ],
+        1
       )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card-body" },
-      _vm._l(_vm.params, function(param, index) {
-        return _c("div", {}, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: param.name,
-                  expression: "param.name"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                required: "",
-                name: "param_names[]",
-                placeholder: "参数名称{$param}"
-              },
-              domProps: { value: param.name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(param, "name", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: param.content,
-                  expression: "param.content"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                required: "",
-                name: "param_contents[]",
-                rows: "5",
-                cols: "30",
-                placeholder: "需要替换的内容,一行一个"
-              },
-              domProps: { value: param.content },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(param, "content", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger btn-sm float-right",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  _vm.deleteParam(index)
-                }
-              }
-            },
-            [_vm._v("删除")]
-          )
-        ])
-      })
-    )
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -93368,7 +93483,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-b7c1ab0c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-25484b6f", module.exports)
   }
 }
 
@@ -93526,17 +93641,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.loading = false;
                 var message = {};
                 if (response.data.status == 200) {
-                    message = {
+                    _this.$message({
                         message: '成功生成',
                         type: 'success'
-                    };
+                    });
+                    window.location.href = "/articles";
                 } else {
-                    message = {
+                    _this.$message({
                         message: '失败',
                         type: 'error'
-                    };
+                    });
                 }
-                _this.$message(message);
             }).catch(function (error) {
                 console.log(error);
                 _this.loading = false;

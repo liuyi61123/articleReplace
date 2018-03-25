@@ -20,7 +20,7 @@ Vue.use(ElementUI);
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('param-setting', require('./components/ParamSetting.vue'));
+Vue.component('article-table', require('./components/ArticleTable.vue'));
 Vue.component('create-edit-article', require('./components/CreateEditArticle.vue'));
 
 const app = new Vue({

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleParam;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
@@ -20,11 +22,19 @@ class ArticlesController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request,Article $article)
     {
-        return view('articles.index');
+        if ($request->ajax()) {
+            //渲染列表
+            $output = $article->all();
+            return response()->json($output);
+        }else{
+            return view('articles.index');
+        }
     }
 
     /**
@@ -64,6 +74,16 @@ class ArticlesController extends Controller
     /**
      * Display the specified resource.
      *
+     * @return \Illuminate\Http\Response
+     */
+    public function export($id)
+    {
+        $pathToFile = 'storage/articles/'.$id.'/articles.zip';
+        return response()->download($pathToFile);
+    }
+    /**
+     * Display the specified resource.
+     *
      * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
@@ -81,7 +101,7 @@ class ArticlesController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('articles.edit');
     }
 
     /**
@@ -104,6 +124,15 @@ class ArticlesController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        //删除数据库
+        $id = $article->id;
+        $article->delete();
+        ArticleParam::where('article_id',$id)->delete();
+
+        //删除对应的文件
+        $directory = 'public/articles/'.$id;
+        Storage::deleteDirectory($directory);
+
+        return response()->json(['status'=>200]);
     }
 }

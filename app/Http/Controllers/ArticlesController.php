@@ -78,9 +78,10 @@ class ArticlesController extends Controller
      */
     public function export($id)
     {
-        $pathToFile = 'storage/articles/'.$id.'/articles.zip';
+        $pathToFile = 'storage/articles/'.$id.'/articles'.$id.'.zip';
         return response()->download($pathToFile);
     }
+
     /**
      * Display the specified resource.
      *
@@ -91,7 +92,6 @@ class ArticlesController extends Controller
     {
         //
     }
-
 
     /**
      * Show the form for editing the specified resource.

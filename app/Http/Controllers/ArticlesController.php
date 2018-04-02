@@ -68,7 +68,7 @@ class ArticlesController extends Controller
         //计算参数
         $data = $request->all();
         $data['id'] = $article->id;
-        $res = $article->export($data);
+        $res = $article->replace($data);
         return response()->json(['status'=>200]);
     }
 

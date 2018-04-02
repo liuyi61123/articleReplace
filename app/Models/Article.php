@@ -25,7 +25,7 @@ class Article extends Model
     /**
      * 导出文件
      */
-     function export($article)
+     function replace($article)
      {
          //先将文章按照格式拼接
          $zipper = new \Chumper\Zipper\Zipper;

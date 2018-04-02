@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ArticleParamsTableSeeder::class,
             ArticlesTableSeeder::class,
+            TemplatesTableSeeder::class,
         ]);
     }
 }

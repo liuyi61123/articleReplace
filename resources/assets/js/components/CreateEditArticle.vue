@@ -4,7 +4,7 @@
             <el-col :span="16">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <span>编辑文章</span>
+                        <span>{{title}}</span>
                     </div>
                     <div class="text item">
                         <el-form-item label="模板">
@@ -66,16 +66,7 @@
         props:['id'],
         data () {
             return {
-                templates:[
-                    {
-                        id:'1',
-                        name:'模板1',
-                    },
-                    {
-                        id:'2',
-                        name:'模板2',
-                    }
-                ],
+                templates:[],
                 article:{
                     template_id:'',
                     titile:'',
@@ -91,6 +82,7 @@
                     ],
                 },
                 paramsIndex:0,
+                title:'',
                 loading:false
             }
         },
@@ -108,7 +100,7 @@
                         let message = {};
                         if(response.data.status == 200){
                             this.$message({
-                                message: '修改生成',
+                                message: '修改成功',
                                 type: 'success'
                             });
                             window.location.href="/articles";
@@ -137,6 +129,7 @@
         },
         created(){
             if(this.id){
+                this.title = '编辑文章';
                 //读取要编辑的文章数据
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
@@ -146,7 +139,18 @@
                 .catch((error)=>{
                     console.log(error);
                 });
+            }else{
+                this.title = '新建文章';
             }
+            //获取模板列表
+            axios.get('/templates')
+            .then((response)=> {
+                console.log(response);
+                this.templates = response.data;
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
         }
     }
 </script>

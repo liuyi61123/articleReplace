@@ -20,8 +20,10 @@ Vue.use(ElementUI);
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('article-table', require('./components/ArticleTable.vue'));
-Vue.component('create-edit-article', require('./components/CreateEditArticle.vue'));
+Vue.component('article-table', require('./components/ArticleTable.vue'));//文章列表
+Vue.component('create-edit-article', require('./components/CreateEditArticle.vue'));//编辑和新建文章
+Vue.component('template-table', require('./components/TemplateTable.vue'));//模板列表
+Vue.component('create-edit-template', require('./components/CreateEditTemplate.vue'));//编辑和新建模板
 
 const app = new Vue({
     el: '#app'

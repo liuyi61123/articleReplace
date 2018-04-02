@@ -11,7 +11,8 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <li><a class="nav-link" href="{{ route('articles.index') }}">文章列表</a></li>
+                <li><a class="nav-link" href="{{ route('articles.index') }}">文章</a></li>
+                <li><a class="nav-link" href="{{ route('templates.index') }}">模板</a></li>
             </ul>
 
             <!-- Right Side Of Navbar -->

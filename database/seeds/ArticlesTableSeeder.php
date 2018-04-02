@@ -14,10 +14,10 @@ class ArticlesTableSeeder extends Seeder
     {
         DB::table('articles')->insert([
             'template_id' => 1,
-            'title' => '{$name}}无法无天',
-            'keywords' => '{$name}}无法无天',
-            'description' => '{$name}}无法无天',
-            'content' => '{$name}}无法无天{$name}}无法无天{$name}}无法无天',
+            'title' => '{$name}无法无天',
+            'keywords' => '{$name}无法无天',
+            'description' => '{$name}无法无天',
+            'content' => '{$name}无法无天{$name}无法无天{$name}无法无天',
         ]);
     }
 }

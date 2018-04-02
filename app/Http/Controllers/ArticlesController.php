@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\ArticleParam;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleRequest;
 
 class ArticlesController extends Controller
 {
@@ -30,7 +31,7 @@ class ArticlesController extends Controller
     {
         if ($request->ajax()) {
             //渲染列表
-            $output = $article->all();
+            $output = $article->paginate();
             return response()->json($output);
         }else{
             return view('articles.index');
@@ -54,7 +55,7 @@ class ArticlesController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,Article $article)
+    public function store(ArticleRequest $request,Article $article)
     {
         $article_data = $request->only('template_id','title','keywords','description','content');
         $article->fill($article_data);
@@ -117,7 +118,7 @@ class ArticlesController extends Controller
      * @param  \App\Models\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $article)
+    public function update(ArticleRequest $request, Article $article)
     {
         $article_data = $request->only('template_id','title','keywords','description','content');
         $article->fill($article_data);

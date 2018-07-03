@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             ArticleParamsTableSeeder::class,
             ArticlesTableSeeder::class,
             TemplatesTableSeeder::class,
+            CitysTableSeeder::class,
+            CarInfosTableSeeder::class,
         ]);
     }
 }

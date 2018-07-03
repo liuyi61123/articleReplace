@@ -7,6 +7,7 @@ use App\Models\ArticleParam;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
+use Illuminate\Support\Facades\DB;
 
 class ArticlesController extends Controller
 {
@@ -136,7 +137,7 @@ class ArticlesController extends Controller
         //计算参数
         $data = $request->all();
         $data['id'] = $article->id;
-        $res = $article->export($data);
+        $res = $article->replace($data);
         return response()->json(['status'=>200]);
     }
 
@@ -159,4 +160,20 @@ class ArticlesController extends Controller
 
         return response()->json(['status'=>200]);
     }
+
+    /**
+     * 获取车子品牌列表
+     */
+     public function cars(){
+        $cars = DB::table('car_infos')->where('pid',0)->get();
+        return response()->json($cars);
+     }
+
+     /**
+      * 获取地区列表
+      */
+      public function citys(){
+          $citys = DB::table('citys')->where('pid',0)->get();
+          return response()->json($citys);
+      }
 }

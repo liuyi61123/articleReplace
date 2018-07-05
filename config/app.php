@@ -209,6 +209,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Zipper' => Chumper\Zipper\Zipper::class,//文件压缩扩展包
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'OSS' => AliyunOss\Laravel\AliyunOssFacade::class,
 
     ],
 

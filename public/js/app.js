@@ -95156,11 +95156,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -95297,15 +95292,11 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "title", label: "标题", width: "180" }
+                      attrs: { prop: "config", label: "配置" }
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "keywords", label: "关键字" }
-                    }),
-                    _vm._v(" "),
-                    _c("el-table-column", {
-                      attrs: { fixed: "right", label: "操作", width: "250" },
+                      attrs: { fixed: "right", align: "center", label: "操作" },
                       scopedSlots: _vm._u([
                         {
                           key: "default",
@@ -95510,6 +95501,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['id'],
@@ -95518,72 +95516,69 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             templates: [],
             types: [{
                 id: 1,
-                name: '房贷'
+                name: '车贷'
             }, {
                 id: 2,
-                name: '车贷'
+                name: '房贷'
             }],
             citys: [],
-            countys: [{
-                id: 1,
-                name: '黄浦'
-            }, {
-                id: 2,
-                name: '静安'
-            }],
+            countys: [],
             cars: [],
             article: {
                 template_id: '',
-                county: [],
+                countys: [],
                 type: '',
                 city: '',
-                car: [],
+                cars: [],
                 params: [{
                     name: '',
-                    content: ''
+                    content: []
                 }]
             },
             paramsIndex: 0,
             title: '',
-            loading: false
+            loading: ''
         };
     },
 
     methods: {
+        changeCity: function changeCity(e) {
+            this.getCountys(e);
+        },
         submitFrom: function submitFrom() {
             var _this = this;
 
-            this.loading = true;
+            this.fullScreen(true);
             // 发送 POST 请求
             axios({
                 method: this.id ? 'put' : 'post',
                 url: this.id ? '/articles/' + this.id : '/articles',
                 data: this.article
             }).then(function (response) {
-                _this.loading = false;
+                _this.fullScreen(false);
                 var message = {};
                 if (response.data.status == 200) {
                     _this.$message({
-                        message: '修改成功',
+                        message: '保存成功',
                         type: 'success'
                     });
                     window.location.href = "/articles";
                 } else {
                     _this.$message({
-                        message: '修改失败',
+                        message: '保存失败',
                         type: 'error'
                     });
                 }
             }).catch(function (error) {
                 console.log(error);
-                _this.loading = false;
+                _this.fullScreen(false);
                 _this.$message.error('错了哦，这是一条错误消息');
             });
         },
         addParam: function addParam() {
             //添加参数
             this.paramsIndex++;
-            Vue.set(this.article.params, this.article.params.length, { name: '', content: '' });
+            Vue.set(this.article.params, this.article.params.length, { name: '', content: [] });
         },
         deleteParam: function deleteParam(index) {
             //删除参数
@@ -95602,35 +95597,68 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         //获取市区信息
-        getCitys: function getCitys() {
+        getCitys: function getCitys(id) {
             var _this3 = this;
 
-            axios.get('/articles/citys').then(function (response) {
+            axios.get('/articles/citys/' + id).then(function (response) {
                 _this3.citys = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
         },
 
-        //获取品牌信息
-        getCars: function getCars() {
+        //获取市区信息
+        getCountys: function getCountys(id) {
             var _this4 = this;
 
-            axios.get('/articles/cars').then(function (response) {
-                _this4.cars = response.data;
+            axios.get('/articles/citys/' + id).then(function (response) {
+                _this4.countys = response.data;
+                response.data.map(function (value, index) {
+                    _this4.article.countys.push(value.name);
+                });
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+
+        //获取品牌信息
+        getCars: function getCars(id) {
+            var _this5 = this;
+
+            axios.get('/articles/cars/' + id).then(function (response) {
+                _this5.cars = response.data;
+                response.data.map(function (value, index) {
+                    _this5.article.cars.push(value.name);
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        fullScreen: function fullScreen(bool) {
+            if (bool) {
+                this.loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            } else {
+                this.loading.close();
+            }
         }
     },
     created: function created() {
-        var _this5 = this;
+        var _this6 = this;
 
+        //开启loading
+        this.fullScreen(true);
+
+        //编辑的情况
         if (this.id) {
             this.title = '编辑文章';
             //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
-                _this5.article = response.data;
+                _this6.article = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95640,9 +95668,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取模板列表
         this.getTemplates();
-        this.getCars();
-        this.getCitys();
-        console.log(this.article);
+        this.getCars(0);
+        this.getCitys(0);
+        //关闭loading
+        this.fullScreen(false);
     }
 });
 
@@ -95660,17 +95689,7 @@ var render = function() {
     [
       _c(
         "el-form",
-        {
-          directives: [
-            {
-              name: "loading",
-              rawName: "v-loading",
-              value: _vm.loading,
-              expression: "loading"
-            }
-          ],
-          attrs: { "label-width": "80px" }
-        },
+        { attrs: { "label-width": "80px" } },
         [
           _c(
             "el-col",
@@ -95700,6 +95719,7 @@ var render = function() {
                           {
                             staticStyle: { width: "100%" },
                             attrs: { placeholder: "请选择" },
+                            on: { change: _vm.changeCity },
                             model: {
                               value: _vm.article.city,
                               callback: function($$v) {
@@ -95726,18 +95746,19 @@ var render = function() {
                         _c(
                           "el-checkbox-group",
                           {
+                            attrs: { min: 1 },
                             model: {
-                              value: _vm.article.county,
+                              value: _vm.article.countys,
                               callback: function($$v) {
-                                _vm.$set(_vm.article, "county", $$v)
+                                _vm.$set(_vm.article, "countys", $$v)
                               },
-                              expression: "article.county"
+                              expression: "article.countys"
                             }
                           },
                           _vm._l(_vm.countys, function(county) {
                             return _c("el-checkbox", {
                               key: county.id,
-                              attrs: { label: county.name, checked: true }
+                              attrs: { label: county.name }
                             })
                           })
                         )
@@ -95780,18 +95801,19 @@ var render = function() {
                         _c(
                           "el-checkbox-group",
                           {
+                            attrs: { min: 1 },
                             model: {
-                              value: _vm.article.car,
+                              value: _vm.article.cars,
                               callback: function($$v) {
-                                _vm.$set(_vm.article, "car", $$v)
+                                _vm.$set(_vm.article, "cars", $$v)
                               },
-                              expression: "article.car"
+                              expression: "article.cars"
                             }
                           },
                           _vm._l(_vm.cars, function(car) {
                             return _c("el-checkbox", {
                               key: car.id,
-                              attrs: { label: car.name, checked: true }
+                              attrs: { label: car.name }
                             })
                           })
                         )
@@ -95917,11 +95939,13 @@ var render = function() {
                           "el-form-item",
                           { attrs: { label: "参数内容" } },
                           [
-                            _c("el-input", {
+                            _c("el-select", {
                               attrs: {
-                                type: "textarea",
-                                autosize: { minRows: 4, maxRows: 8 },
-                                placeholder: "需要替换的内容,一行一个"
+                                multiple: "",
+                                filterable: "",
+                                "allow-create": "",
+                                "default-first-option": "",
+                                placeholder: "请选择文章标签"
                               },
                               model: {
                                 value: param.content,

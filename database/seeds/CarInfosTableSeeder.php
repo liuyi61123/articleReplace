@@ -41,6 +41,43 @@ class CarInfosTableSeeder extends Seeder
                 'name' => '别克',
                 'pid' => 0
             ],
+            [
+                'name' => 'x1',
+                'pid' => 1
+            ],
+            [
+                'name' => 'x2',
+                'pid' => 1
+            ],
+
+            [
+                'name' => 'x3',
+                'pid' => 1
+            ],
+            [
+                'name' => 'A2',
+                'pid' => 2
+            ],
+            [
+                'name' => 'A4',
+                'pid' => 2
+            ],
+            [
+                'name' => 'A6',
+                'pid' => 2
+            ],
+            [
+                'name' => 'S300',
+                'pid' => 3
+            ],
+            [
+                'name' => 'S500',
+                'pid' => 3
+            ],
+            [
+                'name' => 'S750',
+                'pid' => 3
+            ],
         ]);
     }
 }

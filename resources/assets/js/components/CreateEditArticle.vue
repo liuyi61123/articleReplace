@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="20">
-        <el-form label-width="80px"  v-loading="loading">
+        <el-form label-width="80px">
             <el-col :span="16">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -8,7 +8,7 @@
                     </div>
                     <div class="text item">
                         <el-form-item label="市">
-                            <el-select style="width:100%" v-model="article.city" placeholder="请选择">
+                            <el-select style="width:100%" v-model="article.city" placeholder="请选择" @change="changeCity">
                                 <el-option  v-for="city in citys"
                                   :key="city.id"
                                   :label="city.name"
@@ -17,8 +17,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="区">
-                            <el-checkbox-group v-model="article.county">
-                                  <el-checkbox v-for="county in countys" :label="county.name" :key="county.id" :checked="true"></el-checkbox>
+                            <el-checkbox-group :min="1" v-model="article.countys">
+                                  <el-checkbox v-for="county of countys" :label="county.name" :key="county.id"></el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="类型">
@@ -31,8 +31,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="品牌">
-                            <el-checkbox-group v-model="article.car">
-                                  <el-checkbox v-for="car of cars" :label="car.name" :key="car.id" :checked="true"></el-checkbox>
+                            <el-checkbox-group :min="1" v-model="article.cars">
+                                  <el-checkbox v-for="car of cars" :label="car.name" :key="car.id"></el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="模板">
@@ -63,7 +63,14 @@
                                 <el-input v-model="param.name" placeholder="{$param}"></el-input>
                             </el-form-item>
                             <el-form-item label="参数内容">
-                                <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="param.content"   placeholder="需要替换的内容,一行一个"></el-input>
+                                <el-select
+                                    v-model="param.content"
+                                    multiple
+                                    filterable
+                                    allow-create
+                                    default-first-option
+                                    placeholder="请选择文章标签">
+                                  </el-select>
                             </el-form-item>
                             <el-form-item>
                                 <el-button style="float: right;" size="small" type="danger" icon="el-icon-delete" @click="deleteParam(index)"></el-button>
@@ -86,47 +93,41 @@
                 types:[
                     {
                         id:1,
-                        name:'房贷'
+                        name:'车贷'
                     },
                     {
                         id:2,
-                        name:'车贷'
+                        name:'房贷'
                     }
                 ],
                 citys:[],
-                countys:[
-                    {
-                        id:1,
-                        name:'黄浦'
-                    },
-                    {
-                        id:2,
-                        name:'静安'
-                    }
-                ],
+                countys:[],
                 cars:[],
                 article:{
                     template_id:'',
-                    county:[],
+                    countys:[],
                     type:'',
                     city:'',
-                    car:[],
+                    cars:[],
                     params:
                     [
                         {
                             name:'',
-                            content:''
+                            content:[]
                         }
                     ],
                 },
                 paramsIndex:0,
                 title:'',
-                loading:false
+                loading:''
             }
         },
         methods: {
+            changeCity(e){
+                this.getCountys(e)
+            },
             submitFrom(){
-                this.loading = true;
+                this.fullScreen(true)
                 // 发送 POST 请求
                 axios({
                     method: this.id?'put':'post',
@@ -134,31 +135,31 @@
                     data:this.article
                 })
                 .then((response)=> {
-                        this.loading = false;
+                        this.fullScreen(false)
                         let message = {};
                         if(response.data.status == 200){
                             this.$message({
-                                message: '修改成功',
+                                message: '保存成功',
                                 type: 'success'
                             });
                             window.location.href="/articles";
                         }else{
                             this.$message({
-                                message: '修改失败',
+                                message: '保存失败',
                                 type: 'error'
                             });
                         }
                    })
                    .catch((error)=>{
-                       console.log(error);
-                       this.loading = false;
-                       this.$message.error('错了哦，这是一条错误消息');
+                       console.log(error)
+                       this.fullScreen(false)
+                       this.$message.error('错了哦，这是一条错误消息')
                    });
             },
             addParam(){
                 //添加参数
                 this.paramsIndex++
-                Vue.set(this.article.params, this.article.params.length, {name:'',content:''})
+                Vue.set(this.article.params, this.article.params.length, {name:'',content:[]})
             },
             deleteParam(index){
                 //删除参数
@@ -175,8 +176,8 @@
                 });
             },
             //获取市区信息
-            getCitys(){
-                axios.get('/articles/citys')
+            getCitys(id){
+                axios.get('/articles/citys/'+id)
                 .then((response)=> {
                     this.citys = response.data
                 })
@@ -184,18 +185,50 @@
                     console.log(error);
                 });
             },
+            //获取市区信息
+            getCountys(id){
+                axios.get('/articles/citys/'+id)
+                .then((response)=> {
+                    this.countys = response.data
+                    response.data.map((value,index)=>{
+                        this.article.countys.push(value.name)
+                    })
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            },
             //获取品牌信息
-            getCars(){
-                axios.get('/articles/cars')
+            getCars(id){
+                axios.get('/articles/cars/'+id)
                 .then((response)=> {
                     this.cars = response.data
+                    response.data.map((value,index)=>{
+                        this.article.cars.push(value.name)
+                    })
                 })
                 .catch((error)=>{
                     console.log(error)
                 });
+            },
+            fullScreen(bool) {
+                if(bool){
+                    this.loading = this.$loading({
+                      lock: true,
+                      text: 'Loading',
+                      spinner: 'el-icon-loading',
+                      background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                }else{
+                    this.loading.close();
+                }
             }
         },
         created(){
+            //开启loading
+            this.fullScreen(true)
+
+            //编辑的情况
             if(this.id){
                 this.title = '编辑文章';
                 //读取要编辑的文章数据
@@ -211,10 +244,11 @@
             }
 
             //获取模板列表
-            this.getTemplates();
-            this.getCars();
-            this.getCitys();
-            console.log(this.article);
+            this.getTemplates()
+            this.getCars(0)
+            this.getCitys(0)
+            //关闭loading
+            this.fullScreen(false)
         }
     }
 </script>

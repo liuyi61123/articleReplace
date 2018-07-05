@@ -29,12 +29,12 @@ class ArticleRequest extends FormRequest
             {
                 return [
                     'template_id' => 'required|integer',
-                    'title' => 'required',
-                    'keywords' => 'required',
-                    'description' => 'required',
-                    'content' => 'required',
-                    'param_names' => 'required',
-                    'param_contents' => 'required',
+                    // 'title' => 'required',
+                    // 'keywords' => 'required',
+                    // 'description' => 'required',
+                    // 'content' => 'required',
+                    // 'param_names' => 'required',
+                    // 'param_contents' => 'required',
                 ];
             }
             // UPDATE

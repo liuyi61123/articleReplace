@@ -26,18 +26,13 @@
                           width="180">
                         </el-table-column>
                         <el-table-column
-                          prop="title"
-                          label="标题"
-                          width="180">
-                        </el-table-column>
-                        <el-table-column
-                          prop="keywords"
-                          label="关键字">
+                          prop="config"
+                          label="配置">
                         </el-table-column>
                         <el-table-column
                         fixed="right"
-                        label="操作"
-                        width="250">
+                        align="center"
+                        label="操作">
                         <template slot-scope="scope">
                             <el-button
                               size="mini"

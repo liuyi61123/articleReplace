@@ -28,7 +28,10 @@ class TemplatesTableSeeder extends Seeder
             </script>
         </head>
         <body>
-            {content}
+            {county}
+            {car}
+            {car_model}
+            <img src="{image1}">
         </body>
         </html>
 HTML;
@@ -48,7 +51,10 @@ HTML;
                 </script>
             </head>
             <body>
-                {content}
+                {county}
+                {car}
+                {car_model}
+                <img src="{image1}">
             </body>
             </html>
 HTML;
@@ -68,7 +74,10 @@ HTML;
                 </script>
             </head>
             <body>
-                {content}
+                {county}
+                {car}
+                {car_model}
+                <img src="{image1}">
             </body>
             </html>
 HTML;

@@ -58,19 +58,21 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
-        $article_data = $request->only('template_id','title','keywords','description','content');
+        // return response()->json($request->all());
+        $article_data['template_id'] = $request->input('template_id');
+        $article_data['config'] = json_encode($request->except('template_id'));
+        // return response()->json($article_data);
         $article->fill($article_data);
         $article->save();
 
         //遍历参数集合,并保存
-        $params = $request->input('params');
-        $article->params()->createMany($params);
+        // $params = $request->input('params');
+        // $article->params()->createMany($params);
 
         //计算参数
-        $data = $request->all();
-        $data['id'] = $article->id;
-        $res = $article->replace($data);
-        return response()->json(['status'=>200]);
+
+        $res = $article->generate($request->all(),$article->id);
+        return response()->json(['status'=>200,'data'=>$res]);
     }
 
     /**
@@ -80,7 +82,7 @@ class ArticlesController extends Controller
      */
     public function export($id)
     {
-        $pathToFile = 'storage/articles/'.$id.'/articles'.$id.'.zip';
+        $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
         return response()->download($pathToFile);
     }
 
@@ -164,16 +166,16 @@ class ArticlesController extends Controller
     /**
      * 获取车子品牌列表
      */
-     public function cars(){
-        $cars = DB::table('car_infos')->where('pid',0)->get();
+     public function cars($pid){
+        $cars = DB::table('car_infos')->where('pid',$pid)->get();
         return response()->json($cars);
      }
 
      /**
       * 获取地区列表
       */
-      public function citys(){
-          $citys = DB::table('citys')->where('pid',0)->get();
+      public function citys($pid){
+          $citys = DB::table('citys')->where('pid',$pid)->get();
           return response()->json($citys);
       }
 }

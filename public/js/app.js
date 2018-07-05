@@ -95525,10 +95525,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             countys: [],
             cars: [],
             article: {
-                template_id: '',
+                template_id: 1,
                 countys: [],
-                type: '',
-                city: '',
+                type: 1,
+                city: 1,
                 cars: [],
                 params: [{
                     name: '',
@@ -95613,9 +95613,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get('/articles/citys/' + id).then(function (response) {
                 _this4.countys = response.data;
-                response.data.map(function (value, index) {
-                    _this4.article.countys.push(value.name);
-                });
+                if (!_this4.id) {
+                    response.data.map(function (value, index) {
+                        _this4.article.countys.push(value.name);
+                    });
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95627,9 +95629,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get('/articles/cars/' + id).then(function (response) {
                 _this5.cars = response.data;
-                response.data.map(function (value, index) {
-                    _this5.article.cars.push(value.name);
-                });
+                if (!_this5.id) {
+                    response.data.map(function (value, index) {
+                        _this5.article.cars.push(value.name);
+                    });
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95658,7 +95662,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.title = '编辑文章';
             //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
-                _this6.article = response.data;
+                console.log(response.data);
+                _this6.article.template_id = response.data.template_id;
+                _this6.article.cars = response.data.config.cars;
+                _this6.article.type = response.data.config.type;
+                _this6.article.city = response.data.config.city;
+                _this6.getCountys(response.data.config.city);
+                _this6.article.countys = response.data.config.countys;
+                _this6.article.params = response.data.config.params;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95670,6 +95681,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getTemplates();
         this.getCars(0);
         this.getCitys(0);
+        this.getCountys(1);
         //关闭loading
         this.fullScreen(false);
     }

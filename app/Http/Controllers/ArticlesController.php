@@ -65,12 +65,7 @@ class ArticlesController extends Controller
         $article->fill($article_data);
         $article->save();
 
-        //遍历参数集合,并保存
-        // $params = $request->input('params');
-        // $article->params()->createMany($params);
-
         //计算参数
-
         $res = $article->generate($request->all(),$article->id);
         return response()->json(['status'=>200,'data'=>$res]);
     }
@@ -107,7 +102,8 @@ class ArticlesController extends Controller
     {
         if ($request->ajax()) {
             //渲染列表
-            $article = Article::with('params')->find($id);
+            $article = Article::find($id);
+            $article->config = json_decode($article->config);
             return response()->json($article);
         }else{
             return view('articles.edit',compact('id'));
@@ -123,24 +119,20 @@ class ArticlesController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        $article_data = $request->only('template_id','title','keywords','description','content');
+        // return response()->json($request->all());
+        $article_data['template_id'] = $request->input('template_id');
+        $article_data['config'] = json_encode($request->except('template_id'));
+        // return response()->json($article_data);
         $article->fill($article_data);
         $article->save();
-
-        //删除关联的参数
-        $params = $request->input('params');
-        ArticleParam::where('article_id',$article->id)->delete();
-        //保存
-        $article->params()->createMany($params);
 
         //删除原文件后，重新生成
         $directory = 'public/articles/'.$article->id;
         Storage::deleteDirectory($directory);
+    
         //计算参数
-        $data = $request->all();
-        $data['id'] = $article->id;
-        $res = $article->replace($data);
-        return response()->json(['status'=>200]);
+        $res = $article->generate($request->all(),$article->id);
+        return response()->json(['status'=>200,'data'=>$res]);
     }
 
     /**

@@ -104,10 +104,10 @@
                 countys:[],
                 cars:[],
                 article:{
-                    template_id:'',
+                    template_id:1,
                     countys:[],
-                    type:'',
-                    city:'',
+                    type:1,
+                    city:1,
                     cars:[],
                     params:
                     [
@@ -190,9 +190,11 @@
                 axios.get('/articles/citys/'+id)
                 .then((response)=> {
                     this.countys = response.data
-                    response.data.map((value,index)=>{
-                        this.article.countys.push(value.name)
-                    })
+                    if(!this.id){
+                        response.data.map((value,index)=>{
+                            this.article.countys.push(value.name)
+                        })
+                    }
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -203,9 +205,11 @@
                 axios.get('/articles/cars/'+id)
                 .then((response)=> {
                     this.cars = response.data
-                    response.data.map((value,index)=>{
-                        this.article.cars.push(value.name)
-                    })
+                    if(!this.id){
+                        response.data.map((value,index)=>{
+                            this.article.cars.push(value.name)
+                        })
+                    }
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -234,7 +238,15 @@
                 //读取要编辑的文章数据
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
-                    this.article = response.data
+                    console.log(response.data);
+                    this.article.template_id = response.data.template_id
+                    this.article.cars = response.data.config.cars
+                    this.article.type = response.data.config.type
+                    this.article.city = response.data.config.city
+                    this.getCountys(response.data.config.city)
+                    this.article.countys = response.data.config.countys
+                    this.article.params = response.data.config.params
+
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -247,6 +259,7 @@
             this.getTemplates()
             this.getCars(0)
             this.getCitys(0)
+            this.getCountys(1)
             //关闭loading
             this.fullScreen(false)
         }

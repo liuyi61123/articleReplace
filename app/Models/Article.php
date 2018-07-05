@@ -191,7 +191,7 @@ class Article extends Model
        */
       public function toImage($id){
           $html = $this->imageHtml();
-          \SnappyImage::loadHTML($html)->setOption('width', 600)->save($id.'article.png');
+          \SnappyImage::loadHTML($html)->setOption('width', 600)->save(time().$id.'article.png');
           return $id.'article.png';
       }
 

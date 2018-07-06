@@ -98,10 +98,10 @@ class TemplatesController extends Controller
     public function destroy(Template $template)
     {
         //删除数据库
-        if($template->articles()->get()){
+        if(count($template->articles)>0){
             return response()->json(['status'=>500,'msg'=>'不能删除']);
         }else{
-            $template->destroy();
+            $template->delete();
             return response()->json(['status'=>200]);
         }
     }

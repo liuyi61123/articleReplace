@@ -22,13 +22,12 @@
                          </el-table-column>
                         <el-table-column
                           prop="name"
-                          label="名称"
-                          width="180">
+                          label="名称">
                         </el-table-column>
                         <el-table-column
                         fixed="right"
                         label="操作"
-                        width="250">
+                        align="center">
                         <template slot-scope="scope">
                             <el-button
                               size="mini"
@@ -76,6 +75,11 @@
                         });
                         //重新加载数据
                         this.tableData.splice(index, 1);
+                    }else if (response.data.status == 500) {
+                        this.$message({
+                            message: response.data.msg,
+                            type: 'warning'
+                        });
                     }else{
                         this.$message({
                             message: '删除失败',

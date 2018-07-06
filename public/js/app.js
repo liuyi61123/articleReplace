@@ -95213,7 +95213,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //加载table数据
         axios.get('/articles').then(function (response) {
             console.log(response);
-            _this2.tableData = response.data.data;
+            // this.tableData = response.data.data;
+            response.data.data.map(function (value, index) {
+                value.config = JSON.stringify(value.config, null, 4);
+                _this2.tableData.push(value);
+            });
+            console.log(_this2.tableData);
         }).catch(function (error) {
             console.log(error);
         });
@@ -95285,7 +95290,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("el-table-column", {
                       attrs: {
-                        prop: "template_id",
+                        prop: "template.name",
                         label: "模板",
                         width: "180"
                       }
@@ -96117,7 +96122,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -96151,6 +96155,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                     //重新加载数据
                     _this.tableData.splice(index, 1);
+                } else if (response.data.status == 500) {
+                    _this.$message({
+                        message: response.data.msg,
+                        type: 'warning'
+                    });
                 } else {
                     _this.$message({
                         message: '删除失败',
@@ -96241,11 +96250,11 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "name", label: "名称", width: "180" }
+                      attrs: { prop: "name", label: "名称" }
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { fixed: "right", label: "操作", width: "250" },
+                      attrs: { fixed: "right", label: "操作", align: "center" },
                       scopedSlots: _vm._u([
                         {
                           key: "default",

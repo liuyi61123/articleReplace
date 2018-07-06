@@ -16,126 +16,25 @@ class Article extends Model
     protected $guarded = [];
 
     /**
-     * 此文章相关的参数
+     * 获取用户的名字。
+     *
+     * @param  string  $value
+     * @return string
      */
-    public function params()
-    {
-        return $this->hasMany(ArticleParam::class);
-    }
-
-    /**
-     * 导出文件
-     */
-     function replace($article)
+     public function getConfigAttribute($value)
      {
-         //先将文章按照格式拼接
-         $zipper = new \Chumper\Zipper\Zipper;
-         $params = $article['params'];
-         $text = $article['title'].PHP_EOL.$article['keywords'].PHP_EOL.$article['description'].PHP_EOL.$article['content'];
-
-         $file_base_path = 'public/articles/'.$article['id'].'/';
-         $num = count($params);
-         $texts = array();
-         switch ($num) {
-             case '1':
-                 $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
-                 foreach ($contents0 as $content0) {
-                     $replace_text =  str_replace($params[0]['name'],$content0,$text);
-                     //生成文件名称
-                     $file_path = $file_base_path.$content0.'.txt';
-                     //生成文件
-                     Storage::put($file_path,$replace_text);
-                 }
-                 break;
-             case '2':
-                 $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
-                 $contents1 = array_unique(array_filter(explode(',',$params[1]['content'])));
-                 foreach ($contents0 as $content0) {
-                      foreach ($contents1 as $content1) {
-                          $replace_text =  str_replace($params[0]['name'],$content0,$text);
-                          $replace_text =  str_replace($params[1]['name'],$content1,$replace_text);
-                          //生成文件名称
-                          $file_path = $file_base_path.$content0.'-'.$content1.'.txt';
-                          //生成文件
-                          Storage::put($file_path,$replace_text);
-                      }
-                 }
-                 break;
-             case '3':
-                 $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
-                 $contents1 = array_unique(array_filter(explode(',',$params[1]['content'])));
-                 $contents2 = array_unique(array_filter(explode(',',$params[2]['content'])));
-                 foreach ($contents0 as $content0) {
-                      foreach ($contents1 as $content1) {
-                           foreach ($contents2 as $content2) {
-                               $replace_text =  str_replace($params[0]['name'],$content0,$text);
-                               $replace_text =  str_replace($params[1]['name'],$content1,$replace_text);
-                               $replace_text =  str_replace($params[2]['name'],$content2,$replace_text);
-                               //生成文件名称
-                               $file_path = $file_base_path.$content0.'-'.$content1.'-'.$content2.'.txt';
-                               //生成文件
-                               Storage::put($file_path,$replace_text);
-                           }
-                      }
-                 }
-                 break;
-             case '4':
-                 $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
-                 $contents1 = array_unique(array_filter(explode(',',$params[1]['content'])));
-                 $contents2 = array_unique(array_filter(explode(',',$params[2]['content'])));
-                 $contents3 = array_unique(array_filter(explode(',',$params[3]['content'])));
-                 foreach ($contents0 as $content0) {
-                      foreach ($contents1 as $content1) {
-                          foreach ($contents2 as $content2) {
-                               foreach ($contents3 as $content3) {
-                                   $replace_text =  str_replace($params[0]['name'],$content0,$text);
-                                   $replace_text =  str_replace($params[1]['name'],$content1,$replace_text);
-                                   $replace_text =  str_replace($params[2]['name'],$content3,$replace_text);
-                                   $replace_text =  str_replace($params[3]['name'],$content2,$replace_text);
-                                   //生成文件名称
-                                   $file_path = $file_base_path.$content0.'-'.$content1.'-'.$content2.'-'.$content3.'.txt';
-                                   //生成文件
-                                   Storage::put($file_path,$replace_text);
-                               }
-                           }
-                      }
-                 }
-                 break;
-             case '5':
-                 $contents0 = array_unique(array_filter(explode(',',$params[0]['content'])));
-                 $contents1 = array_unique(array_filter(explode(',',$params[1]['content'])));
-                 $contents2 = array_unique(array_filter(explode(',',$params[2]['content'])));
-                 $contents3 = array_unique(array_filter(explode(',',$params[3]['content'])));
-                 $contents4 = array_unique(array_filter(explode(',',$params[4]['content'])));
-                 foreach ($contents0 as $content0) {
-                      foreach ($contents1 as $content1) {
-                          foreach ($contents2 as $content2) {
-                              foreach ($contents3 as $content3) {
-                                  foreach ($contents4 as $content4) {
-                                       $replace_text =  str_replace($params[0]['name'],$content0,$text);
-                                       $replace_text =  str_replace($params[1]['name'],$content1,$replace_text);
-                                       $replace_text =  str_replace($params[2]['name'],$content2,$replace_text);
-                                       $replace_text =  str_replace($params[3]['name'],$content3,$replace_text);
-                                       $replace_text =  str_replace($params[4]['name'],$content4,$replace_text);
-                                       //生成文件名称
-                                       $file_path = $file_base_path.$content0.'-'.$content1.'-'.$content2.'-'.$content3.'-'.$content4.'.txt';
-                                       //生成文件
-                                       Storage::put($file_path,$replace_text);
-                                   }
-                               }
-                           }
-                      }
-                 }
-                 break;
-             default:
-                 return false;
-                 break;
-         }
-         $files = glob('storage/articles/'.$article['id'].'/'.'*.txt');
-         $zipper->make('storage/articles/'.$article['id'].'/'.'articles'.$article['id'].'.zip')->add($files)->close();
-         return true;
+         return json_decode($value);
+         // return '<pre>'.json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).'</pre>';
      }
 
+    /**
+     * 此文章相关的参数
+     */
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
+    }
+    
      /**
       * 生成
       */
@@ -147,7 +46,6 @@ class Article extends Model
           //查找地址信息
           $city_name = DB::table('citys')->where('id',$data['city'])->value('name');
 
-          $file_names = array();
           $file_base_path = 'public/articles/'.$id.'/';
 
           $image1 = $this->toImage($id);
@@ -158,20 +56,33 @@ class Article extends Model
                   //查找汽车相关型号
                   $pid = DB::table('car_infos')->where('name',$car)->value('id');
                   $car_models = DB::table('car_infos')->where('pid',$pid)->pluck('name');
+
                   foreach($car_models as $car_model){
                       foreach($params as $param){
-                          foreach($param['content'] as $param_content){
-                             //替换内容
-                             $replace_text =  str_replace('{county}',$county,$template_content);
-                             $replace_text =  str_replace('{car}',$car,$replace_text);
-                             $replace_text =  str_replace('{car_model}',$car_model,$replace_text);
-                             $replace_text =  str_replace('{image1}',$image1,$replace_text);
+                          if($param['content']){
+                              foreach($param['content'] as $param_content){
+                                 //替换内容
+                                 $replace_text =  str_replace('{county}',$county,$template_content);
+                                 $replace_text =  str_replace('{car}',$car,$replace_text);
+                                 $replace_text =  str_replace('{car_model}',$car_model,$replace_text);
+                                 $replace_text =  str_replace('{image1}',$image1,$replace_text);
 
-                             //文件名规则生成
-                             $file_path = $file_base_path.'/'.$city_name.$county.$car.$car_model.$param_content.'.txt';
-                             $file_names[] = $city_name.$county.$car.$car_model.$param_content;
-                             //生成文件
-                             Storage::put($file_path,$replace_text);
+                                 //文件名规则生成
+                                 $file_path = $file_base_path.'/'.$city_name.$county.$car.$car_model.$param_content.'.txt';
+                                 //生成文件
+                                 Storage::put($file_path,$replace_text);
+                              }
+                          }else{
+                              //替换内容
+                              $replace_text =  str_replace('{county}',$county,$template_content);
+                              $replace_text =  str_replace('{car}',$car,$replace_text);
+                              $replace_text =  str_replace('{car_model}',$car_model,$replace_text);
+                              $replace_text =  str_replace('{image1}',$image1,$replace_text);
+
+                              //文件名规则生成
+                              $file_path = $file_base_path.'/'.$city_name.$county.$car.$car_model.'.txt';
+                              //生成文件
+                              Storage::put($file_path,$replace_text);
                           }
                       }
                   }

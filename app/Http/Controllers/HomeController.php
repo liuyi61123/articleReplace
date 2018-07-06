@@ -26,6 +26,12 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function test1(){
+        $user_id = 'wxoz7jOwIjdUgLPRjRBAZmONoQ08Ag';
+        $package = 'package2';
+        return md5($user_id.$package);
+    }
+
     public function test(){
         $html = <<<HTML
         <!DOCTYPE html>

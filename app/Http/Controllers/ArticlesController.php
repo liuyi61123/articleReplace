@@ -129,7 +129,7 @@ class ArticlesController extends Controller
         //删除原文件后，重新生成
         $directory = 'public/articles/'.$article->id;
         Storage::deleteDirectory($directory);
-    
+
         //计算参数
         $res = $article->generate($request->all(),$article->id);
         return response()->json(['status'=>200,'data'=>$res]);
@@ -146,8 +146,7 @@ class ArticlesController extends Controller
         //删除数据库
         $id = $article->id;
         $article->delete();
-        ArticleParam::where('article_id',$id)->delete();
-
+        
         //删除对应的文件
         $directory = 'public/articles/'.$id;
         Storage::deleteDirectory($directory);

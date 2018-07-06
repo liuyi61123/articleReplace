@@ -21,7 +21,7 @@
                           width="180">
                          </el-table-column>
                         <el-table-column
-                          prop="template_id"
+                          prop="template.name"
                           label="模板"
                           width="180">
                         </el-table-column>
@@ -107,7 +107,12 @@
             axios.get('/articles')
             .then((response)=> {
                 console.log(response);
-                this.tableData = response.data.data;
+                // this.tableData = response.data.data;
+                response.data.data.map((value,index)=>{
+                    value.config = JSON.stringify(value.config, null, 4)
+                    this.tableData.push(value)
+                })
+                console.log(this.tableData)
             })
             .catch((error)=>{
                 console.log(error);

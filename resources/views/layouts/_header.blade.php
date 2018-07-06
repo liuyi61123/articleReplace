@@ -13,6 +13,7 @@
             <ul class="navbar-nav mr-auto">
                 <li><a class="nav-link" href="{{ route('articles.index') }}">文章</a></li>
                 <li><a class="nav-link" href="{{ route('templates.index') }}">模板</a></li>
+                <li><a class="nav-link" href="{{ route('params.index') }}">参数</a></li>
             </ul>
 
             <!-- Right Side Of Navbar -->

@@ -28,6 +28,9 @@
                         <el-table-column
                           prop="config"
                           label="配置">
+                          <template slot-scope="scope">
+                              <pre>{{scope.row.config}}</pre>
+                          </template>
                         </el-table-column>
                         <el-table-column
                         fixed="right"

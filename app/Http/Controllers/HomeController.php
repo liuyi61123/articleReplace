@@ -27,8 +27,8 @@ class HomeController extends Controller
     }
 
     public function test1(){
-        $user_id = 'wxoz7jOwIjdUgLPRjRBAZmONoQ08Ag';
-        $package = 'package2';
+        $user_id = 'wxoz7jOwFs14YJIPAvoYocZwI39NW4';
+        $package = 'package1';
         return md5($user_id.$package);
     }
 

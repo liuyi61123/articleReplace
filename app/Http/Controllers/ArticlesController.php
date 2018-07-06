@@ -32,7 +32,7 @@ class ArticlesController extends Controller
     {
         if ($request->ajax()) {
             //渲染列表
-            $output = $article->paginate();
+            $output = $article->with('template')->paginate();
             return response()->json($output);
         }else{
             return view('articles.index');
@@ -58,10 +58,9 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
-        // return response()->json($request->all());
         $article_data['template_id'] = $request->input('template_id');
         $article_data['config'] = json_encode($request->except('template_id'));
-        // return response()->json($article_data);
+
         $article->fill($article_data);
         $article->save();
 
@@ -103,7 +102,6 @@ class ArticlesController extends Controller
         if ($request->ajax()) {
             //渲染列表
             $article = Article::find($id);
-            $article->config = json_decode($article->config);
             return response()->json($article);
         }else{
             return view('articles.edit',compact('id'));
@@ -119,10 +117,8 @@ class ArticlesController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        // return response()->json($request->all());
         $article_data['template_id'] = $request->input('template_id');
         $article_data['config'] = json_encode($request->except('template_id'));
-        // return response()->json($article_data);
         $article->fill($article_data);
         $article->save();
 
@@ -146,7 +142,7 @@ class ArticlesController extends Controller
         //删除数据库
         $id = $article->id;
         $article->delete();
-        
+
         //删除对应的文件
         $directory = 'public/articles/'.$id;
         Storage::deleteDirectory($directory);

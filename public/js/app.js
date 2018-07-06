@@ -95156,6 +95156,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -95297,7 +95300,17 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "config", label: "配置" }
+                      attrs: { prop: "config", label: "配置" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              _c("pre", [_vm._v(_vm._s(scope.row.config))])
+                            ]
+                          }
+                        }
+                      ])
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {

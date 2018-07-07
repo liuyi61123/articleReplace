@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use SnappyImage;
 
 class Article extends Model
 {
@@ -49,6 +50,7 @@ class Article extends Model
           $file_base_path = 'public/articles/'.$id.'/';
 
           $image1 = $this->toImage($id);
+//          $image1 = 'image';
 
           //遍历结果集
           foreach($data['countys'] as $county){
@@ -102,8 +104,9 @@ class Article extends Model
        */
       public function toImage($id){
           $html = $this->imageHtml();
-          \SnappyImage::loadHTML($html)->setOption('width', 600)->save(time().$id.'article.png');
-          return $id.'article.png';
+          $image_name = time().$id.'article.png';
+          SnappyImage::loadHTML($html)->setOption('width', 600)->save($image_name);
+          return $image_name;
       }
 
       protected function imageHtml(){

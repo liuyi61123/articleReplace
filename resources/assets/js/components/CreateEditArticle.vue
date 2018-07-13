@@ -7,43 +7,74 @@
                         <span>{{title}}</span>
                     </div>
                     <div class="text item">
+                        <el-form-item label="模板">
+                            <el-col :span="4">
+                                <el-select style="width:100%" v-model="article.template_id" placeholder="请选择">
+                                    <el-option  v-for="template in templates"
+                                      :key="template.id"
+                                      :label="template.name"
+                                      :value="template.id">
+                                  </el-option>
+                                </el-select>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="市">
-                            <el-select style="width:100%" v-model="article.city" placeholder="请选择" @change="changeCity">
-                                <el-option  v-for="city in citys"
-                                  :key="city.id"
-                                  :label="city.name"
-                                  :value="city.id">
-                              </el-option>
-                            </el-select>
+                            <el-col :span="4">
+                                <el-select v-model="article.city.data" placeholder="请选择" @change="changeCity">
+                                    <el-option  v-for="city in citys"
+                                      :key="city.id"
+                                      :label="city.name"
+                                      :value="city.id">
+                                    </el-option>
+                                  </el-select>
+                            </el-col>
+                            <el-col :span="3">
+                              <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
                         </el-form-item>
                         <el-form-item label="区">
-                            <el-checkbox-group :min="1" v-model="article.countys">
-                                  <el-checkbox v-for="county of countys" :label="county.name" :key="county.id"></el-checkbox>
-                            </el-checkbox-group>
+                            <el-col :span="24">
+                                <el-checkbox-group :min="1" v-model="article.countys.data">
+                                      <el-checkbox v-for="county of countys" :label="county.name" :key="county.id"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-col>
+                            <el-col :span="3">
+                              <el-input-number v-model="article.countys.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
                         </el-form-item>
-                        <el-form-item label="类型">
-                            <el-select style="width:100%" v-model="article.type" placeholder="请选择">
-                                <el-option  v-for="type in types"
-                                  :key="type.id"
-                                  :label="type.name"
-                                  :value="type.id">
-                              </el-option>
-                            </el-select>
-                        </el-form-item>
+                        <!-- <el-form-item label="类型">
+                            <el-col :span="4">
+                                <el-select v-model="article.type" placeholder="请选择">
+                                    <el-option  v-for="type in types"
+                                      :key="type.id"
+                                      :label="type.name"
+                                      :value="type.id">
+                                  </el-option>
+                                </el-select>
+                            </el-col>
+                        </el-form-item> -->
                         <el-form-item label="品牌">
-                            <el-checkbox-group :min="1" v-model="article.cars">
-                                  <el-checkbox v-for="car of cars" :label="car.name" :key="car.id"></el-checkbox>
-                            </el-checkbox-group>
+                            <el-col :span="24">
+                                <el-checkbox-group :min="1" v-model="article.cars.data">
+                                      <el-checkbox v-for="car of cars" :label="car.name" :key="car.id"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-input-number v-model="article.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                          </el-col>
                         </el-form-item>
-                        <el-form-item label="模板">
-                            <el-select style="width:100%" v-model="article.template_id" placeholder="请选择">
-                                <el-option  v-for="template in templates"
-                                  :key="template.id"
-                                  :label="template.name"
-                                  :value="template.id">
-                              </el-option>
-                            </el-select>
+
+                        <el-form-item label="型号">
+                            <el-col :span="24">
+                                <el-checkbox-group :min="1" v-model="article.models.data">
+                                      <el-checkbox v-for="model of models" :label="model.name" :key="model.id"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-input-number v-model="article.models.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                          </el-col>
                         </el-form-item>
+
                         <el-form-item>
                             <el-button type="primary" @click="submitFrom()">保存</el-button>
                         </el-form-item>
@@ -60,17 +91,24 @@
                     <div class="text item">
                         <div v-for="(param,index) in article.params">
                             <el-form-item label="参数名称">
-                                <el-input v-model="param.name" placeholder="{$param}"></el-input>
+                                <el-col :span="12">
+                                    <el-input v-model="param.name" placeholder="{$param}"></el-input>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-input-number v-model="param.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                                </el-col>
                             </el-form-item>
                             <el-form-item label="参数内容">
-                                <el-select
-                                    v-model="param.content"
-                                    multiple
-                                    filterable
-                                    allow-create
-                                    default-first-option
-                                    placeholder="请选择文章标签">
-                                  </el-select>
+                                <el-col :span="24">
+                                    <el-select
+                                        v-model="param.content"
+                                        multiple
+                                        filterable
+                                        allow-create
+                                        default-first-option
+                                        placeholder="请选择文章标签">
+                                      </el-select>
+                                 </el-col>
                             </el-form-item>
                             <el-form-item>
                                 <el-button style="float: right;" size="small" type="danger" icon="el-icon-delete" @click="deleteParam(index)"></el-button>
@@ -103,15 +141,30 @@
                 citys:[],
                 countys:[],
                 cars:[],
+                models:[],
                 article:{
                     template_id:1,
-                    countys:[],
+                    countys:{
+                        sort:2,
+                        data:[]
+                    },
                     type:1,
-                    city:1,
-                    cars:[],
+                    city:{
+                        sort:1,
+                        data:1
+                    },
+                    cars:{
+                        sort:3,
+                        data:[]
+                    },
+                    models:{
+                        sort:4,
+                        data:[]
+                    },
                     params:
                     [
                         {
+                            sort:5,
                             name:'',
                             content:[]
                         }
@@ -159,7 +212,7 @@
             addParam(){
                 //添加参数
                 this.paramsIndex++
-                Vue.set(this.article.params, this.article.params.length, {name:'',content:[]})
+                Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:[]})
             },
             deleteParam(index){
                 //删除参数
@@ -192,7 +245,7 @@
                     this.countys = response.data
                     if(!this.id){
                         response.data.map((value,index)=>{
-                            this.article.countys.push(value.name)
+                            this.article.countys.data.push(value.name)
                         })
                     }
                 })
@@ -207,7 +260,7 @@
                     this.cars = response.data
                     if(!this.id){
                         response.data.map((value,index)=>{
-                            this.article.cars.push(value.name)
+                            this.article.cars.data.push(value.name)
                         })
                     }
                 })
@@ -240,11 +293,11 @@
                 .then((response)=> {
                     console.log(response.data);
                     this.article.template_id = response.data.template_id
-                    this.article.cars = response.data.config.cars
+                    this.article.cars.data = response.data.config.cars
                     this.article.type = response.data.config.type
-                    this.article.city = response.data.config.city
+                    this.article.city.data = response.data.config.city
                     this.getCountys(response.data.config.city)
-                    this.article.countys = response.data.config.countys
+                    this.article.countys.data = response.data.config.countys
                     this.article.params = response.data.config.params
 
                 })

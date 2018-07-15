@@ -54,25 +54,27 @@
                             </el-col>
                         </el-form-item> -->
                         <el-form-item label="品牌">
-                            <el-col :span="24">
-                                <el-checkbox-group :min="1" v-model="article.cars.data">
-                                      <el-checkbox v-for="car of cars" :label="car.name" :key="car.id"></el-checkbox>
-                                </el-checkbox-group>
+                          <div v-for="(param,index) in article.cars.data">
+                            <el-col :span="4">
+                              <el-select v-model="param.brand" placeholder="请选择">
+                                <el-option
+                                  v-for="car in cars"
+                                  :key="car.brand.id"
+                                  :label="car.brand.name"
+                                  :value="car.brand.id">
+                                </el-option>
+                              </el-select>
                             </el-col>
-                            <el-col :span="3">
-                                <el-input-number v-model="article.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
-                          </el-col>
-                        </el-form-item>
-
-                        <el-form-item label="型号">
-                            <el-col :span="24">
-                                <el-checkbox-group :min="1" v-model="article.models.data">
-                                      <el-checkbox v-for="model of models" :label="model.name" :key="model.id"></el-checkbox>
-                                </el-checkbox-group>
+                            <el-col :span="18">
+                              <el-checkbox-group :min="1" v-model="param.models">
+                                    <el-checkbox v-for="model of cars[param.brand].models" :label="model.name" :key="model.id">{{model.name}}</el-checkbox>
+                              </el-checkbox-group>
                             </el-col>
-                            <el-col :span="3">
-                                <el-input-number v-model="article.models.sort" controls-position="right" :min="1" :max="10"></el-input-number>
-                          </el-col>
+                            <el-col :span="2">
+                                <i class="el-icon-circle-plus" @click="addCar(index)"></i>
+                                <i class="el-icon-remove" @click="deleteCar(index)"></i>
+                            </el-col>
+                            </div>
                         </el-form-item>
 
                         <el-form-item>
@@ -140,8 +142,9 @@
                 ],
                 citys:[],
                 countys:[],
-                cars:[],
-                models:[],
+                cars:[
+
+                ],
                 article:{
                     template_id:1,
                     countys:{
@@ -155,11 +158,12 @@
                     },
                     cars:{
                         sort:3,
-                        data:[]
-                    },
-                    models:{
-                        sort:4,
-                        data:[]
+                        data:[
+                          {
+                            brand:1,
+                            models:[]
+                          }
+                        ]
                     },
                     params:
                     [
@@ -178,6 +182,12 @@
         methods: {
             changeCity(e){
                 this.getCountys(e)
+            },
+            addCar(index){
+                console.log(index)
+            },
+            deleteCar(index){
+                console.log(index)
             },
             submitFrom(){
                 this.fullScreen(true)
@@ -254,14 +264,15 @@
                 });
             },
             //获取品牌信息
-            getCars(id){
-                axios.get('/articles/cars/'+id)
+            getCars(){
+                axios.get('/articles/cars')
                 .then((response)=> {
+                    console.log(response);
                     this.cars = response.data
                     if(!this.id){
-                        response.data.map((value,index)=>{
-                            this.article.cars.data.push(value.name)
-                        })
+                      // response.data.map((value,index)=>{
+                      //     this.article.cars.data.push(value.name)
+                      // })
                     }
                 })
                 .catch((error)=>{
@@ -310,7 +321,7 @@
 
             //获取模板列表
             this.getTemplates()
-            this.getCars(0)
+            this.getCars()
             this.getCitys(0)
             this.getCountys(1)
             //关闭loading

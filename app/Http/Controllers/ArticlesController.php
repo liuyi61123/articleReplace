@@ -150,11 +150,15 @@ class ArticlesController extends Controller
     }
 
     /**
-     * 获取车子品牌列表
+     * 获取所有车子品牌型号列表
      */
-     public function cars($pid){
-        $cars = DB::table('car_infos')->where('pid',$pid)->get();
-        return response()->json($cars);
+     public function cars(){
+        $brands = DB::table('car_infos')->where('pid',0)->get();
+        foreach ($brands as $key=>$brand) {
+            $return[$brand->id]['brand'] = $brand;
+            $return[$brand->id]['models'] = DB::table('car_infos')->where('pid',$brand->id)->get();
+        }
+        return response()->json($return);
      }
 
      /**

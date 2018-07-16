@@ -57,6 +57,7 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
+        // return response()->json($request->all());
         $article_data['template_id'] = $request->input('template_id');
         $article_data['config'] = json_encode($request->except('template_id'));
 

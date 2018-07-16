@@ -94963,7 +94963,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/ExampleComponent.vue"
+Component.options.__file = "resources\\assets\\js\\components\\ExampleComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -94972,9 +94972,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7168fb6a", Component.options)
+    hotAPI.createRecord("data-v-0ca92eac", Component.options)
   } else {
-    hotAPI.reload("data-v-7168fb6a", Component.options)
+    hotAPI.reload("data-v-0ca92eac", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -95042,7 +95042,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7168fb6a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0ca92eac", module.exports)
   }
 }
 
@@ -95072,7 +95072,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/ArticleTable.vue"
+Component.options.__file = "resources\\assets\\js\\components\\ArticleTable.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -95081,9 +95081,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4b8583a2", Component.options)
+    hotAPI.createRecord("data-v-25484b6f", Component.options)
   } else {
-    hotAPI.reload("data-v-4b8583a2", Component.options)
+    hotAPI.reload("data-v-25484b6f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -95383,7 +95383,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4b8583a2", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-25484b6f", module.exports)
   }
 }
 
@@ -95413,7 +95413,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/CreateEditArticle.vue"
+Component.options.__file = "resources\\assets\\js\\components\\CreateEditArticle.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -95422,9 +95422,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1c83bfc9", Component.options)
+    hotAPI.createRecord("data-v-c6e20aee", Component.options)
   } else {
-    hotAPI.reload("data-v-1c83bfc9", Component.options)
+    hotAPI.reload("data-v-c6e20aee", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -95440,6 +95440,20 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -95588,7 +95602,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     sort: 2,
                     data: []
                 },
-                type: 1,
+                // type:1,
                 city: {
                     sort: 1,
                     data: 1
@@ -95597,7 +95611,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     sort: 3,
                     data: [{
                         brand: 1,
-                        models: []
+                        models: [{
+                            name: '',
+                            min: 1,
+                            max: 10
+                        }]
                     }]
                 },
                 params: [{
@@ -95616,15 +95634,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         changeCity: function changeCity(e) {
             this.getCountys(e);
         },
-        addCar: function addCar(index) {
-            console.log(index);
+        addCar: function addCar() {
+            //添加汽车信息参数
+            this.article.cars.data.push({
+                brand: 1,
+                models: []
+            });
         },
         deleteCar: function deleteCar(index) {
-            console.log(index);
+            //删除汽车参数
+            this.article.cars.data.splice(index, 1);
         },
         submitFrom: function submitFrom() {
             var _this = this;
 
+            console.log(this.article);
+            return;
             this.fullScreen(true);
             // 发送 POST 请求
             axios({
@@ -95741,13 +95766,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
                 console.log(response.data);
+                _this6.article = response.data.config;
                 _this6.article.template_id = response.data.template_id;
-                _this6.article.cars.data = response.data.config.cars;
-                _this6.article.type = response.data.config.type;
-                _this6.article.city.data = response.data.config.city;
-                _this6.getCountys(response.data.config.city);
-                _this6.article.countys.data = response.data.config.countys;
-                _this6.article.params = response.data.config.params;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95954,96 +95974,195 @@ var render = function() {
                     _c(
                       "el-form-item",
                       { attrs: { label: "品牌" } },
-                      _vm._l(_vm.article.cars.data, function(param, index) {
-                        return _c(
-                          "div",
-                          [
-                            _c(
-                              "el-col",
-                              { attrs: { span: 4 } },
-                              [
-                                _c(
-                                  "el-select",
-                                  {
-                                    attrs: { placeholder: "请选择" },
-                                    model: {
-                                      value: param.brand,
-                                      callback: function($$v) {
-                                        _vm.$set(param, "brand", $$v)
-                                      },
-                                      expression: "param.brand"
-                                    }
-                                  },
-                                  _vm._l(_vm.cars, function(car) {
-                                    return _c("el-option", {
-                                      key: car.brand.id,
-                                      attrs: {
-                                        label: car.brand.name,
-                                        value: car.brand.id
+                      [
+                        _vm._l(_vm.article.cars.data, function(param, index) {
+                          return _c(
+                            "div",
+                            [
+                              _c(
+                                "el-col",
+                                { attrs: { span: 4 } },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: { placeholder: "请选择" },
+                                      model: {
+                                        value: param.brand,
+                                        callback: function($$v) {
+                                          _vm.$set(param, "brand", $$v)
+                                        },
+                                        expression: "param.brand"
                                       }
+                                    },
+                                    _vm._l(_vm.cars, function(car) {
+                                      return _c("el-option", {
+                                        key: car.brand.id,
+                                        attrs: {
+                                          label: car.brand.name,
+                                          value: car.brand.id
+                                        }
+                                      })
                                     })
-                                  })
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-col",
-                              { attrs: { span: 18 } },
-                              [
-                                _c(
-                                  "el-checkbox-group",
-                                  {
-                                    attrs: { min: 1 },
-                                    model: {
-                                      value: param.models,
-                                      callback: function($$v) {
-                                        _vm.$set(param, "models", $$v)
-                                      },
-                                      expression: "param.models"
-                                    }
-                                  },
-                                  _vm._l(_vm.cars[param.brand].models, function(
-                                    model
-                                  ) {
-                                    return _c(
-                                      "el-checkbox",
-                                      {
-                                        key: model.id,
-                                        attrs: { label: model.name }
-                                      },
-                                      [_vm._v(_vm._s(model.name))]
-                                    )
-                                  })
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c("el-col", { attrs: { span: 2 } }, [
-                              _c("i", {
-                                staticClass: "el-icon-circle-plus",
-                                on: {
-                                  click: function($event) {
-                                    _vm.addCar(index)
-                                  }
-                                }
-                              }),
+                                  )
+                                ],
+                                1
+                              ),
                               _vm._v(" "),
-                              _c("i", {
-                                staticClass: "el-icon-remove",
-                                on: {
-                                  click: function($event) {
-                                    _vm.deleteCar(index)
-                                  }
-                                }
-                              })
-                            ])
+                              _c(
+                                "el-col",
+                                { attrs: { span: 18 } },
+                                _vm._l(_vm.cars[param.brand].models, function(
+                                  model,
+                                  key
+                                ) {
+                                  return _c(
+                                    "div",
+                                    { staticClass: "line" },
+                                    [
+                                      _c(
+                                        "el-checkbox",
+                                        {
+                                          model: {
+                                            value: param.models[key].name,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                param.models[key],
+                                                "name",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "param.models[key].name"
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(model.name))]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "el-input",
+                                        {
+                                          staticStyle: { width: "20%" },
+                                          attrs: {
+                                            min: "1",
+                                            placeholder: "最小值",
+                                            type: "number"
+                                          },
+                                          model: {
+                                            value: param.models[key].min,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                param.models[key],
+                                                "min",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "param.models[key].min"
+                                          }
+                                        },
+                                        [
+                                          _c("template", { slot: "append" }, [
+                                            _vm._v("万")
+                                          ])
+                                        ],
+                                        2
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "el-input",
+                                        {
+                                          staticStyle: { width: "20%" },
+                                          attrs: {
+                                            min: "1",
+                                            placeholder: "最大值",
+                                            type: "number"
+                                          },
+                                          model: {
+                                            value: param.models[key].max,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                param.models[key],
+                                                "max",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "param.models[key].max"
+                                          }
+                                        },
+                                        [
+                                          _c("template", { slot: "append" }, [
+                                            _vm._v("万")
+                                          ])
+                                        ],
+                                        2
+                                      )
+                                    ],
+                                    1
+                                  )
+                                })
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-col",
+                                { attrs: { span: 2 } },
+                                [
+                                  index == 0
+                                    ? _c("el-button", {
+                                        attrs: {
+                                          type: "primary",
+                                          icon: "el-icon-plus"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.addCar()
+                                          }
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  index > 0
+                                    ? _c("el-button", {
+                                        attrs: {
+                                          type: "danger",
+                                          icon: "el-icon-minus"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.deleteCar(index)
+                                          }
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 12 } },
+                          [
+                            _c("el-input-number", {
+                              attrs: {
+                                "controls-position": "right",
+                                min: 1,
+                                max: 10
+                              },
+                              model: {
+                                value: _vm.article.cars.sort,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.cars, "sort", $$v)
+                                },
+                                expression: "article.cars.sort"
+                              }
+                            })
                           ],
                           1
                         )
-                      })
+                      ],
+                      2
                     ),
                     _vm._v(" "),
                     _c(
@@ -96230,7 +96349,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1c83bfc9", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-c6e20aee", module.exports)
   }
 }
 
@@ -96260,7 +96379,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/TemplateTable.vue"
+Component.options.__file = "resources\\assets\\js\\components\\TemplateTable.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -96269,9 +96388,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8724ce66", Component.options)
+    hotAPI.createRecord("data-v-5a7798e6", Component.options)
   } else {
-    hotAPI.reload("data-v-8724ce66", Component.options)
+    hotAPI.reload("data-v-5a7798e6", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -96526,7 +96645,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-8724ce66", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5a7798e6", module.exports)
   }
 }
 
@@ -96556,7 +96675,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/CreateEditTemplate.vue"
+Component.options.__file = "resources\\assets\\js\\components\\CreateEditTemplate.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -96565,9 +96684,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-53e86e37", Component.options)
+    hotAPI.createRecord("data-v-5576e912", Component.options)
   } else {
-    hotAPI.reload("data-v-53e86e37", Component.options)
+    hotAPI.reload("data-v-5576e912", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -96797,7 +96916,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-53e86e37", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5576e912", module.exports)
   }
 }
 

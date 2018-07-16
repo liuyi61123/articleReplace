@@ -65,16 +65,30 @@
                                 </el-option>
                               </el-select>
                             </el-col>
+
                             <el-col :span="18">
-                              <el-checkbox-group :min="1" v-model="param.models">
-                                    <el-checkbox v-for="model of cars[param.brand].models" :label="model.name" :key="model.id">{{model.name}}</el-checkbox>
-                              </el-checkbox-group>
+                                <!-- <el-checkbox-group :min="1" v-model="param.models">
+                                      <el-checkbox v-for="model of cars[param.brand].models" :label="model.name" :key="model.id">{{model.name}}</el-checkbox>
+                                </el-checkbox-group> -->
+                                <div class="line" v-for="(model,key) in cars[param.brand].models">
+                                    <el-checkbox v-model="param.models[key].name">{{model.name}}</el-checkbox>
+                                    <el-input v-model="param.models[key].min" style="width:20%" min="1" placeholder="最小值" type="number">
+                                        <template slot="append">万</template>
+                                    </el-input>
+                                    <el-input v-model="param.models[key].max" style="width:20%" min="1" placeholder="最大值" type="number">
+                                        <template slot="append">万</template>
+                                    </el-input>
+                                </div>
                             </el-col>
+
                             <el-col :span="2">
-                                <i class="el-icon-circle-plus" @click="addCar(index)"></i>
-                                <i class="el-icon-remove" @click="deleteCar(index)"></i>
+                                <el-button v-if="index == 0" type="primary" icon="el-icon-plus" @click="addCar()"></el-button>
+                                <el-button v-if="index > 0" type="danger" icon="el-icon-minus" @click="deleteCar(index)"></el-button>
                             </el-col>
                             </div>
+                            <el-col :span="12">
+                                <el-input-number v-model="article.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
                         </el-form-item>
 
                         <el-form-item>
@@ -142,16 +156,14 @@
                 ],
                 citys:[],
                 countys:[],
-                cars:[
-
-                ],
+                cars:[],
                 article:{
                     template_id:1,
                     countys:{
                         sort:2,
                         data:[]
                     },
-                    type:1,
+                    // type:1,
                     city:{
                         sort:1,
                         data:1
@@ -161,7 +173,13 @@
                         data:[
                           {
                             brand:1,
-                            models:[]
+                            models:[
+                                {
+                                    name:'',
+                                    min:1,
+                                    max:10
+                                }
+                            ]
                           }
                         ]
                     },
@@ -183,13 +201,20 @@
             changeCity(e){
                 this.getCountys(e)
             },
-            addCar(index){
-                console.log(index)
+            addCar(){
+                //添加汽车信息参数
+                this.article.cars.data.push({
+                    brand:1,
+                    models:[]
+                });
             },
             deleteCar(index){
-                console.log(index)
+                //删除汽车参数
+                this.article.cars.data.splice(index, 1)
             },
             submitFrom(){
+                console.log(this.article);
+                return;
                 this.fullScreen(true)
                 // 发送 POST 请求
                 axios({
@@ -303,14 +328,8 @@
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
                     console.log(response.data);
+                    this.article = response.data.config
                     this.article.template_id = response.data.template_id
-                    this.article.cars.data = response.data.config.cars
-                    this.article.type = response.data.config.type
-                    this.article.city.data = response.data.config.city
-                    this.getCountys(response.data.config.city)
-                    this.article.countys.data = response.data.config.countys
-                    this.article.params = response.data.config.params
-
                 })
                 .catch((error)=>{
                     console.log(error)

@@ -16,6 +16,8 @@ class CreateCarInfosTable extends Migration
         Schema::create('car_infos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->comment('品牌或者型号的名称');
+            $table->integer('min')->default(1)->comment('最低价格');
+            $table->integer('max')->default(10)->comment('最高价格');
             $table->integer('pid')->comment('pid父元素id');
             $table->timestamps();
         });

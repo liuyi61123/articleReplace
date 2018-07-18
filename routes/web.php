@@ -5,6 +5,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/test', 'HomeController@test')->name('test');
 Route::get('/test1', 'HomeController@test1')->name('test1');
+Route::get('/test2', 'HomeController@test2')->name('test2');
 
 Route::get('/articles/export/{id}', 'ArticlesController@export')->name('articles.export');
 Route::get('/articles/citys/{pid}', 'ArticlesController@citys')->name('articles.citys');

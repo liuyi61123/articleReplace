@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class HomeController extends Controller
 {
@@ -27,9 +28,40 @@ class HomeController extends Controller
     }
 
     public function test1(){
-        $user_id = 'wxoz7jOwFs14YJIPAvoYocZwI39NW4';
-        $package = 'package1';
-        return md5($user_id.$package);
+        $client = new Client();
+        $api = 'https://jisucxdq.market.alicloudapi.com/car/brand';
+        $response = $client->request('GET', $api, [
+            'headers' => [
+                'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
+            ]
+        ]);
+        dd(json_decode($response->getBody()->getContents(),true));
+    }
+
+    public function test2(){
+       $host = "https://jisucxdq.market.alicloudapi.com";
+       $path = "/car/brand";
+       $method = "GET";
+       $appcode = "127f2a01c31746f3bf412ffee5686388";
+       $headers = array();
+       array_push($headers, "Authorization:APPCODE " . $appcode);
+       $querys = "";
+       $bodys = "";
+       $url = $host . $path;
+
+       $curl = curl_init();
+       curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+       curl_setopt($curl, CURLOPT_URL, $url);
+       curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+       curl_setopt($curl, CURLOPT_FAILONERROR, false);
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+       curl_setopt($curl, CURLOPT_HEADER, true);
+       if (1 == strpos("$".$host, "https://"))
+       {
+           curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+           curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+       }
+       dd(curl_exec($curl));
     }
 
     public function test(){

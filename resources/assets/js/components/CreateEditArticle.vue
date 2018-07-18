@@ -56,7 +56,7 @@
                         <el-form-item label="品牌">
                           <div v-for="(param,index) in article.cars.data">
                             <el-col :span="4">
-                              <el-select v-model="param.brand" placeholder="请选择">
+                              <el-select v-model="param.brand" placeholder="请选择" @change="changeCar(param.brand,index)">
                                 <el-option
                                   v-for="car in cars"
                                   :key="car.brand.id"
@@ -67,18 +67,17 @@
                             </el-col>
 
                             <el-col :span="18">
-                                <!-- <el-checkbox-group :min="1" v-model="param.models">
-                                      <el-checkbox v-for="model of cars[param.brand].models" :label="model.name" :key="model.id">{{model.name}}</el-checkbox>
-                                </el-checkbox-group> -->
-                                <div class="line" v-for="(model,key) in cars[param.brand].models">
-                                    <el-checkbox v-model="param.models[key].name">{{model.name}}</el-checkbox>
-                                    <el-input v-model="param.models[key].min" style="width:20%" min="1" placeholder="最小值" type="number">
-                                        <template slot="append">万</template>
-                                    </el-input>
-                                    <el-input v-model="param.models[key].max" style="width:20%" min="1" placeholder="最大值" type="number">
-                                        <template slot="append">万</template>
-                                    </el-input>
-                                </div>
+                                <template v-if="param.brand > 0">
+                                    <div class="line" v-for="(model,key) in cars[param.brand].models">
+                                        <el-checkbox v-model="param.models[key].name" :true-label="model.name">{{model.name}}</el-checkbox>
+                                        <el-input v-model="param.models[key].min" style="width:20%" min="1" placeholder="最小值" type="number">
+                                            <template slot="append">万</template>
+                                        </el-input>
+                                        <el-input v-model="param.models[key].max" style="width:20%" min="1" placeholder="最大值" type="number">
+                                            <template slot="append">万</template>
+                                        </el-input>
+                                    </div>
+                                </template>
                             </el-col>
 
                             <el-col :span="2">
@@ -86,9 +85,13 @@
                                 <el-button v-if="index > 0" type="danger" icon="el-icon-minus" @click="deleteCar(index)"></el-button>
                             </el-col>
                             </div>
-                            <el-col :span="12">
+                            <el-col :span="24">
                                 <el-input-number v-model="article.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
                             </el-col>
+                        </el-form-item>
+
+                        <el-form-item label="价格排序">
+                            <el-input-number v-model="article.cars.price_sort" controls-position="right" :min="1" :max="10"></el-input-number>
                         </el-form-item>
 
                         <el-form-item>
@@ -170,15 +173,11 @@
                     },
                     cars:{
                         sort:3,
+                        price_sort:4,
                         data:[
                           {
-                            brand:1,
+                            brand:'',
                             models:[
-                                {
-                                    name:'',
-                                    min:1,
-                                    max:10
-                                }
                             ]
                           }
                         ]
@@ -201,10 +200,22 @@
             changeCity(e){
                 this.getCountys(e)
             },
+            changeCar(e,index){
+                this.article.cars.data[index].models = []
+
+                this.cars[e].models.map((value,key)=>{
+                    let model = {
+                        name:'',
+                        min:1,
+                        max:10
+                    }
+                    this.article.cars.data[index].models.push(model)
+                })
+            },
             addCar(){
                 //添加汽车信息参数
                 this.article.cars.data.push({
-                    brand:1,
+                    brand:'',
                     models:[]
                 });
             },
@@ -214,7 +225,7 @@
             },
             submitFrom(){
                 console.log(this.article);
-                return;
+
                 this.fullScreen(true)
                 // 发送 POST 请求
                 axios({
@@ -246,12 +257,19 @@
             },
             addParam(){
                 //添加参数
-                this.paramsIndex++
-                Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:[]})
+                if(this.paramsIndex >= 2){
+                    this.$message.error('不能超过3个参数')
+                }else{
+                    this.paramsIndex++
+                    Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:[]})
+                }
             },
             deleteParam(index){
                 //删除参数
                 this.article.params.splice(index, 1)
+                this.paramsIndex--
+                console.log(this.paramsIndex)
+
             },
             //获取模板列表
             getTemplates(){
@@ -294,11 +312,6 @@
                 .then((response)=> {
                     console.log(response);
                     this.cars = response.data
-                    if(!this.id){
-                      // response.data.map((value,index)=>{
-                      //     this.article.cars.data.push(value.name)
-                      // })
-                    }
                 })
                 .catch((error)=>{
                     console.log(error)

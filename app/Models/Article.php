@@ -41,11 +41,18 @@ class Article extends Model
       */
       public function generate($data,$id){
           //自定义参数
-          $params = $data['params'];
+          $my_params = $data['params'];
+
+          //移除空的自定义参数
+          foreach($my_params as $param){
+              if($param['content']){
+                  $params[] = $param;
+              }
+          }
           //查找模板信息
           $template_content = Template::where('id',$data['template_id'])->value('content');
           //查找地址信息
-          $city_name = DB::table('citys')->where('id',$data['city'])->value('name');
+          $city_name = DB::table('citys')->where('id',$data['city']['data'])->value('name');
 
           $file_base_path = 'public/articles/'.$id.'/';
 
@@ -57,53 +64,96 @@ class Article extends Model
                   $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
 
                   foreach($car_models as $car_model){
-                      //从库中随机找出图片
-                      $image1 = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/cars/'.$car_brand.'/'.$car_model.'/'.rand(1,6).'.jpg';
-                      $image2 = $this->toImage($id,$car_brand.$car_model);
-                      foreach($params as $param){
-                          if($param['content']){
-                              foreach($param['content'] as $param_content){
-                                 //替换内容
-                                 $replace_text =  str_replace('{county}',$county,$template_content);
-                                 $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
-                                 $replace_text =  str_replace('{car_model}',$car_model,$replace_text);
-                                 $replace_text =  str_replace('{image1}',$image1,$replace_text);
-                                 $replace_text =  str_replace('{image2}',$image2,$replace_text);
+                      if($car_model_name = $car_model['name']){
+                          //计算车子价格
+                          $price = rand($car_model['min'],$car_model['max']);
 
-                                 //排序
-                                 $sort = array(
-                                     $data['city']['sort']=>$city_name,
-                                     $data['countys']['sort']=>$county,
-                                     $data['cars']['sort']=>$car_brand.$car_model,
-                                     $param['sort']=>$param_content,
-                                 );
-                                 ksort($sort);
-                                 //文件名规则生成
-                                 $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
-                                 //生成文件
-                                 Storage::put($file_path,$replace_text);
-                              }
-                          }else{
-                              //替换内容
-                              $replace_text =  str_replace('{county}',$county,$template_content);
-                              $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
-                              $replace_text =  str_replace('{car_model}',$car_model,$replace_text);
-                              $replace_text =  str_replace('{image1}',$image1,$replace_text);
-                              $replace_text =  str_replace('{image2}',$image2,$replace_text);
+                          //从库中随机找出图片
+                          $image1 = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/cars/'.$car_brand.'/'.$car_model_name.'/'.rand(1,6).'.jpg';
+                          $image2 = $this->toImage($id,$car_brand.$car_model_name,$price);
 
-                              //排序
-                              $sort = array(
-                                  $data['city']['sort']=>$city_name,
-                                  $data['countys']['sort']=>$county,
-                                  $data['cars']['sort']=>$car_brand.$car_model,
-                              );
-                              ksort($sort);
+                          //替换内容
+                          $replace_text =  str_replace('{city}',$city_name,$template_content);
+                          $replace_text =  str_replace('{county}',$county,$template_content);
+                          $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
+                          $replace_text =  str_replace('{car_model}',$car_model_name,$replace_text);
+                          $replace_text =  str_replace('{price}',$price,$replace_text);
+                          $replace_text =  str_replace('{image1}',$image1,$replace_text);
+                          $replace_text =  str_replace('{image2}',$image2,$replace_text);
 
-                              //文件名规则生成
-                              $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
-
-                              //生成文件
-                              Storage::put($file_path,$replace_text);
+                          //判断自定义参数个数
+                          switch (count($params))
+                          {
+                              case 0:
+                                  $sort = array(
+                                      $data['city']['sort']=>$city_name,
+                                      $data['countys']['sort']=>$county,
+                                      $data['cars']['sort']=>$car_brand.$car_model_name,
+                                      $data['cars']['price_sort']=>$price.'万',
+                                  );
+                                  ksort($sort);
+                                  //文件名规则生成
+                                  $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                  //生成文件
+                                  Storage::put($file_path,$replace_text);
+                                  break;
+                              case 1:
+                                  foreach($params[0]['content'] as $param0){
+                                      $sort = array(
+                                          $data['city']['sort']=>$city_name,
+                                          $data['countys']['sort']=>$county,
+                                          $data['cars']['sort']=>$car_brand.$car_model_name,
+                                          $data['cars']['price_sort']=>$price,
+                                          $params[0]['sort'] => $param0
+                                      );
+                                      ksort($sort);
+                                      //文件名规则生成
+                                      $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                      //生成文件
+                                      Storage::put($file_path,$replace_text);
+                                  }
+                                  break;
+                              case 2:
+                                  foreach($params[0]['content'] as $param0){
+                                       foreach($params[1]['content'] as $param1){
+                                          $sort = array(
+                                              $data['city']['sort']=>$city_name,
+                                              $data['countys']['sort']=>$county,
+                                              $data['cars']['sort']=>$car_brand.$car_model_name,
+                                              $data['cars']['price_sort']=>$price,
+                                              $params[0]['sort'] => $param0,
+                                              $params[1]['sort'] => $param1,
+                                          );
+                                          ksort($sort);
+                                          //文件名规则生成
+                                          $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                          //生成文件
+                                          Storage::put($file_path,$replace_text);
+                                      }
+                                  }
+                                  break;
+                              case 3:
+                                  foreach($params[0]['content'] as $param0){
+                                      foreach($params[1]['content'] as $param1){
+                                          foreach($params[2]['content'] as $param2){
+                                              $sort = array(
+                                                  $data['city']['sort']=>$city_name,
+                                                  $data['countys']['sort']=>$county,
+                                                  $data['cars']['sort']=>$car_brand.$car_model_name,
+                                                  $data['cars']['price_sort']=>$price,
+                                                  $params[0]['sort'] => $param0,
+                                                  $params[1]['sort'] => $param1,
+                                                  $params[2]['sort'] => $param2,
+                                              );
+                                              ksort($sort);
+                                              //文件名规则生成
+                                              $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                              //生成文件
+                                              Storage::put($file_path,$replace_text);
+                                          }
+                                      }
+                                  }
+                                  break;
                           }
                       }
                   }
@@ -121,7 +171,7 @@ class Article extends Model
       /**
        * 根据参数生成html
        */
-      public function toImage($id,$car){
+      public function toImage($id,$car,$price){
           $html = $this->imageHtml($car);
           $image_name = time().$car.$id.rand(1,10000).'article.png';
           $file_path = storage_path('app/public/images/'.$image_name);
@@ -129,7 +179,7 @@ class Article extends Model
           return $image_name;
       }
 
-      protected function imageHtml($car){
+      protected function imageHtml($car,$price){
           $names = ['张','王','李','赵','刘','牛','高'];
           $name = $names[array_rand($names)];
 
@@ -168,7 +218,7 @@ class Article extends Model
                       </tr>
                       <tr>
                           <td class="lable">借款金额</td>
-                          <td class="value">20万</td>
+                          <td class="value">$price 万</td>
                           <td class="lable">借款期限</td>
                           <td class="va">12个月</td>
                           <td class="lable">借款类型</td>
@@ -248,7 +298,7 @@ class Article extends Model
               </div>
 
               <div class="title">
-                  <span>23万 还款计算表</span>
+                  <span>$price 万 还款计算表</span>
               </div>
               <div class="content">
                   <table border="1" cellspacing="0" bordercolor="#a0c6e5" style="border-collapse:collapse;">

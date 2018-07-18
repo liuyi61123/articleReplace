@@ -95580,6 +95580,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['id'],
@@ -95609,13 +95612,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 },
                 cars: {
                     sort: 3,
+                    price_sort: 4,
                     data: [{
-                        brand: 1,
-                        models: [{
-                            name: '',
-                            min: 1,
-                            max: 10
-                        }]
+                        brand: '',
+                        models: []
                     }]
                 },
                 params: [{
@@ -95634,10 +95634,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         changeCity: function changeCity(e) {
             this.getCountys(e);
         },
+        changeCar: function changeCar(e, index) {
+            var _this = this;
+
+            this.article.cars.data[index].models = [];
+
+            this.cars[e].models.map(function (value, key) {
+                var model = {
+                    name: '',
+                    min: 1,
+                    max: 10
+                };
+                _this.article.cars.data[index].models.push(model);
+            });
+        },
         addCar: function addCar() {
             //添加汽车信息参数
             this.article.cars.data.push({
-                brand: 1,
+                brand: '',
                 models: []
             });
         },
@@ -95646,10 +95660,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.article.cars.data.splice(index, 1);
         },
         submitFrom: function submitFrom() {
-            var _this = this;
+            var _this2 = this;
 
             console.log(this.article);
-            return;
+
             this.fullScreen(true);
             // 发送 POST 请求
             axios({
@@ -95657,42 +95671,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 url: this.id ? '/articles/' + this.id : '/articles',
                 data: this.article
             }).then(function (response) {
-                _this.fullScreen(false);
+                _this2.fullScreen(false);
                 var message = {};
                 if (response.data.status == 200) {
-                    _this.$message({
+                    _this2.$message({
                         message: '保存成功',
                         type: 'success'
                     });
                     window.location.href = "/articles";
                 } else {
-                    _this.$message({
+                    _this2.$message({
                         message: '保存失败',
                         type: 'error'
                     });
                 }
             }).catch(function (error) {
                 console.log(error);
-                _this.fullScreen(false);
-                _this.$message.error('错了哦，这是一条错误消息');
+                _this2.fullScreen(false);
+                _this2.$message.error('错了哦，这是一条错误消息');
             });
         },
         addParam: function addParam() {
             //添加参数
-            this.paramsIndex++;
-            Vue.set(this.article.params, this.article.params.length, { sort: this.paramsIndex + 5, name: '', content: [] });
+            if (this.paramsIndex >= 2) {
+                this.$message.error('不能超过3个参数');
+            } else {
+                this.paramsIndex++;
+                Vue.set(this.article.params, this.article.params.length, { sort: this.paramsIndex + 5, name: '', content: [] });
+            }
         },
         deleteParam: function deleteParam(index) {
             //删除参数
             this.article.params.splice(index, 1);
+            this.paramsIndex--;
+            console.log(this.paramsIndex);
         },
 
         //获取模板列表
         getTemplates: function getTemplates() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios.get('/templates').then(function (response) {
-                _this2.templates = response.data;
+                _this3.templates = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95700,10 +95720,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取市区信息
         getCitys: function getCitys(id) {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.get('/articles/citys/' + id).then(function (response) {
-                _this3.citys = response.data;
+                _this4.citys = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95711,13 +95731,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取市区信息
         getCountys: function getCountys(id) {
-            var _this4 = this;
+            var _this5 = this;
 
             axios.get('/articles/citys/' + id).then(function (response) {
-                _this4.countys = response.data;
-                if (!_this4.id) {
+                _this5.countys = response.data;
+                if (!_this5.id) {
                     response.data.map(function (value, index) {
-                        _this4.article.countys.data.push(value.name);
+                        _this5.article.countys.data.push(value.name);
                     });
                 }
             }).catch(function (error) {
@@ -95727,16 +95747,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取品牌信息
         getCars: function getCars() {
-            var _this5 = this;
+            var _this6 = this;
 
             axios.get('/articles/cars').then(function (response) {
                 console.log(response);
-                _this5.cars = response.data;
-                if (!_this5.id) {
-                    // response.data.map((value,index)=>{
-                    //     this.article.cars.data.push(value.name)
-                    // })
-                }
+                _this6.cars = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95755,7 +95770,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     created: function created() {
-        var _this6 = this;
+        var _this7 = this;
 
         //开启loading
         this.fullScreen(true);
@@ -95766,8 +95781,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
                 console.log(response.data);
-                _this6.article = response.data.config;
-                _this6.article.template_id = response.data.template_id;
+                _this7.article = response.data.config;
+                _this7.article.template_id = response.data.template_id;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95987,6 +96002,11 @@ var render = function() {
                                     "el-select",
                                     {
                                       attrs: { placeholder: "请选择" },
+                                      on: {
+                                        change: function($event) {
+                                          _vm.changeCar(param.brand, index)
+                                        }
+                                      },
                                       model: {
                                         value: param.brand,
                                         callback: function($$v) {
@@ -96012,93 +96032,111 @@ var render = function() {
                               _c(
                                 "el-col",
                                 { attrs: { span: 18 } },
-                                _vm._l(_vm.cars[param.brand].models, function(
-                                  model,
-                                  key
-                                ) {
-                                  return _c(
-                                    "div",
-                                    { staticClass: "line" },
-                                    [
-                                      _c(
-                                        "el-checkbox",
-                                        {
-                                          model: {
-                                            value: param.models[key].name,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                param.models[key],
-                                                "name",
-                                                $$v
+                                [
+                                  param.brand > 0
+                                    ? _vm._l(
+                                        _vm.cars[param.brand].models,
+                                        function(model, key) {
+                                          return _c(
+                                            "div",
+                                            { staticClass: "line" },
+                                            [
+                                              _c(
+                                                "el-checkbox",
+                                                {
+                                                  attrs: {
+                                                    "true-label": model.name
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      param.models[key].name,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        param.models[key],
+                                                        "name",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "param.models[key].name"
+                                                  }
+                                                },
+                                                [_vm._v(_vm._s(model.name))]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "el-input",
+                                                {
+                                                  staticStyle: { width: "20%" },
+                                                  attrs: {
+                                                    min: "1",
+                                                    placeholder: "最小值",
+                                                    type: "number"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      param.models[key].min,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        param.models[key],
+                                                        "min",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "param.models[key].min"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "template",
+                                                    { slot: "append" },
+                                                    [_vm._v("万")]
+                                                  )
+                                                ],
+                                                2
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "el-input",
+                                                {
+                                                  staticStyle: { width: "20%" },
+                                                  attrs: {
+                                                    min: "1",
+                                                    placeholder: "最大值",
+                                                    type: "number"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      param.models[key].max,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        param.models[key],
+                                                        "max",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "param.models[key].max"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "template",
+                                                    { slot: "append" },
+                                                    [_vm._v("万")]
+                                                  )
+                                                ],
+                                                2
                                               )
-                                            },
-                                            expression: "param.models[key].name"
-                                          }
-                                        },
-                                        [_vm._v(_vm._s(model.name))]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "el-input",
-                                        {
-                                          staticStyle: { width: "20%" },
-                                          attrs: {
-                                            min: "1",
-                                            placeholder: "最小值",
-                                            type: "number"
-                                          },
-                                          model: {
-                                            value: param.models[key].min,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                param.models[key],
-                                                "min",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "param.models[key].min"
-                                          }
-                                        },
-                                        [
-                                          _c("template", { slot: "append" }, [
-                                            _vm._v("万")
-                                          ])
-                                        ],
-                                        2
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "el-input",
-                                        {
-                                          staticStyle: { width: "20%" },
-                                          attrs: {
-                                            min: "1",
-                                            placeholder: "最大值",
-                                            type: "number"
-                                          },
-                                          model: {
-                                            value: param.models[key].max,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                param.models[key],
-                                                "max",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "param.models[key].max"
-                                          }
-                                        },
-                                        [
-                                          _c("template", { slot: "append" }, [
-                                            _vm._v("万")
-                                          ])
-                                        ],
-                                        2
+                                            ],
+                                            1
+                                          )
+                                        }
                                       )
-                                    ],
-                                    1
-                                  )
-                                })
+                                    : _vm._e()
+                                ],
+                                2
                               ),
                               _vm._v(" "),
                               _c(
@@ -96142,7 +96180,7 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "el-col",
-                          { attrs: { span: 12 } },
+                          { attrs: { span: 24 } },
                           [
                             _c("el-input-number", {
                               attrs: {
@@ -96163,6 +96201,28 @@ var render = function() {
                         )
                       ],
                       2
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "价格排序" } },
+                      [
+                        _c("el-input-number", {
+                          attrs: {
+                            "controls-position": "right",
+                            min: 1,
+                            max: 10
+                          },
+                          model: {
+                            value: _vm.article.cars.price_sort,
+                            callback: function($$v) {
+                              _vm.$set(_vm.article.cars, "price_sort", $$v)
+                            },
+                            expression: "article.cars.price_sort"
+                          }
+                        })
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(

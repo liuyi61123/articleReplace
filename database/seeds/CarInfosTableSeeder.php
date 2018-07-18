@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
 
 class CarInfosTableSeeder extends Seeder
 {
@@ -12,72 +13,13 @@ class CarInfosTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('car_infos')->insert([
-            [
-                'name' => '宝马',
-                'pid' => 0
-            ],
-            [
-                'name' => '奥迪',
-                'pid' => 0
-            ],
-            [
-                'name' => '奔驰',
-                'pid' => 0
-            ],
-            [
-                'name' => '大众',
-                'pid' => 0
-            ],
-            [
-                'name' => '本田',
-                'pid' => 0
-            ],
-            [
-                'name' => '丰田',
-                'pid' => 0
-            ],
-            [
-                'name' => '别克',
-                'pid' => 0
-            ],
-            [
-                'name' => 'x1',
-                'pid' => 1
-            ],
-            [
-                'name' => 'x2',
-                'pid' => 1
-            ],
-
-            [
-                'name' => 'x3',
-                'pid' => 1
-            ],
-            [
-                'name' => 'A2',
-                'pid' => 2
-            ],
-            [
-                'name' => 'A4',
-                'pid' => 2
-            ],
-            [
-                'name' => 'A6',
-                'pid' => 2
-            ],
-            [
-                'name' => 'S300',
-                'pid' => 3
-            ],
-            [
-                'name' => 'S500',
-                'pid' => 3
-            ],
-            [
-                'name' => 'S750',
-                'pid' => 3
-            ],
-        ]);
+        $client = new Client();
+        $brand_api = 'https://jisucxdq.market.alicloudapi.com/car/brand';
+        $header = [
+            'headers' => [
+                'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
+            ]
+        ];
+        $response = $client->request('GET', $brand_api, $header);
     }
 }

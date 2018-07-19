@@ -56,7 +56,7 @@
                         <el-form-item label="品牌">
                           <div v-for="(param,index) in article.cars.data">
                             <el-col :span="4">
-                              <el-select v-model="param.brand" placeholder="请选择" @change="changeCar(param.brand,index)">
+                              <el-select v-model="param.brand" filterable placeholder="请选择" @change="changeCar(param.brand,index)">
                                 <el-option
                                   v-for="car in cars"
                                   :key="car.brand.id"

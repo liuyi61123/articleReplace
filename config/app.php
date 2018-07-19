@@ -150,6 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
+        AliyunOss\Laravel\AliyunOssServiceProvider::class,
 
         /*
          * Application Service Providers...

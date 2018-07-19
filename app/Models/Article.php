@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use SnappyImage;
+use App\Handlers\OssUploadImageHandler;
 
 class Article extends Model
 {
@@ -44,6 +45,7 @@ class Article extends Model
           $my_params = $data['params'];
 
           //移除空的自定义参数
+          $params = array();
           foreach($my_params as $param){
               if($param['content']){
                   $params[] = $param;
@@ -57,6 +59,8 @@ class Article extends Model
           $file_base_path = 'public/articles/'.$id.'/';
 
           //遍历结果集
+          $oss = new OssUploadImageHandler();
+          $oss_base_url = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/';
           foreach($data['countys']['data'] as $county){
               foreach($data['cars']['data'] as $car){
                   //查找汽车相关型号
@@ -69,7 +73,19 @@ class Article extends Model
                           $price = rand($car_model['min'],$car_model['max']);
 
                           //从库中随机找出图片
-                          $image1 = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/cars/'.$car_brand.'/'.$car_model_name.'/'.rand(1,6).'.jpg';
+                          $oss_imges = $oss->listArrays(env('OSS_BUCKET'),[
+                              'max-keys'=>1000,
+                              'prefix'=>'cars/'.$car_brand.'/'.$car_model_name,
+                              'delimiter'=>'',
+                              'marker'=>'',
+                          ]);
+                          if($oss_imges){
+                               $image1 = $oss_base_url.array_random($oss_imges);
+                          }else{
+                               $image1 = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/cars/宝马/x1/1.jpg';
+                          }
+
+                          //生成第二张图片
                           $image2 = $this->toImage($id,$car_brand.$car_model_name,$price);
 
                           //替换内容
@@ -103,7 +119,7 @@ class Article extends Model
                                           $data['city']['sort']=>$city_name,
                                           $data['countys']['sort']=>$county,
                                           $data['cars']['sort']=>$car_brand.$car_model_name,
-                                          $data['cars']['price_sort']=>$price,
+                                          $data['cars']['price_sort']=>$price.'万',
                                           $params[0]['sort'] => $param0
                                       );
                                       ksort($sort);
@@ -120,7 +136,7 @@ class Article extends Model
                                               $data['city']['sort']=>$city_name,
                                               $data['countys']['sort']=>$county,
                                               $data['cars']['sort']=>$car_brand.$car_model_name,
-                                              $data['cars']['price_sort']=>$price,
+                                              $data['cars']['price_sort']=>$price.'万',
                                               $params[0]['sort'] => $param0,
                                               $params[1]['sort'] => $param1,
                                           );
@@ -140,7 +156,7 @@ class Article extends Model
                                                   $data['city']['sort']=>$city_name,
                                                   $data['countys']['sort']=>$county,
                                                   $data['cars']['sort']=>$car_brand.$car_model_name,
-                                                  $data['cars']['price_sort']=>$price,
+                                                  $data['cars']['price_sort']=>$price.'万',
                                                   $params[0]['sort'] => $param0,
                                                   $params[1]['sort'] => $param1,
                                                   $params[2]['sort'] => $param2,
@@ -172,16 +188,44 @@ class Article extends Model
        * 根据参数生成html
        */
       public function toImage($id,$car,$price){
-          $html = $this->imageHtml($car);
-          $image_name = time().$car.$id.rand(1,10000).'article.png';
-          $file_path = storage_path('app/public/images/'.$image_name);
-          SnappyImage::loadHTML($html)->setOption('width', 600)->save($file_path);
-          return $image_name;
+          $html = $this->imageHtml($car,$price);
+
+          $file = 'upload.png';
+          //生成图片
+          SnappyImage::loadHTML($html)->setOption('width', 600)->save($file);
+          //上传到oss
+          $oss = new OssUploadImageHandler();
+          return $oss->articleSave($file);
       }
 
       protected function imageHtml($car,$price){
-          $names = ['张','王','李','赵','刘','牛','高'];
-          $name = $names[array_rand($names)];
+          //客户姓名
+          $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
+          $sexs = ['先生','女士'];
+          $name = array_random($names).array_random($sexs);
+
+          //借款期限
+          $period = array_random([12,6]);
+
+          //上牌日期(随机2016-2017一个日期)
+          $start_time = strtotime('2016-01-01');
+          $end_time = strtotime('2016-01-01');
+          $boarding = date('Y年m月',rand($start_time,$end_time));
+
+          //汽车本身评估价格
+          $evaluation_car = $price-8-rand(1,3);
+          //额度评估
+          $evaluation = round($price*(100+rand(10,20))/100,1);
+          //客户需要
+          $need_price = $price*10000;
+          //总利息
+          $all_interest = round($price*$period*10000*0.95/100,0);
+
+          //每月利息
+          $month_interest = round($price*10000*0.95/100,0);
+
+          //每日利息
+          $date_interest = round($month_interest/30,0);
 
           $html = <<<HTML
           <!DOCTYPE html>
@@ -210,7 +254,7 @@ class Article extends Model
                   <table border="1" cellspacing="0" bordercolor="#a0c6e5" style="border-collapse:collapse;">
                       <tr>
                           <td class="lable td_6">客户姓名</td>
-                          <td class="value td_6"> $name 先生</td>
+                          <td class="value td_6"> $name </td>
                           <td class="lable td_6">户口</td>
                           <td class="value td_6">上海</td>
                           <td class="lable td_6">家庭状况</td>
@@ -220,7 +264,7 @@ class Article extends Model
                           <td class="lable">借款金额</td>
                           <td class="value">$price 万</td>
                           <td class="lable">借款期限</td>
-                          <td class="va">12个月</td>
+                          <td class="va">$period 个月</td>
                           <td class="lable">借款类型</td>
                           <td class="value">等额本息</td>
                       </tr>
@@ -231,12 +275,12 @@ class Article extends Model
                           <td class="value">沪大牌</td>
                       </tr>
                       <tr>
-                          <td class="lable">出厂日期</td>
-                          <td class="value">2015年11月</td>
                           <td class="lable">上牌日期</td>
-                          <td class="value">2016年4月</td>
+                          <td class="value">$boarding</td>
                           <td class="lable">全款买车</td>
                           <td class="value">是</td>
+                          <td class="lable">车辆状况</td>
+                          <td class="value">良好</td>
                       </tr>
                   </table>
               </div>
@@ -252,7 +296,7 @@ class Article extends Model
                       </tr>
                       <tr>
                           <td class="value">汽车本身评估价格</td>
-                          <td class="lable">加15万</td>
+                          <td class="lable">加 $evaluation_car 万</td>
                       </tr>
                       <tr>
                           <td class="value">汽车拍照为沪大牌</td>
@@ -290,33 +334,33 @@ class Article extends Model
                           <td class="lable td_6">风控意见</td>
                           <td class="value td_6">通过</td>
                           <td class="lable td_6">额度评估</td>
-                          <td class="value td_6">25万</td>
+                          <td class="value td_6">$evaluation 万</td>
                           <td class="lable td_6">客户需要</td>
-                          <td class="value td_6">23万</td>
+                          <td class="value td_6">$price 万</td>
                       </tr>
                   </table>
               </div>
 
               <div class="title">
-                  <span>$price 万 还款计算表</span>
+                  <span>$price 万还款计算表</span>
               </div>
               <div class="content">
                   <table border="1" cellspacing="0" bordercolor="#a0c6e5" style="border-collapse:collapse;">
                       <tr>
                           <td class="lable td_6">借款金额</td>
-                          <td class="value td_6">230000</td>
+                          <td class="value td_6">$need_price </td>
                           <td class="lable td_6">借款利率</td>
                           <td class="value td_6">0.95</td>
                           <td class="lable td_6">贷款时间</td>
-                          <td class="value td_6">12个月</td>
+                          <td class="value td_6">$period 个月</td>
                       </tr>
                       <tr>
                           <td class="lable">总利息</td>
-                          <td class="value">26220元</td>
+                          <td class="value">$all_interest 元</td>
                           <td class="lable">每月利息</td>
-                          <td class="value">2185元</td>
+                          <td class="value">$month_interest 元</td>
                           <td class="lable">折合每日</td>
-                          <td class="value">72元</td>
+                          <td class="value">$date_interest 元</td>
                       </tr>
                   </table>
               </div>

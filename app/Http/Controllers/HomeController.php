@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use OSS\Core\OssException;
 
 class HomeController extends Controller
 {
@@ -29,39 +30,57 @@ class HomeController extends Controller
 
     public function test1(){
         $client = new Client();
-        $api = 'https://jisucxdq.market.alicloudapi.com/car/brand';
-        $response = $client->request('GET', $api, [
+        $header = [
             'headers' => [
                 'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
             ]
-        ]);
-        dd(json_decode($response->getBody()->getContents(),true));
+        ];
+        // $brand_api = 'https://jisucxdq.market.alicloudapi.com/car/brand';
+        // $response = $client->request('GET', $brand_api, $header);
+        // $brands = json_decode($response->getBody()->getContents(),true)['result'];
+        //
+        // //先插入品牌
+        // foreach($brands as $brand){
+        //
+        // }
+
+        //获取某个品牌的所有型号
+        $model_api = 'https://jisucxdq.market.alicloudapi.com/car/carlist?parentid=';
+        $parentid = 42108;
+        $response = $client->request('GET', $model_api.$parentid, $header);
+        $contents = json_decode($response->getBody()->getContents(),true);
+        $carlists = array();
+        // dd($contents);
+        foreach($contents['result'] as $content){
+            foreach($content['carlist'] as $value){
+                if(!in_array(['name'=>$value['name']],$carlists)){
+                    $carlists[] = array(
+                        'name'=>$value['name']
+                    );
+                }
+            }
+        }
+
+        $carlists = array_merge(array_sort($carlists));
+        dd($carlists);
     }
 
     public function test2(){
-       $host = "https://jisucxdq.market.alicloudapi.com";
-       $path = "/car/brand";
-       $method = "GET";
-       $appcode = "127f2a01c31746f3bf412ffee5686388";
-       $headers = array();
-       array_push($headers, "Authorization:APPCODE " . $appcode);
-       $querys = "";
-       $bodys = "";
-       $url = $host . $path;
+        try{
+            $lists = \OSS::listObjects(env('OSS_BUCKET'),[
+                'max-keys'=>1000,
+                'prefix'=>'cars/宝马/x1/',
+                'delimiter'=>'',
+                'marker'=>'',
+            ]);
 
-       $curl = curl_init();
-       curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-       curl_setopt($curl, CURLOPT_URL, $url);
-       curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-       curl_setopt($curl, CURLOPT_FAILONERROR, false);
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-       curl_setopt($curl, CURLOPT_HEADER, true);
-       if (1 == strpos("$".$host, "https://"))
-       {
-           curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-           curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-       }
-       dd(curl_exec($curl));
+        }catch(OssException $e){
+            dd($e);
+        }
+
+        foreach($lists->getObjectList() as $list){
+            dump($list->getKey());
+        }
     }
 
     public function test(){
@@ -211,6 +230,21 @@ class HomeController extends Controller
         </html>
 
 HTML;
-        return  \SnappyImage::loadHTML($html)->setOption('width', 600)->inline('download.png');
+        $file = 'upload.png';
+        \SnappyImage::loadHTML($html)->setOption('width', 600)->save($file);
+
+        $folder_name = "uploads/article/" . date("Ym", time()) . '/'.date("d", time()).'/';
+        $filename = $folder_name . '_' . time() . '_' . str_random(10) . '.png' ;
+        try{
+            $upload = \OSS::uploadFile(env('OSS_BUCKET'), $filename, $file);
+            $result = $upload['info']['url'];
+            //删除upload.png
+            unlink($file);
+        }catch(OssException $e){
+            Log::error($e);
+            $result = false;
+        }
+        dd($result);
+
     }
 }

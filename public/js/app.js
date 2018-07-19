@@ -95306,7 +95306,11 @@ var render = function() {
                           key: "default",
                           fn: function(scope) {
                             return [
-                              _c("pre", [_vm._v(_vm._s(scope.row.config))])
+                              _vm._v(
+                                "\n                          " +
+                                  _vm._s(scope.row.config) +
+                                  "\n                      "
+                              )
                             ]
                           }
                         }
@@ -96001,7 +96005,10 @@ var render = function() {
                                   _c(
                                     "el-select",
                                     {
-                                      attrs: { placeholder: "请选择" },
+                                      attrs: {
+                                        filterable: "",
+                                        placeholder: "请选择"
+                                      },
                                       on: {
                                         change: function($event) {
                                           _vm.changeCar(param.brand, index)

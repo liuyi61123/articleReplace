@@ -32,6 +32,57 @@ class OssUploadImageHandler
        return $result;
    }
 
+   public function articleSave($file, $bucket='')
+   {
+        // 构建存储的文件夹规则
+        // 文件夹切割能让查找效率更高。
+       $folder_name = "uploads/article/" . date("Ym", time()) . '/'.date("d", time()).'/';
+
+       // 拼接文件名，加前缀是为了增加辨析度，前缀可以是相关数据模型的 ID
+       // 值如：1_1493521050_7BVc9v9ujP.png
+       $filename = $folder_name . time() . '_' . str_random(10) . '.png';
+
+       //调用oss上传文件
+       try{
+           $upload = OSS::uploadFile($bucket?$bucket:env('OSS_BUCKET'), $filename, $file);
+           $result = $upload['info']['url'];
+           //删除原文件
+           unlink($file);
+       }catch(OssException $e){
+           Log::error($e);
+           $result = false;
+       }
+       return $result;
+   }
+
+   /**
+    * 获取oss文件列表
+    */
+   public function listObjects($bucket='',$option=[]){
+       try{
+           $result = OSS::listObjects($bucket?$bucket:env('OSS_BUCKET'),$option);
+       }catch(OssException $e){
+           Log::error($e);
+           $result = false;
+       }
+
+       return $result->getObjectList();
+   }
+
+   /**
+    * 获取oss文件列表(数组)
+    */
+   public function listArrays($bucket='',$option=[]){
+       $lists = $this->listObjects($bucket='',$option=[]);
+
+       $arrays = array();
+       foreach($lists as $key=>$list){
+           if($key > 0){
+               $arrays[] = $list->getKey();
+           }
+       }
+       return $arrays;
+   }
 
    /**
     * 删除文件

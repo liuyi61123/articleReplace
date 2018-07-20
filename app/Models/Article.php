@@ -209,7 +209,7 @@ class Article extends Model
 
           //上牌日期(随机2016-2017一个日期)
           $start_time = strtotime('2016-01-01');
-          $end_time = strtotime('2016-01-01');
+          $end_time = strtotime('2017-01-01');
           $boarding = date('Y年m月',rand($start_time,$end_time));
 
           //汽车本身评估价格
@@ -264,7 +264,7 @@ class Article extends Model
                           <td class="lable">借款金额</td>
                           <td class="value">$price 万</td>
                           <td class="lable">借款期限</td>
-                          <td class="va">$period 个月</td>
+                          <td class="value">$period 个月</td>
                           <td class="lable">借款类型</td>
                           <td class="value">等额本息</td>
                       </tr>
@@ -348,7 +348,7 @@ class Article extends Model
                   <table border="1" cellspacing="0" bordercolor="#a0c6e5" style="border-collapse:collapse;">
                       <tr>
                           <td class="lable td_6">借款金额</td>
-                          <td class="value td_6">$need_price </td>
+                          <td class="value td_6">$need_price 元</td>
                           <td class="lable td_6">借款利率</td>
                           <td class="value td_6">0.95</td>
                           <td class="lable td_6">贷款时间</td>

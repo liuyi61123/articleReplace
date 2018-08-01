@@ -34,8 +34,9 @@
                         </el-form-item>
                         <el-form-item label="区">
                             <el-col :span="24">
+                                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                                 <el-checkbox-group :min="1" v-model="article.countys.data">
-                                      <el-checkbox v-for="county of countys" :label="county.name" :key="county.id"></el-checkbox>
+                                      <el-checkbox v-for="county of countys" :label="county.name" :key="county.id" @change="handleCheckedCitiesChange"></el-checkbox>
                                 </el-checkbox-group>
                             </el-col>
                             <el-col :span="3">
@@ -146,6 +147,8 @@
         props:['id'],
         data () {
             return {
+                checkAll: false,
+                isIndeterminate: true,
                 templates:[],
                 types:[
                     {
@@ -199,6 +202,19 @@
         methods: {
             changeCity(e){
                 this.getCountys(e)
+            },
+            handleCheckAllChange(val) {
+                let countys = [];
+                this.countys.map((value,key)=>{
+                    countys[key] = value.name
+                })
+                this.article.countys.data = val ? countys : [];
+                this.isIndeterminate = false;
+            },
+            handleCheckedCitiesChange(value) {
+                let checkedCount = value.length;
+                this.checkAll = checkedCount === this.countys.length;
+                this.isIndeterminate = checkedCount > 0 && checkedCount < this.countys.length;
             },
             changeCar(e,index){
                 this.article.cars.data[index].models = []

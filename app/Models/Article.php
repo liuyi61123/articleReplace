@@ -56,11 +56,15 @@ class Article extends Model
           //查找地址信息
           $city_name = DB::table('citys')->where('id',$data['city']['data'])->value('name');
 
+          //客户姓名
+          $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
+          $sexs = ['先生','女士'];
+
           $file_base_path = 'public/articles/'.$id.'/';
 
           //遍历结果集
           $oss = new OssUploadImageHandler();
-          $oss_base_url = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/';
+          $oss_base_url = config('oss.bucket_prefix');
           foreach($data['countys']['data'] as $county){
               foreach($data['cars']['data'] as $car){
                   //查找汽车相关型号
@@ -80,15 +84,18 @@ class Article extends Model
                               'marker'=>'',
                           ]);
                           if($oss_imges){
-                               $image1 = $oss_base_url.array_random($oss_imges);
+                               $image1 = $oss_base_url.'/'.array_random($oss_imges);
                           }else{
-                               $image1 = 'http://article-1.oss-cn-hangzhou.aliyuncs.com/cars/宝马/x1/1.jpg';
+                              $image1 = $oss_base_url.'/cars/宝马/x1/1.jpg';
                           }
+                          //客户姓名
+                          $name = array_random($names).array_random($sexs);
 
                           //生成第二张图片
-                          $image2 = $this->toImage($id,$car_brand.$car_model_name,$price);
+                          $image2 = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
 
                           //替换内容
+                          $replace_text =  str_replace('{name}',$name,$template_content);
                           $replace_text =  str_replace('{city}',$city_name,$template_content);
                           $replace_text =  str_replace('{county}',$county,$template_content);
                           $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
@@ -108,8 +115,11 @@ class Article extends Model
                                       $data['cars']['price_sort']=>$price.'万',
                                   );
                                   ksort($sort);
+                                  $title = implode('',$sort);
+                                  //替换title
+                                  $replace_text =  str_replace('{title}',$title,$replace_text);
                                   //文件名规则生成
-                                  $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                  $file_path = $file_base_path.'/'.$title.'.txt';
                                   //生成文件
                                   Storage::put($file_path,$replace_text);
                                   break;
@@ -123,8 +133,11 @@ class Article extends Model
                                           $params[0]['sort'] => $param0
                                       );
                                       ksort($sort);
+                                      $title = implode('',$sort);
+                                      //替换title
+                                      $replace_text =  str_replace('{title}',$title,$replace_text);
                                       //文件名规则生成
-                                      $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                      $file_path = $file_base_path.'/'.$title.'.txt';
                                       //生成文件
                                       Storage::put($file_path,$replace_text);
                                   }
@@ -141,8 +154,11 @@ class Article extends Model
                                               $params[1]['sort'] => $param1,
                                           );
                                           ksort($sort);
+                                          $title = implode('',$sort);
+                                          //替换title
+                                          $replace_text =  str_replace('{title}',$title,$replace_text);
                                           //文件名规则生成
-                                          $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                          $file_path = $file_base_path.'/'.$title.'.txt';
                                           //生成文件
                                           Storage::put($file_path,$replace_text);
                                       }
@@ -162,8 +178,11 @@ class Article extends Model
                                                   $params[2]['sort'] => $param2,
                                               );
                                               ksort($sort);
+                                              $title = implode('',$sort);
+                                              //替换title
+                                              $replace_text =  str_replace('{title}',$title,$replace_text);
                                               //文件名规则生成
-                                              $file_path = $file_base_path.'/'.implode('',$sort).'.txt';
+                                              $file_path = $file_base_path.'/'.$title.'.txt';
                                               //生成文件
                                               Storage::put($file_path,$replace_text);
                                           }
@@ -187,22 +206,22 @@ class Article extends Model
       /**
        * 根据参数生成html
        */
-      public function toImage($id,$car,$price){
-          $html = $this->imageHtml($car,$price);
+      public function toImage($id,$car,$price,$name){
+          $html = $this->imageHtml($car,$price,$name);
 
           $file = 'upload.png';
+          //判断图片文件是否存在，如果存在就先删除
+          if(file_exists($file)) unlink($file);
+
           //生成图片
           SnappyImage::loadHTML($html)->setOption('width', 600)->save($file);
+
           //上传到oss
           $oss = new OssUploadImageHandler();
           return $oss->articleSave($file);
       }
 
-      protected function imageHtml($car,$price){
-          //客户姓名
-          $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
-          $sexs = ['先生','女士'];
-          $name = array_random($names).array_random($sexs);
+      protected function imageHtml($car,$price,$name){
 
           //借款期限
           $period = array_random([12,6]);

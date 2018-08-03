@@ -29,13 +29,8 @@ class TemplateRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'template_id' => 'required|integer',
-                    'title' => 'required',
-                    'keywords' => 'required',
-                    'description' => 'required',
+                    'name' => 'required',
                     'content' => 'required',
-                    'param_names' => 'required',
-                    'param_contents' => 'required',
                 ];
             }
             // UPDATE
@@ -43,7 +38,8 @@ class TemplateRequest extends FormRequest
             case 'PATCH':
             {
                 return [
-                    // UPDATE ROLES
+                    'name' => 'required',
+                    'content' => 'required',
                 ];
             }
             case 'GET':

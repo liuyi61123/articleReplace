@@ -218,7 +218,9 @@ class Article extends Model
 
           //上传到oss
           $oss = new OssUploadImageHandler();
-          return $oss->articleSave($file);
+          //替换https
+          $file_path =  str_replace('http://','https://',$oss->articleSave($file));
+          return $file_path;
       }
 
       protected function imageHtml($car,$price,$name){
@@ -255,11 +257,11 @@ class Article extends Model
               <title>title</title>
               <style >
                   html,body{margin: 0px;padding: 0px;}
-                  .title{background-color: #C00000;text-align: center;color: #ffffff;font-size: 20px;font-weight: bold;}
+                  .title{background-color: #004b92;text-align: center;color: #ffffff;font-size: 20px;font-weight: bold;}
                   .content{width:100%;}
                   table{width:100%;}
                   table tr td { border:1px solid #000000; }
-                  .lable{text-align:center; color: #C00000}
+                  .lable{text-align:center; color: #004b92}
                   .value{text-align:center}
                   .td_2{width: 50%;}
                   .td_6{width: 16.6%;}

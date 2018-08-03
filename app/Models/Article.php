@@ -96,8 +96,8 @@ class Article extends Model
 
                           //替换内容
                           $replace_text =  str_replace('{name}',$name,$template_content);
-                          $replace_text =  str_replace('{city}',$city_name,$template_content);
-                          $replace_text =  str_replace('{county}',$county,$template_content);
+                          $replace_text =  str_replace('{city}',$city_name,$replace_text);
+                          $replace_text =  str_replace('{county}',$county,$replace_text);
                           $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
                           $replace_text =  str_replace('{car_model}',$car_model_name,$replace_text);
                           $replace_text =  str_replace('{price}',$price,$replace_text);

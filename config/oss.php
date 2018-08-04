@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    
+
     //access_key_id
     'access_key_id'=>env('OSS_ACCESS_KEY_ID','access_key_id'),
 
@@ -16,5 +16,8 @@ return array(
 
     //url前缀
     'bucket_prefix'=>env('OSS_BUCKET_PREFIX','bucket_prefix'),
+
+    //是否使用https
+    'prefix_https'=>env('OSS_PREFIX_HTTPS',true),
 
 );

@@ -46,6 +46,10 @@ class OssUploadImageHandler
        try{
            $upload = OSS::uploadFile($bucket?$bucket:env('OSS_BUCKET'), $filename, $file);
            $result = $upload['info']['url'];
+           //是否替换https
+          if(config('oss.prefix_https')){
+             $result =  str_replace('http://','https://',$result);
+          }
            //删除原文件
            unlink($file);
        }catch(OssException $e){

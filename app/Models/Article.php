@@ -218,9 +218,8 @@ class Article extends Model
 
           //上传到oss
           $oss = new OssUploadImageHandler();
-          //替换https
-          $file_path =  str_replace('http://','https://',$oss->articleSave($file));
-          return $file_path;
+          //文件路径
+          return  $oss->articleSave($file);
       }
 
       protected function imageHtml($car,$price,$name){

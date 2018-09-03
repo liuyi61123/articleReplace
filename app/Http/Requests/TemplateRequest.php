@@ -30,6 +30,8 @@ class TemplateRequest extends FormRequest
             {
                 return [
                     'name' => 'required',
+                    'paragraphs' => 'required',
+                    'images' => 'required|array',
                     'content' => 'required',
                 ];
             }
@@ -39,6 +41,8 @@ class TemplateRequest extends FormRequest
             {
                 return [
                     'name' => 'required',
+                    'paragraphs' => 'required',
+                    'images' => 'required|array',
                     'content' => 'required',
                 ];
             }

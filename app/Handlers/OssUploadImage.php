@@ -100,6 +100,7 @@ class OssUploadImageHandler
             OSS::deleteObject($bucket?$bucket:env('OSS_BUCKET'),$file);
             $result = true;
         }catch(OssException $e){
+            Log::error($file);
             Log::error($e);
             $result = false;
         }

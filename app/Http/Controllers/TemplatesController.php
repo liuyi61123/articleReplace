@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Template;
 use App\Http\Requests\TemplateRequest;
 use Illuminate\Http\Request;
+use App\Handlers\OssUploadImageHandler;
 
 class TemplatesController extends Controller
 {
@@ -104,5 +105,35 @@ class TemplatesController extends Controller
             $template->delete();
             return response()->json(['status'=>200]);
         }
+    }
+
+    /**
+     * 上传图片
+     */
+    public function upload_image(Request $request,OssUploadImageHandler $upload){
+        $url = $upload->save($request->file('image'),'templates');
+        if($url){
+            $response = ['status'=>200,'data'=>$url];
+            $status = 200;
+        }else{
+            $response = ['status'=>500,'msg'=>'上传失败'];
+            $status = 500;
+        }
+        return response()->json($response,$status);
+    }
+
+    /**
+     * 删除图片
+     */
+    public function delete_image(Request $request,OssUploadImageHandler $upload){
+        $delete = $upload->delete($request->url);
+        if($delete){
+            $response = ['status'=>200,'msg'=>'删除成功'];
+            $status = 200;
+        }else{
+            $response = ['status'=>400,'msg'=>'删除失败','data'=>$request->url];
+            $status = 500;
+        }
+        return response()->json($response,$status);
     }
 }

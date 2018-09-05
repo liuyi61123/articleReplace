@@ -28,66 +28,22 @@ class TemplatesTableSeeder extends Seeder
             </script>
         </head>
         <body>
-            {county}
-            {car_brand}
-            {car_model}
-            <img src="{image1}">
-            <img src="{image2}">
+            <img src=" {图片}"> //随机获取的图片
+            <img src="{image}">//生成的图片
+            {段落}//段落
+            {city}//城市
+            {county}//区
+            {car_brand}//汽车品牌
+            {car_model}//汽车型号
+            {price}//价格
         </body>
         </html>
 HTML;
-        $html1 = <<<HTML
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-                <meta charset="utf-8" />
-                <title>{title}</title>
-                <meta name="keywords" content="{keywords}" />
-                <meta name="description" content="{description}" />
-                <script>
-                    var title = '夜场模板';
-                </script>
-            </head>
-            <body>
-                {county}
-                {car_brand}
-                {car_model}
-                <img src="{image1}">
-                <img src="{image2}">
-            </body>
-            </html>
-HTML;
-        $html2 = <<<HTML
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-                <meta charset="utf-8" />
-                <title>{title}</title>
-                <meta name="keywords" content="{keywords}" />
-                <meta name="description" content="{description}" />
-                <script>
-                    var title = '下水道模板';
-                </script>
-            </head>
-            <body>
-                {county}
-                {car_brand}
-                {car_model}
-                <img src="{image1}">
-                <img src="{image2}">
-            </body>
-            </html>
-HTML;
+
         DB::table('templates')->insert([
             ['name' => '招聘模板','content' =>$html],
-            ['name' => '夜场模板','content' =>$html1],
-            ['name' => '下水道模板','content' =>$html2]
+            ['name' => '夜场模板','content' =>$html],
+            ['name' => '下水道模板','content' =>$html]
         ]);
     }
 }

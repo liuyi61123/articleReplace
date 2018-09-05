@@ -14,11 +14,14 @@
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.content" placeholder="模板内容"></el-input>
                         </el-form-item>
                         <el-form-item label="图片">
+                            <!-- <el-button type="primary" @click="imageListAction">从图片库选择</el-button> -->
+                            <!-- <ImageList v-bind:dialogListVisible="imageList"></ImageList> -->
                             <el-upload
                               action="/templates/upload_image"
                               accept="image/*"
                               list-type="picture-card"
                               name="image"
+                              :multiple="true"
                               :file-list="template.images"
                               :on-preview="imagPreview"
                               :on-success="imageUploadSuccess"
@@ -45,7 +48,11 @@
 </template>
 
 <script>
+    // import ImageList from '../components/ImageList'
     export default {
+        // components:{
+        //     ImageList
+        // },
         props:['id'],
         data () {
             return {
@@ -58,7 +65,8 @@
                 title:'',
                 loading:false,
                 dialogImageUrl: '',
-                dialogVisible: false
+                dialogVisible: false,
+                imageList:false
             }
         },
         methods: {
@@ -89,9 +97,6 @@
                    });
             },
             removeImage(file, fileList) {
-                console.log(file)
-                console.log(fileList)
-
                 axios({
                     method:'delete',
                     url:'/templates/delete_image',
@@ -100,7 +105,6 @@
                     }
                 })
                 .then((response)=> {
-                    console.log(response)
                     this.template.images.map((value,index)=>{
                         if(value.uid == file.uid){
                             this.template.images.splice(index,1);
@@ -110,29 +114,22 @@
                 .catch((error)=>{
                     console.log(error);
                 });
-
-                console.log(this.template.images)
             },
             imageUploadSuccess(response, file, fileList) {
-                console.log(response)
-                console.log(file)
-                console.log(fileList)
-                this.template.images.push({
-                    uid:file.uid,
-                    url:file.response.data
+                this.template.images = fileList
+                this.template.images.map((value,index)=>{
+                    this.template.images[index].url = value.response?value.response.data:value.url
+                    delete this.template.images[index].response
+                    delete this.template.images[index].raw
                 })
-                // this.template.images = []
-                // fileList.map((value,index)=>{
-                //     let url = value.response?value.response.data:value.url
-                //     this.template.images.push({
-                //         'url':url
-                //     });
-                // })
-                console.log(this.template.images)
             },
             imagPreview(file) {
                this.dialogImageUrl = file.url;
                this.dialogVisible = true;
+           },
+           imageListAction(){
+               this.imageList = this.imageList?false:true
+               console.log(this.imageList)
            }
         },
         created(){
@@ -141,7 +138,6 @@
                 //读取要编辑的文章数据
                 axios.get('/templates/'+this.id+'/edit')
                 .then((response)=> {
-                    console.log(response);
                     this.template = response.data
                     this.template.images = response.data.images ||[]
                 })

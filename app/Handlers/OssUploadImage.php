@@ -23,7 +23,7 @@ class OssUploadImageHandler
 
        //调用oss上传文件
        try{
-           $upload = OSS::uploadFile($bucket?$bucket:env('OSS_BUCKET'), $filename, $file);
+           $upload = OSS::uploadFile($bucket?$bucket:config('oss.bucket'), $filename, $file);
            $result = $upload['info']['url'];
        }catch(OssException $e){
            Log::error($e);
@@ -44,7 +44,7 @@ class OssUploadImageHandler
 
        //调用oss上传文件
        try{
-           $upload = OSS::uploadFile($bucket?$bucket:env('OSS_BUCKET'), $filename, $file);
+           $upload = OSS::uploadFile($bucket?$bucket:config('oss.bucket'), $filename, $file);
            $result = $upload['info']['url'];
            //是否替换https
           if(config('oss.prefix_https')){
@@ -64,7 +64,7 @@ class OssUploadImageHandler
     */
    public function listObjects($bucket='',$option=[]){
        try{
-           $result = OSS::listObjects($bucket?$bucket:env('OSS_BUCKET'),$option);
+           $result = OSS::listObjects($bucket?$bucket:config('oss.bucket'),$option);
        }catch(OssException $e){
            Log::error($e);
            $result = false;
@@ -77,15 +77,18 @@ class OssUploadImageHandler
     * 获取oss文件列表(数组)
     */
    public function listArrays($bucket='',$option=[]){
-       $lists = $this->listObjects($bucket='',$option=[]);
+       $lists = $this->listObjects($bucket,$option);
 
        $arrays = array();
        foreach($lists as $key=>$list){
-           if($key > 0){
-               $arrays[] = $list->getKey();
-           }
+           $prefix_https = config('oss.prefix_https')?'https://':'http://';
+           $arrays[] = array(
+               'uid'=>$list->getKey(),
+               'url'=>$prefix_https.config('oss.bucket_prefix').$list->getKey()
+           );
        }
-       return $arrays;
+       $last = end($lists)->getKey();
+       return ['list'=>$arrays,'last'=>$last];
    }
 
    /**
@@ -97,7 +100,7 @@ class OssUploadImageHandler
 
         //删除文件
         try{
-            OSS::deleteObject($bucket?$bucket:env('OSS_BUCKET'),$file);
+            OSS::deleteObject($bucket?$bucket:config('oss.bucket'),$file);
             $result = true;
         }catch(OssException $e){
             Log::error($file);

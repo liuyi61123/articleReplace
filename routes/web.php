@@ -15,3 +15,4 @@ Route::post('templates/upload_image', 'TemplatesController@upload_image')->name(
 Route::delete('templates/delete_image', 'TemplatesController@delete_image')->name('template.delete_image');//删除图片
 Route::resource('templates', 'TemplatesController');//模板
 Route::resource('params', 'ParamsController');//参数
+Route::resource('images', 'ImagesController');//图片

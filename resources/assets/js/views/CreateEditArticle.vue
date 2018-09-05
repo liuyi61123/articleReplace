@@ -120,14 +120,12 @@
                             </el-form-item>
                             <el-form-item label="参数内容">
                                 <el-col :span="24">
-                                    <el-select
-                                        v-model="param.content"
-                                        multiple
-                                        filterable
-                                        allow-create
-                                        default-first-option
-                                        placeholder="请选择文章标签">
-                                      </el-select>
+                                    <el-input
+                                      v-model="param.content"
+                                      type="textarea"
+                                      :rows="5"
+                                      placeholder="一行一个">
+                                    </el-input>
                                  </el-col>
                             </el-form-item>
                             <el-form-item>
@@ -190,7 +188,7 @@
                         {
                             sort:5,
                             name:'',
-                            content:[]
+                            content:''
                         }
                     ],
                 },

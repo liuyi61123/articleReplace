@@ -18,16 +18,13 @@ class Article extends Model
     protected $guarded = [];
 
     /**
-     * 获取用户的名字。
+     * 应该被转换成原生类型的属性。
      *
-     * @param  string  $value
-     * @return string
+     * @var array
      */
-     public function getConfigAttribute($value)
-     {
-         return json_decode($value);
-         // return '<pre>'.json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).'</pre>';
-     }
+    protected $casts = [
+        'config' => 'array',
+    ];
 
     /**
      * 此文章相关的参数
@@ -46,13 +43,22 @@ class Article extends Model
 
           //移除空的自定义参数
           $params = array();
-          foreach($my_params as $param){
+          foreach($my_params as $key=>$param){
               if($param['content']){
+                  //切割字符串
+                  $param['content'] = explode("\n",trim($param['content']));
                   $params[] = $param;
               }
           }
           //查找模板信息
-          $template_content = Template::where('id',$data['template_id'])->value('content');
+          $template = Template::find($data['template_id']);
+          $template_content = $template->content;
+          $template_images = $template->images;
+          $template_paragraphs = $template->paragraphs;
+          $template_paragraphs = explode("\n",trim($template_paragraphs));
+          //查找模板中图片和段落出现的次数
+          $template_images_count = substr_count($template_content,'图片');
+          $template_paragraphs_count = substr_count($template_content,'段落');
           //查找地址信息
           $city_name = DB::table('citys')->where('id',$data['city']['data'])->value('name');
 
@@ -75,24 +81,11 @@ class Article extends Model
                       if($car_model_name = $car_model['name']){
                           //计算车子价格
                           $price = rand($car_model['min'],$car_model['max']);
-
-                          //从库中随机找出图片
-                          $oss_imges = $oss->listArrays(env('OSS_BUCKET'),[
-                              'max-keys'=>1000,
-                              'prefix'=>'cars/'.$car_brand.'/'.$car_model_name,
-                              'delimiter'=>'',
-                              'marker'=>'',
-                          ]);
-                          if($oss_imges){
-                               $image1 = $oss_base_url.'/'.array_random($oss_imges);
-                          }else{
-                              $image1 = $oss_base_url.'/cars/宝马/x1/1.jpg';
-                          }
                           //客户姓名
                           $name = array_random($names).array_random($sexs);
 
                           //生成第二张图片
-                          $image2 = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
+                          $image = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
 
                           //替换内容
                           $replace_text =  str_replace('{name}',$name,$template_content);
@@ -101,8 +94,7 @@ class Article extends Model
                           $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
                           $replace_text =  str_replace('{car_model}',$car_model_name,$replace_text);
                           $replace_text =  str_replace('{price}',$price,$replace_text);
-                          $replace_text =  str_replace('{image1}',$image1,$replace_text);
-                          $replace_text =  str_replace('{image2}',$image2,$replace_text);
+                          $replace_text =  str_replace('{image}',$image,$replace_text);
 
                           //判断自定义参数个数
                           switch (count($params))
@@ -118,6 +110,13 @@ class Article extends Model
                                   $title = implode('',$sort);
                                   //替换title
                                   $replace_text =  str_replace('{title}',$title,$replace_text);
+                                  //随机替换模板中的段落和图片
+                                  for($i=0;$i<$template_paragraphs_count;$i++){
+                                      $replace_text =  preg_replace('/{段落}/',array_random($template_paragraphs),$replace_text,1);
+                                  }
+                                  for($i=0;$i<$template_images_count;$i++){
+                                      $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
+                                  }
                                   //文件名规则生成
                                   $file_path = $file_base_path.'/'.$title.'.txt';
                                   //生成文件
@@ -136,6 +135,13 @@ class Article extends Model
                                       $title = implode('',$sort);
                                       //替换title
                                       $replace_text =  str_replace('{title}',$title,$replace_text);
+                                      //随机替换模板中的段落和图片
+                                      for($i=0;$i<$template_paragraphs_count;$i++){
+                                          $replace_text =  preg_replace('/{段落}/',array_random($template_paragraphs),$replace_text,1);
+                                      }
+                                      for($i=0;$i<$template_images_count;$i++){
+                                          $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
+                                      }
                                       //文件名规则生成
                                       $file_path = $file_base_path.'/'.$title.'.txt';
                                       //生成文件
@@ -157,6 +163,13 @@ class Article extends Model
                                           $title = implode('',$sort);
                                           //替换title
                                           $replace_text =  str_replace('{title}',$title,$replace_text);
+                                          //随机替换模板中的段落和图片
+                                          for($i=0;$i<$template_paragraphs_count;$i++){
+                                              $replace_text =  preg_replace('/{段落}/',array_random($template_paragraphs),$replace_text,1);
+                                          }
+                                          for($i=0;$i<$template_images_count;$i++){
+                                              $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
+                                          }
                                           //文件名规则生成
                                           $file_path = $file_base_path.'/'.$title.'.txt';
                                           //生成文件
@@ -181,6 +194,13 @@ class Article extends Model
                                               $title = implode('',$sort);
                                               //替换title
                                               $replace_text =  str_replace('{title}',$title,$replace_text);
+                                              //随机替换模板中的段落和图片
+                                              for($i=0;$i<$template_paragraphs_count;$i++){
+                                                  $replace_text =  preg_replace('/{段落}/',array_random($template_paragraphs),$replace_text,1);
+                                              }
+                                              for($i=0;$i<$template_images_count;$i++){
+                                                  $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
+                                              }
                                               //文件名规则生成
                                               $file_path = $file_base_path.'/'.$title.'.txt';
                                               //生成文件

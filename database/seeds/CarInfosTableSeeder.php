@@ -16,7 +16,7 @@ class CarInfosTableSeeder extends Seeder
         $client = new Client();
         $header = [
             'headers' => [
-                'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
+                'Authorization' => 'APPCODE fe945f8ba6d04d33a869c3b20c2bf065',
             ]
         ];
         $brand_api = 'https://jisucxdq.market.alicloudapi.com/car/brand';

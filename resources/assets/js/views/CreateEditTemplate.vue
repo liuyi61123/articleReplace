@@ -14,8 +14,8 @@
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.content" placeholder="模板内容"></el-input>
                         </el-form-item>
                         <el-form-item label="图片">
-                            <!-- <el-button type="primary" @click="imageListAction">从图片库选择</el-button> -->
-                            <!-- <ImageList v-bind:dialogListVisible="imageList"></ImageList> -->
+                            <el-button type="primary" @click="imageListAction">从图片库选择</el-button>
+                            <ImageList :dialogListVisible="imageList" @closeImageList="closeImageList" @selectImages="selectImages"></ImageList>
                             <el-upload
                               action="/templates/upload_image"
                               accept="image/*"
@@ -48,11 +48,11 @@
 </template>
 
 <script>
-    // import ImageList from '../components/ImageList'
+    import ImageList from '../components/ImageList'
     export default {
-        // components:{
-        //     ImageList
-        // },
+        components:{
+            ImageList
+        },
         props:['id'],
         data () {
             return {
@@ -130,6 +130,19 @@
            imageListAction(){
                this.imageList = this.imageList?false:true
                console.log(this.imageList)
+           },
+           closeImageList(){
+               this.imageList = false
+           },
+           selectImages(images){
+               console.log(images)
+               images.map((value,index)=>{
+                   this.template.images.push({
+                       url:value
+                   })
+               })
+               this.closeImageList()
+               console.log(this.template.images)
            }
         },
         created(){

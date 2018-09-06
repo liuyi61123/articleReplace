@@ -29,7 +29,7 @@ class ImagesController extends Controller
          //获取图片列表
          $last = $request->input('last','');
          $oss_imges = $oss->listArrays('',[
-             'max-keys'=>20,
+             'max-keys'=>18,
              'prefix'=>'uploads/templates',
              'delimiter'=>'',
              'marker'=>$last,

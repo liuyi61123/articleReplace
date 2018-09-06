@@ -87,11 +87,30 @@
                     axios.get('/images')
                     .then((response)=>{
                         console.log(response)
+                        if(response.data.list.length<=18){
+                            this.isLoadMore = true
+                        }
                         this.list = response.data.list
                         this.last = response.data.last
                     })
                     .catch((error)=>{
-                        console.log(error);
+                        console.log(error)
+                        let message = ''
+                        let status = error.response.status
+                        if (status == 422) {
+                            message = error.response.data.message
+
+                        } else if (status == 403) {
+                            message = '权限不足'
+                        }
+                        else if (status == 419) {
+                            message = '非法请求'
+                        }
+                        else {
+                            message = '系统错误:' + errors.status
+                        }
+                        this.loading = false
+                        this.$message.error(message)
                     });
                 }else{
                     this.list = []

@@ -95587,7 +95587,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (error) {
                 console.log(error);
                 _this2.fullScreen(false);
-                _this2.$message.error('错了哦，这是一条错误消息');
+
+                var message = '';
+                var status = error.response.status;
+                if (status == 422) {
+                    message = error.response.data.message;
+                } else if (status == 403) {
+                    message = '权限不足';
+                } else if (status == 419) {
+                    message = '非法请求';
+                } else {
+                    message = '系统错误:' + errors.status;
+                }
+                _this2.loading = false;
+                _this2.$message.error(message);
             });
         },
         addParam: function addParam() {
@@ -96772,31 +96785,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
                 window.location.href = "/templates";
             }).catch(function (error) {
-                console.log(error);
+                console.log(error.response);
+                var message = '';
+                var status = error.response.status;
+                if (status == 422) {
+                    message = error.response.data.message;
+                } else if (status == 403) {
+                    message = '权限不足';
+                } else if (status == 419) {
+                    message = '非法请求';
+                } else {
+                    message = '系统错误:' + errors.status;
+                }
                 _this.loading = false;
-                _this.$message({
-                    message: '修改失败',
-                    type: 'error'
-                });
+                _this.$message.error(message);
             });
         },
         removeImage: function removeImage(file, fileList) {
             var _this2 = this;
 
-            axios({
-                method: 'delete',
-                url: '/templates/delete_image',
-                data: {
-                    url: file.url
+            // axios({
+            //     method:'delete',
+            //     url:'/templates/delete_image',
+            //     data:{
+            //         url:file.url
+            //     }
+            // })
+            // .then((response)=> {
+            //     this.template.images.map((value,index)=>{
+            //         if(value.uid == file.uid){
+            //             this.template.images.splice(index,1);
+            //         }
+            //     })
+            // })
+            // .catch((error)=>{
+            //     console.log(error);
+            // });
+            this.template.images.map(function (value, index) {
+                if (value.uid == file.uid) {
+                    _this2.template.images.splice(index, 1);
                 }
-            }).then(function (response) {
-                _this2.template.images.map(function (value, index) {
-                    if (value.uid == file.uid) {
-                        _this2.template.images.splice(index, 1);
-                    }
-                });
-            }).catch(function (error) {
-                console.log(error);
             });
         },
         imageUploadSuccess: function imageUploadSuccess(response, file, fileList) {
@@ -97299,10 +97327,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log('获取图片列表');
                 axios.get('/images').then(function (response) {
                     console.log(response);
+                    if (response.data.list.length <= 18) {
+                        _this2.isLoadMore = true;
+                    }
                     _this2.list = response.data.list;
                     _this2.last = response.data.last;
                 }).catch(function (error) {
                     console.log(error);
+                    var message = '';
+                    var status = error.response.status;
+                    if (status == 422) {
+                        message = error.response.data.message;
+                    } else if (status == 403) {
+                        message = '权限不足';
+                    } else if (status == 419) {
+                        message = '非法请求';
+                    } else {
+                        message = '系统错误:' + errors.status;
+                    }
+                    _this2.loading = false;
+                    _this2.$message.error(message);
                 });
             } else {
                 this.list = [];

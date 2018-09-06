@@ -266,7 +266,24 @@
                    .catch((error)=>{
                        console.log(error)
                        this.fullScreen(false)
-                       this.$message.error('错了哦，这是一条错误消息')
+
+                       let message = ''
+                       let status = error.response.status
+                       if (status == 422) {
+                           message = error.response.data.message
+
+                       } else if (status == 403) {
+                           message = '权限不足'
+                       }
+                       else if (status == 419) {
+                           message = '非法请求'
+                       }
+                       else {
+                           message = '系统错误:' + errors.status
+                       }
+                       this.loading = false
+                       this.$message.error(message)
+
                    });
             },
             addParam(){

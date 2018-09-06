@@ -88,32 +88,48 @@
                         window.location.href="/templates";
                    })
                    .catch((error)=>{
-                       console.log(error);
-                       this.loading = false;
-                       this.$message({
-                           message: '修改失败',
-                           type: 'error'
-                       });
+                       console.log(error.response)
+                       let message = ''
+                       let status = error.response.status
+                       if (status == 422) {
+                           message = error.response.data.message
+
+                       } else if (status == 403) {
+                           message = '权限不足'
+                       }
+                       else if (status == 419) {
+                           message = '非法请求'
+                       }
+                       else {
+                           message = '系统错误:' + errors.status
+                       }
+                       this.loading = false
+                       this.$message.error(message)
                    });
             },
             removeImage(file, fileList) {
-                axios({
-                    method:'delete',
-                    url:'/templates/delete_image',
-                    data:{
-                        url:file.url
+                // axios({
+                //     method:'delete',
+                //     url:'/templates/delete_image',
+                //     data:{
+                //         url:file.url
+                //     }
+                // })
+                // .then((response)=> {
+                //     this.template.images.map((value,index)=>{
+                //         if(value.uid == file.uid){
+                //             this.template.images.splice(index,1);
+                //         }
+                //     })
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                // });
+                this.template.images.map((value,index)=>{
+                    if(value.uid == file.uid){
+                        this.template.images.splice(index,1);
                     }
                 })
-                .then((response)=> {
-                    this.template.images.map((value,index)=>{
-                        if(value.uid == file.uid){
-                            this.template.images.splice(index,1);
-                        }
-                    })
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
             },
             imageUploadSuccess(response, file, fileList) {
                 this.template.images = fileList
@@ -156,6 +172,7 @@
                 })
                 .catch((error)=>{
                     console.log(error);
+
                 });
             }else{
                 this.title = '新建模板';

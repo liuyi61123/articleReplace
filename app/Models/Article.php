@@ -70,7 +70,7 @@ class Article extends Model
 
           //遍历结果集
           $oss = new OssUploadImageHandler();
-          
+
           foreach($data['countys']['data'] as $county){
               foreach($data['cars']['data'] as $car){
                   //查找汽车相关型号
@@ -78,7 +78,7 @@ class Article extends Model
                   $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
 
                   foreach($car_models as $car_model){
-                      if($car_model_name = $car_model['name']){
+                      if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
                           //计算车子价格
                           $price = rand($car_model['min'],$car_model['max']);
                           //客户姓名

@@ -95148,6 +95148,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -95206,8 +95213,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/articles').then(function (response) {
             console.log(response);
             // this.tableData = response.data.data;
-            response.data.data.map(function (value, index) {
-                value.config = JSON.stringify(value.config, null, 4);
+            response.data.map(function (value, index) {
+                // value.config = JSON.stringify(value.config, null, 4)
                 _this2.tableData.push(value);
             });
             console.log(_this2.tableData);
@@ -95277,7 +95284,12 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "id", label: "Id", width: "180" }
+                      attrs: {
+                        prop: "id",
+                        label: "Id",
+                        sortable: "",
+                        width: "180"
+                      }
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
@@ -95289,21 +95301,12 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "config", label: "配置" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function(scope) {
-                            return [
-                              _vm._v(
-                                "\n                          " +
-                                  _vm._s(scope.row.config) +
-                                  "\n                      "
-                              )
-                            ]
-                          }
-                        }
-                      ])
+                      attrs: {
+                        prop: "template.updated_at",
+                        label: "更新时间",
+                        sortable: "",
+                        width: "180"
+                      }
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {

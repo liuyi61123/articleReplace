@@ -18,6 +18,7 @@
                         <el-table-column
                           prop="id"
                           label="Id"
+                          sortable
                           width="180">
                          </el-table-column>
                         <el-table-column
@@ -26,12 +27,18 @@
                           width="180">
                         </el-table-column>
                         <el-table-column
+                          prop="template.updated_at"
+                          label="更新时间"
+                          sortable
+                          width="180">
+                        </el-table-column>
+                        <!-- <el-table-column
                           prop="config"
                           label="配置">
                           <template slot-scope="scope">
                               {{scope.row.config}}
                           </template>
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column
                         fixed="right"
                         align="center"
@@ -109,10 +116,10 @@
             //加载table数据
             axios.get('/articles')
             .then((response)=> {
-                console.log(response);
+                console.log(response)
                 // this.tableData = response.data.data;
-                response.data.data.map((value,index)=>{
-                    value.config = JSON.stringify(value.config, null, 4)
+                response.data.map((value,index)=>{
+                    // value.config = JSON.stringify(value.config, null, 4)
                     this.tableData.push(value)
                 })
                 console.log(this.tableData)

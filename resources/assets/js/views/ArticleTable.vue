@@ -19,18 +19,18 @@
                           prop="id"
                           label="Id"
                           sortable
-                          width="180">
+                          width="100">
                          </el-table-column>
                         <el-table-column
                           prop="template.name"
                           label="模板"
-                          width="180">
+                          width="220">
                         </el-table-column>
                         <el-table-column
                           prop="template.updated_at"
                           label="更新时间"
                           sortable
-                          width="180">
+                          width="200">
                         </el-table-column>
                         <!-- <el-table-column
                           prop="config"
@@ -59,6 +59,17 @@
                           </template>
                       </el-table-column>
                     </el-table>
+                    <el-pagination
+                      background
+                      layout="prev, pager, next"
+                      :current-page.sync="current_page"
+                      :page-size="20"
+                      :total="total"
+                      @prev-click="prevClick"
+                      @next-click="nextClick"
+                      @current-change="currentChange"
+                      >
+                    </el-pagination>
                 </div>
             </el-card>
         </el-col>
@@ -69,6 +80,8 @@
     export default {
         data () {
             return {
+                total:0,//总数
+                current_page:1,//当前页数
                 tableData:[]
             }
         },
@@ -110,23 +123,36 @@
                    this.loading = false;
                    this.$message.error('错了哦，这是一条错误消息');
                });
+           },
+           currentChange(page){
+               this.getPage(page)
+           },
+           prevClick(page){
+               this.getPage(page)
+           },
+           nextClick(page){
+               this.getPage(page)
+           },
+           getPage(page){
+               //加载table数据
+               page = page || 1
+               axios.get('/articles?page='+page)
+               .then((response)=> {
+                   this.total = response.data.total
+                   this.current_page = response.data.current_page
+                   this.tableData = []
+                   response.data.data.map((value,index)=>{
+                       this.tableData.push(value)
+                   })
+               })
+               .catch((error)=>{
+                   console.log(error)
+               })
            }
         },
         created(){
             //加载table数据
-            axios.get('/articles')
-            .then((response)=> {
-                console.log(response)
-                // this.tableData = response.data.data;
-                response.data.map((value,index)=>{
-                    // value.config = JSON.stringify(value.config, null, 4)
-                    this.tableData.push(value)
-                })
-                console.log(this.tableData)
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
+            this.getPage(1)
         }
     }
 </script>

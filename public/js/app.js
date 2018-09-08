@@ -95155,10 +95155,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            total: 0, //总数
+            current_page: 1, //当前页数
             tableData: []
         };
     },
@@ -95204,23 +95217,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.loading = false;
                 _this.$message.error('错了哦，这是一条错误消息');
             });
+        },
+        currentChange: function currentChange(page) {
+            this.getPage(page);
+        },
+        prevClick: function prevClick(page) {
+            this.getPage(page);
+        },
+        nextClick: function nextClick(page) {
+            this.getPage(page);
+        },
+        getPage: function getPage(page) {
+            var _this2 = this;
+
+            //加载table数据
+            page = page || 1;
+            axios.get('/articles?page=' + page).then(function (response) {
+                _this2.total = response.data.total;
+                _this2.current_page = response.data.current_page;
+                _this2.tableData = [];
+                response.data.data.map(function (value, index) {
+                    _this2.tableData.push(value);
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     },
     created: function created() {
-        var _this2 = this;
-
         //加载table数据
-        axios.get('/articles').then(function (response) {
-            console.log(response);
-            // this.tableData = response.data.data;
-            response.data.map(function (value, index) {
-                // value.config = JSON.stringify(value.config, null, 4)
-                _this2.tableData.push(value);
-            });
-            console.log(_this2.tableData);
-        }).catch(function (error) {
-            console.log(error);
-        });
+        this.getPage(1);
     }
 });
 
@@ -95288,7 +95314,7 @@ var render = function() {
                         prop: "id",
                         label: "Id",
                         sortable: "",
-                        width: "180"
+                        width: "100"
                       }
                     }),
                     _vm._v(" "),
@@ -95296,7 +95322,7 @@ var render = function() {
                       attrs: {
                         prop: "template.name",
                         label: "模板",
-                        width: "180"
+                        width: "220"
                       }
                     }),
                     _vm._v(" "),
@@ -95305,7 +95331,7 @@ var render = function() {
                         prop: "template.updated_at",
                         label: "更新时间",
                         sortable: "",
-                        width: "180"
+                        width: "200"
                       }
                     }),
                     _vm._v(" "),
@@ -95361,7 +95387,25 @@ var render = function() {
                     })
                   ],
                   1
-                )
+                ),
+                _vm._v(" "),
+                _c("el-pagination", {
+                  attrs: {
+                    background: "",
+                    layout: "prev, pager, next",
+                    "current-page": _vm.current_page,
+                    "page-size": 20,
+                    total: _vm.total
+                  },
+                  on: {
+                    "update:currentPage": function($event) {
+                      _vm.current_page = $event
+                    },
+                    "prev-click": _vm.prevClick,
+                    "next-click": _vm.nextClick,
+                    "current-change": _vm.currentChange
+                  }
+                })
               ],
               1
             )

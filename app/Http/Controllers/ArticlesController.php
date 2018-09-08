@@ -31,8 +31,7 @@ class ArticlesController extends Controller
     {
         if ($request->ajax()) {
             //渲染列表
-            // $output = $article->with('template')->paginate();
-            $output = $article->with('template')->get();
+            $output = $article->with('template')->paginate(20);
             return response()->json($output);
         }else{
             return view('articles.index');

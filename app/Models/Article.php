@@ -70,7 +70,7 @@ class Article extends Model
 
           //遍历结果集
           $oss = new OssUploadImageHandler();
-          $oss_base_url = config('oss.bucket_prefix');
+          
           foreach($data['countys']['data'] as $county){
               foreach($data['cars']['data'] as $car){
                   //查找汽车相关型号

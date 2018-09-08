@@ -279,7 +279,7 @@
                            message = '非法请求'
                        }
                        else {
-                           message = '系统错误:' + errors.status
+                           message = '系统错误:' + status
                        }
                        this.loading = false
                        this.$message.error(message)
@@ -292,7 +292,7 @@
                     this.$message.error('不能超过3个参数')
                 }else{
                     this.paramsIndex++
-                    Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:[]})
+                    Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:''})
                 }
             },
             deleteParam(index){

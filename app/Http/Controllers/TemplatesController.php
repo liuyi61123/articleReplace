@@ -29,7 +29,11 @@ class TemplatesController extends Controller
     {
         if ($request->ajax()) {
             //渲染列表
-            $output = $template->all();
+            if($request->input('type') == 'all'){
+                $output = $template->all();
+            }else{
+                $output = $template->paginate(20);
+            }
             return response()->json($output);
         }else{
             return view('templates.index');

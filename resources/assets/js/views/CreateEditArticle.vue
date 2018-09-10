@@ -8,8 +8,8 @@
                     </div>
                     <div class="text item">
                         <el-form-item label="模板">
-                            <el-col :span="4">
-                                <el-select style="width:100%" v-model="article.template_id" placeholder="请选择">
+                            <el-col :span="8">
+                                <el-select filterable style="width:100%" v-model="article.template_id" placeholder="请选择">
                                     <el-option  v-for="template in templates"
                                       :key="template.id"
                                       :label="template.name"
@@ -304,8 +304,9 @@
             },
             //获取模板列表
             getTemplates(){
-                axios.get('/templates')
+                axios.get('/templates?type=all')
                 .then((response)=> {
+                    console.log(response)
                     this.templates = response.data
                 })
                 .catch((error)=>{

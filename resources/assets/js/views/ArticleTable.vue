@@ -23,14 +23,12 @@
                          </el-table-column>
                         <el-table-column
                           prop="template.name"
-                          label="模板"
-                          width="220">
+                          label="模板">
                         </el-table-column>
                         <el-table-column
                           prop="template.updated_at"
                           label="更新时间"
-                          sortable
-                          width="200">
+                          sortable>
                         </el-table-column>
                         <!-- <el-table-column
                           prop="config"
@@ -63,7 +61,7 @@
                       background
                       layout="prev, pager, next"
                       :current-page.sync="current_page"
-                      :page-size="20"
+                      :page-size.sync="per_page"
                       :total="total"
                       @prev-click="prevClick"
                       @next-click="nextClick"
@@ -82,6 +80,7 @@
             return {
                 total:0,//总数
                 current_page:1,//当前页数
+                per_page:1,//每页显示数量
                 tableData:[]
             }
         },
@@ -138,8 +137,10 @@
                page = page || 1
                axios.get('/articles?page='+page)
                .then((response)=> {
+                   console.log(response)
                    this.total = response.data.total
                    this.current_page = response.data.current_page
+                   this.per_page = response.data.per_page
                    this.tableData = []
                    response.data.data.map((value,index)=>{
                        this.tableData.push(value)

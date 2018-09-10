@@ -12,11 +12,21 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style media="screen">
+        html,body{
+            background:rgb(48, 65, 86);
+        }
+        .title{
+            text-align:center;
+            margin:50px 0;
+            color: #fff;
+        }
+    </style>
     @yield('styles')
 </head>
 <body>
     <div id="app" class="{{ route_class() }}-page">
-        <div class="" style="text-align:center;margin:50px 0;">
+        <div class="title">
             <h2>文章管理系统</h2>
         </div>
         @yield('content')

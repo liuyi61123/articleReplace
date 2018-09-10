@@ -16,16 +16,10 @@
 </head>
 <body>
     <div id="app" class="{{ route_class() }}-page">
-        <el-container>
-            @include('layouts._aside')
-            <el-container class="content">
-                @include('layouts._header')
-                <el-main>
-                    @yield('content')
-                </el-main>
-                @include('layouts._footer')
-            </el-container>
-        </el-container>
+        <div class="" style="text-align:center;margin:50px 0;">
+            <h2>文章管理系统</h2>
+        </div>
+        @yield('content')
     </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

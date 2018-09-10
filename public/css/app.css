@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);/*!
+/*!
  * Bootstrap v4.1.1 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
  * Copyright 2011-2018 Twitter, Inc.
@@ -10415,5 +10415,47 @@ a.text-dark:focus {
   background-color: #fff;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.content {
+  padding-left: 180px;
+}
+
+.el-aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #304156;
+  width: 180px;
+}
+
+.el-aside .el-menu-vertica a {
+  text-decoration: none;
+}
+
+.el-aside .el-menu-vertica a .el-menu-item {
+  color: #fff;
+}
+
+.website-title {
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.user-name-dropdown {
+  float: right;
+  margin-right: 40px;
+  margin-top: 10px;
+}
+
+.user-name-dropdown .el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+}
+
+.user-name-dropdown .el-icon-arrow-down {
+  font-size: 12px;
 }
 

@@ -58,7 +58,9 @@ class ArticlesController extends Controller
     public function store(ArticleRequest $request,Article $article)
     {
         $article_data['template_id'] = $request->input('template_id');
-        $article_data['config'] = $request->except('template_id');
+        $article_data['name'] = $request->input('name');
+        $article_data['desc'] = $request->input('desc');
+        $article_data['config'] = $request->except(['template_id','name','desc']);
 
         $article->fill($article_data);
         $article->save();

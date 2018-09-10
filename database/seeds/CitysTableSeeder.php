@@ -51,25 +51,25 @@ class CitysTableSeeder extends Seeder
                 );
             }
             DB::table('citys')->insert($cityLists);
-        }
 
-        //再循环插入型号
-        $county_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
-        foreach($cityLists as $cityList){
+            //再循环插入型号
+            $county_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
+            foreach($cityLists as $cityList){
 
-            $parentid = $cityList['id'];
-            $response = $client->request('GET', $county_api.$parentid, $header);
-            $contents = json_decode($response->getBody()->getContents(),true);
-            $countyLists = array();
+                $parentid = $cityList['id'];
+                $response = $client->request('GET', $county_api.$parentid, $header);
+                $contents = json_decode($response->getBody()->getContents(),true);
+                $countyLists = array();
 
-            foreach($contents['data'] as $value){
-                $countyLists[] = array(
-                    'id'=>$value['id'],
-                    'name'=>$value['name'],
-                    'pid'=>$value['parent_id']
-                );
+                foreach($contents['data'] as $value){
+                    $countyLists[] = array(
+                        'id'=>$value['id'],
+                        'name'=>$value['name'],
+                        'pid'=>$value['parent_id']
+                    );
+                }
+                DB::table('citys')->insert($countyLists);
             }
-            DB::table('citys')->insert($countyLists);
         }
     }
 }

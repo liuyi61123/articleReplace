@@ -55,7 +55,7 @@ class CarInfosTableSeeder extends Seeder
             DB::table('car_infos')->insert($carlists);
 
             //暂停 10 秒
-            sleep(2);
+            // sleep(2);
         }
     }
 }

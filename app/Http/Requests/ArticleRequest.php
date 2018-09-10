@@ -29,6 +29,8 @@ class ArticleRequest extends FormRequest
             {
                 return [
                     'template_id' => 'required|integer',
+                    'name' => 'required',
+                    'desc' => 'nullable',
                     // 'title' => 'required',
                     // 'keywords' => 'required',
                     // 'description' => 'required',
@@ -43,6 +45,9 @@ class ArticleRequest extends FormRequest
             {
                 return [
                     // UPDATE ROLES
+                    'template_id' => 'required|integer',
+                    'name' => 'required',
+                    'desc' => 'nullable',
                 ];
             }
             case 'GET':

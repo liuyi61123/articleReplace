@@ -7,6 +7,16 @@
                         <span>{{title}}</span>
                     </div>
                     <div class="text item">
+                        <el-form-item label="名称">
+                            <el-col :span="24">
+                                <el-input v-model="article.name" placeholder="名称"></el-input>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item label="描述">
+                            <el-col :span="24">
+                                <el-input v-model="article.desc" placeholder="详细描述"></el-input>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="模板">
                             <el-col :span="8">
                                 <el-select filterable style="width:100%" v-model="article.template_id" placeholder="请选择">
@@ -19,21 +29,21 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="省">
-                            <el-col :span="4">
-                                <el-select v-model="article.city.data" placeholder="请选择" @change="changeProvince">
-                                    <el-option  v-for="province in provinces"
+                            <el-col :span="8">
+                                <el-select v-model="article.province.data" placeholder="请选择" @change="changeProvince">
+                                    <el-option v-for="province in provinces"
                                       :key="province.id"
                                       :label="province.name"
                                       :value="province.id">
                                     </el-option>
                                   </el-select>
                             </el-col>
-                            <el-col :span="3">
-                              <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number>
-                            </el-col>
+                            <!-- <el-col :span="3"> -->
+                              <!-- <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number> -->
+                            <!-- </el-col> -->
                         </el-form-item>
                         <el-form-item label="市">
-                            <el-col :span="4">
+                            <el-col :span="8">
                                 <el-select v-model="article.city.data" placeholder="请选择" @change="changeCity">
                                     <el-option  v-for="city in citys"
                                       :key="city.id"
@@ -177,6 +187,8 @@
                 countys:[],
                 cars:[],
                 article:{
+                    name:'',
+                    desc:'',
                     template_id:1,
                     province:{
                         sort:0,
@@ -184,7 +196,7 @@
                     },
                     city:{
                         sort:1,
-                        data:1
+                        data:''
                     },
                     countys:{
                         sort:2,
@@ -216,6 +228,10 @@
             }
         },
         methods: {
+            changeProvince(e){
+                this.countys = []
+                this.getCitys(e)
+            },
             changeCity(e){
                 this.getCountys(e)
             },
@@ -256,8 +272,6 @@
                 this.article.cars.data.splice(index, 1)
             },
             submitFrom(){
-                console.log(this.article);
-
                 this.fullScreen(true)
                 // 发送 POST 请求
                 axios({
@@ -332,28 +346,30 @@
                 });
             },
             //获取省区信息
-            getProvinces(id){
-                axios.get('/articles/citys/'+id)
+            getProvinces(pid){
+                axios.get('/articles/citys/'+pid)
                 .then((response)=> {
-                    this.province = response.data
+                    this.provinces = response.data
                 })
                 .catch((error)=>{
                     console.log(error);
                 });
             },
             //获取市区信息
-            getCitys(id){
-                axios.get('/articles/citys/'+id)
+            getCitys(pid){
+                axios.get('/articles/citys/'+pid)
                 .then((response)=> {
                     this.citys = response.data
+                    this.article.city.data = response.data[0].id
+                    this.getCountys(this.article.city.data)
                 })
                 .catch((error)=>{
                     console.log(error);
                 });
             },
             //获取市区信息
-            getCountys(id){
-                axios.get('/articles/citys/'+id)
+            getCountys(pid){
+                axios.get('/articles/citys/'+pid)
                 .then((response)=> {
                     this.countys = response.data
                     if(!this.id){
@@ -403,6 +419,8 @@
                     console.log(response.data);
                     this.article = response.data.config
                     this.article.template_id = response.data.template_id
+                    this.article.name = response.data.name
+                    this.article.desc = response.data.desc
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -415,8 +433,8 @@
             this.getTemplates()
             this.getCars()
             this.getProvinces(0)
-            // this.getCitys(0)
-            // this.getCountys(1)
+            this.getCitys(1)
+            this.getCountys(2)
             //关闭loading
             this.fullScreen(false)
         }

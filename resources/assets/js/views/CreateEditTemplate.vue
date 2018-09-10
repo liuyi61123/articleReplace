@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="20">
-        <el-form label-position="top" label-width="80px"  v-loading="loading">
+        <el-form label-width="80px"  v-loading="loading">
             <el-col :span="14">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">

@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="20">
         <el-form label-position="top" label-width="80px"  v-loading="loading">
-            <el-col :span="16" :offset="4">
+            <el-col :span="14">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>{{title}}</span>
@@ -32,15 +32,44 @@
                         <el-dialog :visible.sync="dialogVisible">
                           <img width="100%" :src="dialogImageUrl" alt="">
                         </el-dialog>
-                        <el-form-item label="段落">
+                        <!-- <el-form-item label="段落">
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.paragraphs" placeholder="段落"></el-input>
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item>
                             <el-button type="primary" @click="submitFrom()">保存</el-button>
                         </el-form-item>
                     </div>
                 </el-card>
             </el-col>
+
+            <el-col :span="10">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>段落</span>
+                        <el-button type="success" size="small" style="float: right;" @click="addParagraph()">添加段落</el-button>
+                    </div>
+
+                    <div class="text item">
+                        <div v-for="(paragraph,index) in template.paragraphs">
+                            <el-form-item label="段落名称">
+                                <el-input v-model="paragraph.name" placeholder="段落名称（便于区分）"></el-input>
+                            </el-form-item>
+                            <el-form-item label="段落内容">
+                                <!-- <el-col :span="24"> -->
+                                    <el-input
+                                      v-model="paragraph.content"
+                                      type="textarea"
+                                      :rows="10"
+                                      placeholder="一行一个">
+                                    </el-input>
+                                 <!-- </el-col> -->
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button style="float: right;" size="small" type="danger" icon="el-icon-delete" @click="deleteParagraph(index)"></el-button>
+                            </el-form-item>
+                        </div>
+                    </div>
+                </el-card>
             </el-col>
         </el-form>
     </el-row>
@@ -59,9 +88,15 @@
                 template:{
                     name:'',
                     content:'',
-                    paragraphs:'',
+                    paragraphs:[
+                        {
+                            name:'',
+                            content:''
+                        }
+                    ],
                     images:[]
                 },
+                paragraphIndex:0,
                 title:'',
                 loading:false,
                 dialogImageUrl: '',
@@ -159,6 +194,22 @@
                })
                this.closeImageList()
                console.log(this.template.images)
+           },
+           addParagraph(){
+               //添加参数
+               if(this.paragraphIndex >= 2){
+                   this.$message.error('不能超过3个参数')
+               }else{
+                   this.paragraphIndex++
+                   Vue.set(this.template.paragraphs, this.template.paragraphs.length, {name:'',content:''})
+               }
+           },
+           deleteParagraph(index){
+               //删除参数
+               this.template.paragraphs.splice(index, 1)
+               this.paragraphIndex--
+               console.log(this.paragraphIndex)
+
            }
         },
         created(){
@@ -169,6 +220,7 @@
                 .then((response)=> {
                     this.template = response.data
                     this.template.images = response.data.images ||[]
+                    this.template.paragraphs = response.data.paragraphs ||[{name:'',content:''}]
                 })
                 .catch((error)=>{
                     console.log(error);

@@ -96851,6 +96851,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -96863,9 +96892,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             template: {
                 name: '',
                 content: '',
-                paragraphs: '',
+                paragraphs: [{
+                    name: '',
+                    content: ''
+                }],
                 images: []
             },
+            paragraphIndex: 0,
             title: '',
             loading: false,
             dialogImageUrl: '',
@@ -96967,6 +97000,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             this.closeImageList();
             console.log(this.template.images);
+        },
+        addParagraph: function addParagraph() {
+            //添加参数
+            if (this.paragraphIndex >= 2) {
+                this.$message.error('不能超过3个参数');
+            } else {
+                this.paragraphIndex++;
+                Vue.set(this.template.paragraphs, this.template.paragraphs.length, { name: '', content: '' });
+            }
+        },
+        deleteParagraph: function deleteParagraph(index) {
+            //删除参数
+            this.template.paragraphs.splice(index, 1);
+            this.paragraphIndex--;
+            console.log(this.paragraphIndex);
         }
     },
     created: function created() {
@@ -96978,6 +97026,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/templates/' + this.id + '/edit').then(function (response) {
                 _this5.template = response.data;
                 _this5.template.images = response.data.images || [];
+                _this5.template.paragraphs = response.data.paragraphs || [{ name: '', content: '' }];
             }).catch(function (error) {
                 console.log(error);
             });
@@ -97655,7 +97704,7 @@ var render = function() {
         [
           _c(
             "el-col",
-            { attrs: { span: 16, offset: 4 } },
+            { attrs: { span: 14 } },
             [
               _c("el-card", { staticClass: "box-card" }, [
                 _c(
@@ -97777,28 +97826,6 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "el-form-item",
-                      { attrs: { label: "段落" } },
-                      [
-                        _c("el-input", {
-                          attrs: {
-                            type: "textarea",
-                            autosize: { minRows: 20 },
-                            placeholder: "段落"
-                          },
-                          model: {
-                            value: _vm.template.paragraphs,
-                            callback: function($$v) {
-                              _vm.$set(_vm.template, "paragraphs", $$v)
-                            },
-                            expression: "template.paragraphs"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-form-item",
                       [
                         _c(
                           "el-button",
@@ -97817,6 +97844,114 @@ var render = function() {
                     )
                   ],
                   1
+                )
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "el-col",
+            { attrs: { span: 10 } },
+            [
+              _c("el-card", { staticClass: "box-card" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "clearfix",
+                    attrs: { slot: "header" },
+                    slot: "header"
+                  },
+                  [
+                    _c("span", [_vm._v("段落")]),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
+                      {
+                        staticStyle: { float: "right" },
+                        attrs: { type: "success", size: "small" },
+                        on: {
+                          click: function($event) {
+                            _vm.addParagraph()
+                          }
+                        }
+                      },
+                      [_vm._v("添加段落")]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "text item" },
+                  _vm._l(_vm.template.paragraphs, function(paragraph, index) {
+                    return _c(
+                      "div",
+                      [
+                        _c(
+                          "el-form-item",
+                          { attrs: { label: "段落名称" } },
+                          [
+                            _c("el-input", {
+                              attrs: { placeholder: "段落名称（便于区分）" },
+                              model: {
+                                value: paragraph.name,
+                                callback: function($$v) {
+                                  _vm.$set(paragraph, "name", $$v)
+                                },
+                                expression: "paragraph.name"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-form-item",
+                          { attrs: { label: "段落内容" } },
+                          [
+                            _c("el-input", {
+                              attrs: {
+                                type: "textarea",
+                                rows: 10,
+                                placeholder: "一行一个"
+                              },
+                              model: {
+                                value: paragraph.content,
+                                callback: function($$v) {
+                                  _vm.$set(paragraph, "content", $$v)
+                                },
+                                expression: "paragraph.content"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-form-item",
+                          [
+                            _c("el-button", {
+                              staticStyle: { float: "right" },
+                              attrs: {
+                                size: "small",
+                                type: "danger",
+                                icon: "el-icon-delete"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteParagraph(index)
+                                }
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  })
                 )
               ])
             ],

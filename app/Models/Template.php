@@ -20,6 +20,7 @@ class Template extends Model
      */
     protected $casts = [
         'images' => 'array',
+        'paragraphs' => 'array',
     ];
 
     /**
@@ -29,5 +30,5 @@ class Template extends Model
     {
         return $this->hasMany(Article::class);
     }
-    
+
 }

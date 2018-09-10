@@ -18,6 +18,20 @@
                                 </el-select>
                             </el-col>
                         </el-form-item>
+                        <el-form-item label="省">
+                            <el-col :span="4">
+                                <el-select v-model="article.city.data" placeholder="请选择" @change="changeProvince">
+                                    <el-option  v-for="province in provinces"
+                                      :key="province.id"
+                                      :label="province.name"
+                                      :value="province.id">
+                                    </el-option>
+                                  </el-select>
+                            </el-col>
+                            <el-col :span="3">
+                              <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="市">
                             <el-col :span="4">
                                 <el-select v-model="article.city.data" placeholder="请选择" @change="changeCity">
@@ -158,19 +172,23 @@
                         name:'房贷'
                     }
                 ],
+                provinces:[],
                 citys:[],
                 countys:[],
                 cars:[],
                 article:{
                     template_id:1,
-                    countys:{
-                        sort:2,
-                        data:[]
+                    province:{
+                        sort:0,
+                        data:1
                     },
-                    // type:1,
                     city:{
                         sort:1,
                         data:1
+                    },
+                    countys:{
+                        sort:2,
+                        data:[]
                     },
                     cars:{
                         sort:3,
@@ -313,6 +331,16 @@
                     console.log(error);
                 });
             },
+            //获取省区信息
+            getProvinces(id){
+                axios.get('/articles/citys/'+id)
+                .then((response)=> {
+                    this.province = response.data
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            },
             //获取市区信息
             getCitys(id){
                 axios.get('/articles/citys/'+id)
@@ -386,8 +414,9 @@
             //获取模板列表
             this.getTemplates()
             this.getCars()
-            this.getCitys(0)
-            this.getCountys(1)
+            this.getProvinces(0)
+            // this.getCitys(0)
+            // this.getCountys(1)
             //关闭loading
             this.fullScreen(false)
         }

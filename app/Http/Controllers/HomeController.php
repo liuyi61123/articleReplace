@@ -18,6 +18,7 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+
     /**
      * Show the application dashboard.
      *
@@ -35,34 +36,26 @@ class HomeController extends Controller
                 'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
             ]
         ];
-        // $brand_api = 'https://jisucxdq.market.alicloudapi.com/car/brand';
-        // $response = $client->request('GET', $brand_api, $header);
-        // $brands = json_decode($response->getBody()->getContents(),true)['result'];
-        //
-        // //先插入品牌
-        // foreach($brands as $brand){
-        //
-        // }
+
 
         //获取某个品牌的所有型号
-        $model_api = 'https://jisucxdq.market.alicloudapi.com/car/carlist?parentid=';
-        $parentid = 42108;
+        $model_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
+        $parentid = 99537;
         $response = $client->request('GET', $model_api.$parentid, $header);
         $contents = json_decode($response->getBody()->getContents(),true);
-        $carlists = array();
+        $citylists = array();
         // dd($contents);
-        foreach($contents['result'] as $content){
-            foreach($content['carlist'] as $value){
-                if(!in_array(['name'=>$value['name']],$carlists)){
-                    $carlists[] = array(
-                        'name'=>$value['name']
-                    );
-                }
-            }
+
+        foreach($contents['data'] as $value){
+            $citylists[] = array(
+                'id'=>$value['id'],
+                'name'=>$value['name'],
+                'pid'=>$value['parent_id']
+            );
         }
 
-        $carlists = array_merge(array_sort($carlists));
-        dd($carlists);
+        // $carlists = array_merge(array_sort($carlists));
+        dd($citylists);
     }
 
     public function test2(){

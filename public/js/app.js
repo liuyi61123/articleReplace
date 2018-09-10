@@ -95513,6 +95513,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['id'],
@@ -95528,19 +95542,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 id: 2,
                 name: '房贷'
             }],
+            provinces: [],
             citys: [],
             countys: [],
             cars: [],
             article: {
                 template_id: 1,
-                countys: {
-                    sort: 2,
-                    data: []
+                province: {
+                    sort: 0,
+                    data: 1
                 },
-                // type:1,
                 city: {
                     sort: 1,
                     data: 1
+                },
+                countys: {
+                    sort: 2,
+                    data: []
                 },
                 cars: {
                     sort: 3,
@@ -95677,12 +95695,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
 
-        //获取市区信息
-        getCitys: function getCitys(id) {
+        //获取省区信息
+        getProvinces: function getProvinces(id) {
             var _this4 = this;
 
             axios.get('/articles/citys/' + id).then(function (response) {
-                _this4.citys = response.data;
+                _this4.province = response.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+
+        //获取市区信息
+        getCitys: function getCitys(id) {
+            var _this5 = this;
+
+            axios.get('/articles/citys/' + id).then(function (response) {
+                _this5.citys = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95690,13 +95719,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取市区信息
         getCountys: function getCountys(id) {
-            var _this5 = this;
+            var _this6 = this;
 
             axios.get('/articles/citys/' + id).then(function (response) {
-                _this5.countys = response.data;
-                if (!_this5.id) {
+                _this6.countys = response.data;
+                if (!_this6.id) {
                     response.data.map(function (value, index) {
-                        _this5.article.countys.data.push(value.name);
+                        _this6.article.countys.data.push(value.name);
                     });
                 }
             }).catch(function (error) {
@@ -95706,11 +95735,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //获取品牌信息
         getCars: function getCars() {
-            var _this6 = this;
+            var _this7 = this;
 
             axios.get('/articles/cars').then(function (response) {
                 console.log(response);
-                _this6.cars = response.data;
+                _this7.cars = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95729,7 +95758,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     created: function created() {
-        var _this7 = this;
+        var _this8 = this;
 
         //开启loading
         this.fullScreen(true);
@@ -95740,8 +95769,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //读取要编辑的文章数据
             axios.get('/articles/' + this.id + '/edit').then(function (response) {
                 console.log(response.data);
-                _this7.article = response.data.config;
-                _this7.article.template_id = response.data.template_id;
+                _this8.article = response.data.config;
+                _this8.article.template_id = response.data.template_id;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95752,8 +95781,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //获取模板列表
         this.getTemplates();
         this.getCars();
-        this.getCitys(0);
-        this.getCountys(1);
+        this.getProvinces(0);
+        // this.getCitys(0)
+        // this.getCountys(1)
         //关闭loading
         this.fullScreen(false);
     }
@@ -95828,6 +95858,66 @@ var render = function() {
                                 })
                               })
                             )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "省" } },
+                      [
+                        _c(
+                          "el-col",
+                          { attrs: { span: 4 } },
+                          [
+                            _c(
+                              "el-select",
+                              {
+                                attrs: { placeholder: "请选择" },
+                                on: { change: _vm.changeProvince },
+                                model: {
+                                  value: _vm.article.city.data,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.article.city, "data", $$v)
+                                  },
+                                  expression: "article.city.data"
+                                }
+                              },
+                              _vm._l(_vm.provinces, function(province) {
+                                return _c("el-option", {
+                                  key: province.id,
+                                  attrs: {
+                                    label: province.name,
+                                    value: province.id
+                                  }
+                                })
+                              })
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 3 } },
+                          [
+                            _c("el-input-number", {
+                              attrs: {
+                                "controls-position": "right",
+                                min: 1,
+                                max: 10
+                              },
+                              model: {
+                                value: _vm.article.city.sort,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.city, "sort", $$v)
+                                },
+                                expression: "article.city.sort"
+                              }
+                            })
                           ],
                           1
                         )

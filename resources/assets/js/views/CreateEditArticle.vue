@@ -315,7 +315,6 @@
                        }
                        this.loading = false
                        this.$message.error(message)
-
                    });
             },
             addParam(){
@@ -331,14 +330,11 @@
                 //删除参数
                 this.article.params.splice(index, 1)
                 this.paramsIndex--
-                console.log(this.paramsIndex)
-
             },
             //获取模板列表
             getTemplates(){
                 axios.get('/templates?type=all')
                 .then((response)=> {
-                    console.log(response)
                     this.templates = response.data
                 })
                 .catch((error)=>{
@@ -386,7 +382,6 @@
             getCars(){
                 axios.get('/articles/cars')
                 .then((response)=> {
-                    console.log(response);
                     this.cars = response.data
                 })
                 .catch((error)=>{
@@ -416,7 +411,6 @@
                 //读取要编辑的文章数据
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
-                    console.log(response.data);
                     this.article = response.data.config
                     this.article.template_id = response.data.template_id
                     this.article.name = response.data.name

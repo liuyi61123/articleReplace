@@ -19,7 +19,7 @@ class CitysTableSeeder extends Seeder
                 'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
             ]
         ];
-        $province_api = 'https://api02.aliyun.venuscn.com/area/all?level=0';
+        $province_api = 'http://api02.aliyun.venuscn.com/area/all?level=0';
         $response = $client->request('GET', $province_api, $header);
         $contents = json_decode($response->getBody()->getContents(),true);
         $provinceLists = array();
@@ -35,7 +35,7 @@ class CitysTableSeeder extends Seeder
         DB::table('citys')->insert($provinceLists);
 
         //再循环插入型号
-        $city_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
+        $city_api = 'http://api02.aliyun.venuscn.com/area/query?parent_id=';
         foreach($provinceLists as $provinceList){
 
             $parentid = $provinceList['id'];
@@ -53,7 +53,7 @@ class CitysTableSeeder extends Seeder
             DB::table('citys')->insert($cityLists);
 
             //再循环插入型号
-            $county_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
+            $county_api = 'http://api02.aliyun.venuscn.com/area/query?parent_id=';
             foreach($cityLists as $cityList){
 
                 $parentid = $cityList['id'];

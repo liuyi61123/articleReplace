@@ -230,9 +230,11 @@
         methods: {
             changeProvince(e){
                 this.countys = []
+                this.article.countys.data = []
                 this.getCitys(e)
             },
             changeCity(e){
+                this.article.countys.data = []
                 this.getCountys(e)
             },
             handleCheckAllChange(val) {
@@ -273,6 +275,8 @@
             },
             submitFrom(){
                 this.fullScreen(true)
+                // console.log(this.article)
+                // return ;
                 // 发送 POST 请求
                 axios({
                     method: this.id?'put':'post',
@@ -411,24 +415,33 @@
                 //读取要编辑的文章数据
                 axios.get('/articles/'+this.id+'/edit')
                 .then((response)=> {
+                    console.log(response)
                     this.article = response.data.config
                     this.article.template_id = response.data.template_id
                     this.article.name = response.data.name
                     this.article.desc = response.data.desc
+                    //获取城市
+                    this.getCitys(response.data.config.province.data)
+                    //获取区
+                    this.getCountys(response.data.config.city.data)
                 })
                 .catch((error)=>{
                     console.log(error)
                 });
             }else{
                 this.title = '新建文章';
+                //获取城市
+                this.getCitys(1)
+                //获取区
+                this.getCountys(2)
             }
 
             //获取模板列表
             this.getTemplates()
+            //获取汽车信息
             this.getCars()
+            //获取省
             this.getProvinces(0)
-            this.getCitys(1)
-            this.getCountys(2)
             //关闭loading
             this.fullScreen(false)
         }

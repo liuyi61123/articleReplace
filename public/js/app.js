@@ -95168,6 +95168,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -95312,6 +95322,33 @@ var render = function() {
                   [
                     _c("el-table-column", {
                       attrs: { type: "selection", width: "55" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "status",
+                        label: "状态",
+                        sortable: "",
+                        width: "100"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              scope.row.status == 1
+                                ? _c("el-tag", { attrs: { type: "success" } }, [
+                                    _vm._v("已完成"),
+                                    _c("i", { staticClass: "el-icon-success" })
+                                  ])
+                                : _c("el-tag", { attrs: { type: "danger" } }, [
+                                    _vm._v("生成中"),
+                                    _c("i", { staticClass: "el-icon-loading" })
+                                  ])
+                            ]
+                          }
+                        }
+                      ])
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {

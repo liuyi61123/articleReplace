@@ -1,7 +1,9 @@
 <?php
+// @formatter:off
+
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.6.12 on 2018-03-20 22:28:46.
+ * Generated for Laravel 5.6.28 on 2018-09-23 21:43:57.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11,6 +13,22 @@
 
 namespace Illuminate\Support\Facades { 
 
+    /**
+     * 
+     *
+     * @method static string version()
+     * @method static string basePath()
+     * @method static string environment()
+     * @method static bool isDownForMaintenance()
+     * @method static void registerConfiguredProviders()
+     * @method static \Illuminate\Support\ServiceProvider register(\Illuminate\Support\ServiceProvider|string $provider, array $options = [], bool $force = false)
+     * @method static void registerDeferredProvider(string $provider, string $service = null)
+     * @method static void boot()
+     * @method static void booting(mixed $callback)
+     * @method static void booted(mixed $callback)
+     * @method static string getCachedServicesPath()
+     * @see \Illuminate\Foundation\Application
+     */ 
     class App {
         
         /**
@@ -1248,7 +1266,7 @@ namespace Illuminate\Support\Facades {
          * Set the shared instance of the container.
          *
          * @param \Illuminate\Contracts\Container\Container|null $container
-         * @return static 
+         * @return \Illuminate\Contracts\Container\Container|static 
          * @static 
          */ 
         public static function setInstance($container = null)
@@ -1312,6 +1330,16 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static int handle(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output = null)
+     * @method static int call(string $command, array $parameters = [], $outputBuffer = null)
+     * @method static int queue(string $command, array $parameters = [])
+     * @method static array all()
+     * @method static string output()
+     * @see \Illuminate\Contracts\Console\Kernel
+     */ 
     class Artisan {
         
         /**
@@ -1449,6 +1477,34 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static mixed guard(string|null $name = null)
+     * @method static void shouldUse(string $name);
+     * @method static bool check()
+     * @method static bool guest()
+     * @method static \Illuminate\Contracts\Auth\Authenticatable|null user()
+     * @method static int|null id()
+     * @method static bool validate(array $credentials = [])
+     * @method static void setUser(\Illuminate\Contracts\Auth\Authenticatable $user)
+     * @method static bool attempt(array $credentials = [], bool $remember = false)
+     * @method static bool once(array $credentials = [])
+     * @method static void login(\Illuminate\Contracts\Auth\Authenticatable $user, bool $remember = false)
+     * @method static \Illuminate\Contracts\Auth\Authenticatable loginUsingId(mixed $id, bool $remember = false)
+     * @method static bool onceUsingId(mixed $id)
+     * @method static bool viaRemember()
+     * @method static void logout()
+     * @method static \Symfony\Component\HttpFoundation\Response|null onceBasic(string $field = 'email',array $extraConditions = [])
+     * @method static null|bool logoutOtherDevices(string $password, string $attribute = 'password')
+     * @method static \Illuminate\Contracts\Auth\UserProvider|null createUserProvider(string $provider = null)
+     * @method static \Illuminate\Auth\AuthManager extend(string $driver, \Closure $callback)
+     * @method static \Illuminate\Auth\AuthManager provider(string $name, \Closure $callback)
+     * @see \Illuminate\Auth\AuthManager
+     * @see \Illuminate\Contracts\Auth\Factory
+     * @see \Illuminate\Contracts\Auth\Guard
+     * @see \Illuminate\Contracts\Auth\StatefulGuard
+     */ 
     class Auth {
         
         /**
@@ -1745,6 +1801,21 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Invalidate other sessions for the current user.
+         * 
+         * The application must be using the AuthenticateSession middleware.
+         *
+         * @param string $password
+         * @param string $attribute
+         * @return null|bool 
+         * @static 
+         */ 
+        public static function logoutOtherDevices($password, $attribute = 'password')
+        {
+            return \Illuminate\Auth\SessionGuard::logoutOtherDevices($password, $attribute);
+        }
+        
+        /**
          * Register an authentication attempt event listener.
          *
          * @param mixed $callback
@@ -1917,6 +1988,17 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Determine if the guard has a user instance.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasUser()
+        {
+            return \Illuminate\Auth\SessionGuard::hasUser();
+        }
+        
+        /**
          * Determine if the current user is authenticated.
          *
          * @return bool 
@@ -1979,6 +2061,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -2000,6 +2083,27 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static void compile($path = null)
+     * @method static string getPath()
+     * @method static void setPath($path)
+     * @method static string compileString($value)
+     * @method static string stripParentheses($expression)
+     * @method static void extend(callable $compiler)
+     * @method static array getExtensions()
+     * @method static void if($name, callable $callback)
+     * @method static bool check($name, ...$parameters)
+     * @method static void component($path, $alias = null)
+     * @method static void include($path, $alias = null)
+     * @method static void directive($name, callable $handler)
+     * @method static array getCustomDirectives()
+     * @method static void setEchoFormat($format)
+     * @method static void withDoubleEncoding()
+     * @method static void withoutDoubleEncoding()
+     * @see \Illuminate\View\Compilers\BladeCompiler
+     */ 
     class Blade {
         
         /**
@@ -2234,6 +2338,14 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static void connection($name = null);
+     * @method static \Illuminate\Broadcasting\Broadcasters\Broadcaster channel(string $channel, callable|string  $callback)
+     * @method static mixed auth(\Illuminate\Http\Request $request)
+     * @see \Illuminate\Contracts\Broadcasting\Factory
+     */ 
     class Broadcast {
         
         /**
@@ -2299,7 +2411,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a driver instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return mixed 
          * @static 
          */ 
@@ -2346,6 +2458,17 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static mixed dispatch($command)
+     * @method static mixed dispatchNow($command, $handler = null)
+     * @method static bool hasCommandHandler($command)
+     * @method static bool|mixed getCommandHandler($command)
+     * @method static \Illuminate\Contracts\Bus\Dispatcher pipeThrough(array $pipes)
+     * @method static \Illuminate\Contracts\Bus\Dispatcher map(array $map)
+     * @see \Illuminate\Contracts\Bus\Dispatcher
+     */ 
     class Bus {
         
         /**
@@ -2433,9 +2556,80 @@ namespace Illuminate\Support\Facades {
         {
             return \Illuminate\Bus\Dispatcher::map($map);
         }
+        
+        /**
+         * Assert if a job was dispatched based on a truth-test callback.
+         *
+         * @param string $command
+         * @param callable|int|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertDispatched($command, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\BusFake::assertDispatched($command, $callback);
+        }
+        
+        /**
+         * Determine if a job was dispatched based on a truth-test callback.
+         *
+         * @param string $command
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotDispatched($command, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\BusFake::assertNotDispatched($command, $callback);
+        }
+        
+        /**
+         * Get all of the jobs matching a truth-test callback.
+         *
+         * @param string $command
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function dispatched($command, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\BusFake::dispatched($command, $callback);
+        }
+        
+        /**
+         * Determine if there are any stored commands for a given class.
+         *
+         * @param string $command
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasDispatched($command)
+        {
+            return \Illuminate\Support\Testing\Fakes\BusFake::hasDispatched($command);
+        }
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Contracts\Cache\Repository  store(string|null $name = null)
+     * @method static bool has(string $key)
+     * @method static mixed get(string $key, mixed $default = null)
+     * @method static mixed pull(string $key, mixed $default = null)
+     * @method static void put(string $key, $value, \DateTimeInterface|\DateInterval|float|int $minutes)
+     * @method static bool add(string $key, $value, \DateTimeInterface|\DateInterval|float|int $minutes)
+     * @method static int|bool increment(string $key, $value = 1)
+     * @method static int|bool decrement(string $key, $value = 1)
+     * @method static void forever(string $key, $value)
+     * @method static mixed remember(string $key, \DateTimeInterface|\DateInterval|float|int $minutes, \Closure $callback)
+     * @method static mixed sear(string $key, \Closure $callback)
+     * @method static mixed rememberForever(string $key, \Closure $callback)
+     * @method static bool forget(string $key)
+     * @method static \Illuminate\Contracts\Cache\Store getStore()
+     * @see \Illuminate\Cache\CacheManager
+     * @see \Illuminate\Cache\Repository
+     */ 
     class Cache {
         
         /**
@@ -2453,7 +2647,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a cache driver instance.
          *
-         * @param string $driver
+         * @param string|null $driver
          * @return mixed 
          * @static 
          */ 
@@ -2583,7 +2777,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param mixed $value
-         * @param \DateTimeInterface|\DateInterval|float|int $minutes
+         * @param \DateTimeInterface|\DateInterval|float|int|null $minutes
          * @return void 
          * @static 
          */ 
@@ -2912,6 +3106,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -2991,6 +3186,17 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static bool has($key)
+     * @method static mixed get($key, $default = null)
+     * @method static array all()
+     * @method static void set($key, $value = null)
+     * @method static void prepend($key, $value)
+     * @method static void push($key, $value)
+     * @see \Illuminate\Config\Repository
+     */ 
     class Config {
         
         /**
@@ -3131,6 +3337,14 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static void queue(...$parameters)
+     * @method static unqueue($name)
+     * @method static array getQueuedCookies()
+     * @see \Illuminate\Cookie\CookieJar
+     */ 
     class Cookie {
         
         /**
@@ -3263,6 +3477,13 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static string encrypt(string $value, bool $serialize = true)
+     * @method static string decrypt(string $payload, bool $unserialize = true)
+     * @see \Illuminate\Encryption\Encrypter
+     */ 
     class Crypt {
         
         /**
@@ -3321,7 +3542,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param mixed $payload
          * @param bool $unserialize
-         * @return string 
+         * @return mixed 
          * @throws \Illuminate\Contracts\Encryption\DecryptException
          * @static 
          */ 
@@ -3355,6 +3576,32 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Database\ConnectionInterface connection(string $name = null)
+     * @method static string getDefaultConnection()
+     * @method static void setDefaultConnection(string $name)
+     * @method static \Illuminate\Database\Query\Builder table(string $table)
+     * @method static \Illuminate\Database\Query\Expression raw($value)
+     * @method static mixed selectOne(string $query, array $bindings = [])
+     * @method static array select(string $query, array $bindings = [])
+     * @method static bool insert(string $query, array $bindings = [])
+     * @method static int update(string $query, array $bindings = [])
+     * @method static int delete(string $query, array $bindings = [])
+     * @method static bool statement(string $query, array $bindings = [])
+     * @method static int affectingStatement(string $query, array $bindings = [])
+     * @method static bool unprepared(string $query)
+     * @method static array prepareBindings(array $bindings)
+     * @method static mixed transaction(\Closure $callback, int $attempts = 1)
+     * @method static void beginTransaction()
+     * @method static void commit()
+     * @method static void rollBack()
+     * @method static int transactionLevel()
+     * @method static array pretend(\Closure $callback)
+     * @see \Illuminate\Database\DatabaseManager
+     * @see \Illuminate\Database\Connection
+     */ 
     class DB {
         
         /**
@@ -4032,6 +4279,18 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Unset the event dispatcher for this connection.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function unsetEventDispatcher()
+        {
+            //Method inherited from \Illuminate\Database\Connection            
+            \Illuminate\Database\MySqlConnection::unsetEventDispatcher();
+        }
+        
+        /**
          * Determine if the connection in a "dry run".
          *
          * @return bool 
@@ -4260,6 +4519,20 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static void listen(string | array $events, $listener)
+     * @method static bool hasListeners(string $eventName)
+     * @method static void subscribe(object | string $subscriber)
+     * @method static array|null until(string | object $event, $payload = [])
+     * @method static array|null dispatch(string | object $event, $payload = [], bool $halt = false)
+     * @method static void push(string $event, array $payload = [])
+     * @method static void flush(string $event)
+     * @method static void forget(string $event)
+     * @method static void forgetPushed()
+     * @see \Illuminate\Events\Dispatcher
+     */ 
     class Event {
         
         /**
@@ -4437,9 +4710,113 @@ namespace Illuminate\Support\Facades {
         {
             return \Illuminate\Events\Dispatcher::setQueueResolver($resolver);
         }
+        
+        /**
+         * Assert if an event was dispatched based on a truth-test callback.
+         *
+         * @param string $event
+         * @param callable|int|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertDispatched($event, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\EventFake::assertDispatched($event, $callback);
+        }
+        
+        /**
+         * Assert if a event was dispatched a number of times.
+         *
+         * @param string $event
+         * @param int $times
+         * @return void 
+         * @static 
+         */ 
+        public static function assertDispatchedTimes($event, $times = 1)
+        {
+            \Illuminate\Support\Testing\Fakes\EventFake::assertDispatchedTimes($event, $times);
+        }
+        
+        /**
+         * Determine if an event was dispatched based on a truth-test callback.
+         *
+         * @param string $event
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotDispatched($event, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\EventFake::assertNotDispatched($event, $callback);
+        }
+        
+        /**
+         * Get all of the events matching a truth-test callback.
+         *
+         * @param string $event
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function dispatched($event, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\EventFake::dispatched($event, $callback);
+        }
+        
+        /**
+         * Determine if the given event has been dispatched.
+         *
+         * @param string $event
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasDispatched($event)
+        {
+            return \Illuminate\Support\Testing\Fakes\EventFake::hasDispatched($event);
+        }
          
     }
 
+    /**
+     * 
+     *
+     * @method static bool exists(string $path)
+     * @method static string get(string $path, bool $lock = false)
+     * @method static string sharedGet(string $path)
+     * @method static mixed getRequire(string $path)
+     * @method static mixed requireOnce(string $file)
+     * @method static string hash(string $path)
+     * @method static int put(string $path, string $contents, bool $lock = false)
+     * @method static int prepend(string $path, string $data)
+     * @method static int append(string $path, string $data)
+     * @method static mixed chmod(string $path, int $mode = null)
+     * @method static bool delete(string|array $paths)
+     * @method static bool move(string $path, string $target)
+     * @method static bool copy(string $path, string $target)
+     * @method static void link(string $target, string $link)
+     * @method static string name(string $path)
+     * @method static string basename(string $path)
+     * @method static string dirname(string $path)
+     * @method static string extension(string $path)
+     * @method static string type(string $path)
+     * @method static string|false mimeType(string $path)
+     * @method static int size(string $path)
+     * @method static int lastModified(string $path)
+     * @method static bool isDirectory(string $directory)
+     * @method static bool isReadable(string $path)
+     * @method static bool isWritable(string $path)
+     * @method static bool isFile(string $file)
+     * @method static array glob(string $pattern, int $flags = 0)
+     * @method static \Symfony\Component\Finder\SplFileInfo[] files(string $directory, bool $hidden = false)
+     * @method static \Symfony\Component\Finder\SplFileInfo[] allFiles(string $directory, bool $hidden = false)
+     * @method static array directories(string $directory)
+     * @method static bool makeDirectory(string $path, int $mode = 0755,  bool $recursive = false, bool $force = false)
+     * @method static bool moveDirectory(string $from, string $to, bool $overwrite = false)
+     * @method static bool copyDirectory(string $directory, string $destination, int $options = null)
+     * @method static bool deleteDirectory(string $directory, bool $preserve = false)
+     * @method static bool cleanDirectory(string $directory)
+     * @see \Illuminate\Filesystem\Filesystem
+     */ 
     class File {
         
         /**
@@ -4904,6 +5281,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -4925,6 +5303,24 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static bool has(string $ability)
+     * @method static \Illuminate\Contracts\Auth\Access\Gate define(string $ability, callable | string $callback)
+     * @method static \Illuminate\Contracts\Auth\Access\Gate policy(string $class, string $policy)
+     * @method static \Illuminate\Contracts\Auth\Access\Gate before(callable $callback)
+     * @method static \Illuminate\Contracts\Auth\Access\Gate after(callable $callback)
+     * @method static bool allows(string $ability, array | mixed $arguments = [])
+     * @method static bool denies(string $ability, array | mixed $arguments = [])
+     * @method static bool check(iterable | string $abilities, array | mixed $arguments = [])
+     * @method static bool any(iterable | string $abilities, array | mixed $arguments = [])
+     * @method static \Illuminate\Auth\Access\Response authorize(string $ability, array | mixed $arguments = [])
+     * @method static mixed getPolicyFor(object | string $class)
+     * @method static \Illuminate\Contracts\Auth\Access\Gate forUser(\Illuminate\Contracts\Auth\Authenticatable | mixed $user)
+     * @method static array abilities()
+     * @see \Illuminate\Contracts\Auth\Access\Gate
+     */ 
     class Gate {
         
         /**
@@ -4958,7 +5354,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param string $class
-         * @param array $abilities
+         * @param array|null $abilities
          * @return $this 
          * @static 
          */ 
@@ -5130,6 +5526,15 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static array info(string $hashedValue)
+     * @method static string make(string $value, array $options = [])
+     * @method static bool check(string $value, string $hashedValue, array $options = [])
+     * @method static bool needsRehash(string $hashedValue, array $options = [])
+     * @see \Illuminate\Hashing\BcryptHasher
+     */ 
     class Hash {
         
         /**
@@ -5222,6 +5627,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -5258,6 +5664,16 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static mixed trans(string $key, array $replace = [], string $locale = null)
+     * @method static string transChoice(string $key, int | array | \Countable $number, array $replace = [], string $locale = null)
+     * @method static string getLocale()
+     * @method static void setLocale(string $locale)
+     * @method static string|array|null get(string $key, array $replace = [], string $locale = null, bool $fallback = true)
+     * @see \Illuminate\Translation\Translator
+     */ 
     class Lang {
         
         /**
@@ -5560,6 +5976,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -5581,6 +5998,22 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static void emergency(string $message, array $context = [])
+     * @method static void alert(string $message, array $context = [])
+     * @method static void critical(string $message, array $context = [])
+     * @method static void error(string $message, array $context = [])
+     * @method static void warning(string $message, array $context = [])
+     * @method static void notice(string $message, array $context = [])
+     * @method static void info(string $message, array $context = [])
+     * @method static void debug(string $message, array $context = [])
+     * @method static void log($level, string $message, array $context = [])
+     * @method static mixed channel(string $channel = null)
+     * @method static \Psr\Log\LoggerInterface stack(array $channels, string $channel = null)
+     * @see \Illuminate\Log\Logger
+     */ 
     class Log {
         
         /**
@@ -5776,6 +6209,18 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Mail\PendingMail to($users)
+     * @method static \Illuminate\Mail\PendingMail bcc($users)
+     * @method static void raw(string $text, $callback)
+     * @method static void send(string|array|\Illuminate\Contracts\Mail\Mailable $view, array $data = [], \Closure|string $callback = null)
+     * @method static array failures()
+     * @method static mixed queue(string|array|\Illuminate\Contracts\Mail\Mailable $view, string $queue = null)
+     * @method static mixed later(\DateTimeInterface|\DateInterval|int $delay, string|array|\Illuminate\Contracts\Mail\Mailable $view, string $queue = null)
+     * @see \Illuminate\Mail\Mailer
+     */ 
     class Mail {
         
         /**
@@ -6052,6 +6497,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -6070,9 +6516,141 @@ namespace Illuminate\Support\Facades {
         {
             return \Illuminate\Mail\Mailer::hasMacro($name);
         }
+        
+        /**
+         * Assert if a mailable was sent based on a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|int|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertSent($mailable, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertSent($mailable, $callback);
+        }
+        
+        /**
+         * Determine if a mailable was not sent based on a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotSent($mailable, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertNotSent($mailable, $callback);
+        }
+        
+        /**
+         * Assert that no mailables were sent.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNothingSent()
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertNothingSent();
+        }
+        
+        /**
+         * Assert if a mailable was queued based on a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|int|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertQueued($mailable, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertQueued($mailable, $callback);
+        }
+        
+        /**
+         * Determine if a mailable was not queued based on a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotQueued($mailable, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertNotQueued($mailable, $callback);
+        }
+        
+        /**
+         * Assert that no mailables were queued.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNothingQueued()
+        {
+            \Illuminate\Support\Testing\Fakes\MailFake::assertNothingQueued();
+        }
+        
+        /**
+         * Get all of the mailables matching a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function sent($mailable, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\MailFake::sent($mailable, $callback);
+        }
+        
+        /**
+         * Determine if the given mailable has been sent.
+         *
+         * @param string $mailable
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasSent($mailable)
+        {
+            return \Illuminate\Support\Testing\Fakes\MailFake::hasSent($mailable);
+        }
+        
+        /**
+         * Get all of the queued mailables matching a truth-test callback.
+         *
+         * @param string $mailable
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function queued($mailable, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\MailFake::queued($mailable, $callback);
+        }
+        
+        /**
+         * Determine if the given mailable has been queued.
+         *
+         * @param string $mailable
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasQueued($mailable)
+        {
+            return \Illuminate\Support\Testing\Fakes\MailFake::hasQueued($mailable);
+        }
          
     }
 
+    /**
+     * 
+     *
+     * @method static void send(\Illuminate\Support\Collection|array|mixed $notifiables, $notification)
+     * @method static void sendNow(\Illuminate\Support\Collection|array|mixed $notifiables, $notification)
+     * @method static mixed channel(string|null $name = null)
+     * @see \Illuminate\Notifications\ChannelManager
+     */ 
     class Notification {
         
         /**
@@ -6153,6 +6731,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -6186,15 +6765,117 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Support\Manager            
             return \Illuminate\Notifications\ChannelManager::getDrivers();
         }
+        
+        /**
+         * Assert if a notification was sent based on a truth-test callback.
+         *
+         * @param mixed $notifiable
+         * @param string $notification
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertSentTo($notifiable, $notification, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\NotificationFake::assertSentTo($notifiable, $notification, $callback);
+        }
+        
+        /**
+         * Assert if a notification was sent a number of times.
+         *
+         * @param mixed $notifiable
+         * @param string $notification
+         * @param int $times
+         * @return void 
+         * @static 
+         */ 
+        public static function assertSentToTimes($notifiable, $notification, $times = 1)
+        {
+            \Illuminate\Support\Testing\Fakes\NotificationFake::assertSentToTimes($notifiable, $notification, $times);
+        }
+        
+        /**
+         * Determine if a notification was sent based on a truth-test callback.
+         *
+         * @param mixed $notifiable
+         * @param string $notification
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotSentTo($notifiable, $notification, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\NotificationFake::assertNotSentTo($notifiable, $notification, $callback);
+        }
+        
+        /**
+         * Assert that no notifications were sent.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNothingSent()
+        {
+            \Illuminate\Support\Testing\Fakes\NotificationFake::assertNothingSent();
+        }
+        
+        /**
+         * Assert the total amount of times a notification was sent.
+         *
+         * @param int $expectedCount
+         * @param string $notification
+         * @return void 
+         * @static 
+         */ 
+        public static function assertTimesSent($expectedCount, $notification)
+        {
+            \Illuminate\Support\Testing\Fakes\NotificationFake::assertTimesSent($expectedCount, $notification);
+        }
+        
+        /**
+         * Get all of the notifications matching a truth-test callback.
+         *
+         * @param mixed $notifiable
+         * @param string $notification
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function sent($notifiable, $notification, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\NotificationFake::sent($notifiable, $notification, $callback);
+        }
+        
+        /**
+         * Determine if there are more notifications left to inspect.
+         *
+         * @param mixed $notifiable
+         * @param string $notification
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasSent($notifiable, $notification)
+        {
+            return \Illuminate\Support\Testing\Fakes\NotificationFake::hasSent($notifiable, $notification);
+        }
          
     }
 
+    /**
+     * 
+     *
+     * @method static string sendResetLink(array $credentials)
+     * @method static mixed reset(array $credentials, \Closure $callback)
+     * @method static void validator(\Closure $callback)
+     * @method static bool validateNewPassword(array $credentials)
+     * @see \Illuminate\Auth\Passwords\PasswordBroker
+     */ 
     class Password {
         
         /**
          * Attempt to get the broker from the local cache.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Contracts\Auth\PasswordBroker 
          * @static 
          */ 
@@ -6228,6 +6909,22 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static int size(string $queue = null)
+     * @method static mixed push(string|object $job, string $data = '', $queue = null)
+     * @method static mixed pushOn(string $queue, string|object $job, $data = '')
+     * @method static mixed pushRaw(string $payload, string $queue = null, array $options = [])
+     * @method static mixed later(\DateTimeInterface|\DateInterval|int $delay, string|object $job, $data = '', string $queue = null)
+     * @method static mixed laterOn(string $queue, \DateTimeInterface|\DateInterval|int $delay, string|object $job, $data = '')
+     * @method static mixed bulk(array $jobs, $data = '', string $queue = null)
+     * @method static \Illuminate\Contracts\Queue\Job|null pop(string $queue = null)
+     * @method static string getConnectionName()
+     * @method static \Illuminate\Contracts\Queue\Queue setConnectionName(string $name)
+     * @see \Illuminate\Queue\QueueManager
+     * @see \Illuminate\Queue\Queue
+     */ 
     class Queue {
         
         /**
@@ -6399,6 +7096,96 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Assert if a job was pushed based on a truth-test callback.
+         *
+         * @param string $job
+         * @param callable|int|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertPushed($job, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\QueueFake::assertPushed($job, $callback);
+        }
+        
+        /**
+         * Assert if a job was pushed based on a truth-test callback.
+         *
+         * @param string $queue
+         * @param string $job
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertPushedOn($queue, $job, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\QueueFake::assertPushedOn($queue, $job, $callback);
+        }
+        
+        /**
+         * Assert if a job was pushed with chained jobs based on a truth-test callback.
+         *
+         * @param string $job
+         * @param array $expectedChain
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertPushedWithChain($job, $expectedChain = array(), $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\QueueFake::assertPushedWithChain($job, $expectedChain, $callback);
+        }
+        
+        /**
+         * Determine if a job was pushed based on a truth-test callback.
+         *
+         * @param string $job
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotPushed($job, $callback = null)
+        {
+            \Illuminate\Support\Testing\Fakes\QueueFake::assertNotPushed($job, $callback);
+        }
+        
+        /**
+         * Assert that no jobs were pushed.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNothingPushed()
+        {
+            \Illuminate\Support\Testing\Fakes\QueueFake::assertNothingPushed();
+        }
+        
+        /**
+         * Get all of the jobs matching a truth-test callback.
+         *
+         * @param string $job
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */ 
+        public static function pushed($job, $callback = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\QueueFake::pushed($job, $callback);
+        }
+        
+        /**
+         * Determine if there are any stored jobs for a given class.
+         *
+         * @param string $job
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasPushed($job)
+        {
+            return \Illuminate\Support\Testing\Fakes\QueueFake::hasPushed($job);
+        }
+        
+        /**
          * Get the size of the queue.
          *
          * @param string $queue
@@ -6407,7 +7194,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function size($queue = null)
         {
-            return \Illuminate\Queue\SyncQueue::size($queue);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::size($queue);
         }
         
         /**
@@ -6417,12 +7204,11 @@ namespace Illuminate\Support\Facades {
          * @param mixed $data
          * @param string $queue
          * @return mixed 
-         * @throws \Exception|\Throwable
          * @static 
          */ 
         public static function push($job, $data = '', $queue = null)
         {
-            return \Illuminate\Queue\SyncQueue::push($job, $data, $queue);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::push($job, $data, $queue);
         }
         
         /**
@@ -6436,13 +7222,13 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function pushRaw($payload, $queue = null, $options = array())
         {
-            return \Illuminate\Queue\SyncQueue::pushRaw($payload, $queue, $options);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::pushRaw($payload, $queue, $options);
         }
         
         /**
          * Push a new job onto the queue after a delay.
          *
-         * @param \DateTimeInterface|\DateInterval|int $delay
+         * @param \DateTime|int $delay
          * @param string $job
          * @param mixed $data
          * @param string $queue
@@ -6451,19 +7237,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function later($delay, $job, $data = '', $queue = null)
         {
-            return \Illuminate\Queue\SyncQueue::later($delay, $job, $data, $queue);
-        }
-        
-        /**
-         * Pop the next job off of the queue.
-         *
-         * @param string $queue
-         * @return \Illuminate\Contracts\Queue\Job|null 
-         * @static 
-         */ 
-        public static function pop($queue = null)
-        {
-            return \Illuminate\Queue\SyncQueue::pop($queue);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::later($delay, $job, $data, $queue);
         }
         
         /**
@@ -6477,15 +7251,14 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function pushOn($queue, $job, $data = '')
         {
-            //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::pushOn($queue, $job, $data);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::pushOn($queue, $job, $data);
         }
         
         /**
          * Push a new job onto the queue after a delay.
          *
          * @param string $queue
-         * @param \DateTimeInterface|\DateInterval|int $delay
+         * @param \DateTime|int $delay
          * @param string $job
          * @param mixed $data
          * @return mixed 
@@ -6493,8 +7266,19 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function laterOn($queue, $delay, $job, $data = '')
         {
-            //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::laterOn($queue, $delay, $job, $data);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::laterOn($queue, $delay, $job, $data);
+        }
+        
+        /**
+         * Pop the next job off of the queue.
+         *
+         * @param string $queue
+         * @return \Illuminate\Contracts\Queue\Job|null 
+         * @static 
+         */ 
+        public static function pop($queue = null)
+        {
+            return \Illuminate\Support\Testing\Fakes\QueueFake::pop($queue);
         }
         
         /**
@@ -6508,8 +7292,107 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function bulk($jobs, $data = '', $queue = null)
         {
-            //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::bulk($jobs, $data, $queue);
+            return \Illuminate\Support\Testing\Fakes\QueueFake::bulk($jobs, $data, $queue);
+        }
+        
+        /**
+         * Get the connection name for the queue.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getConnectionName()
+        {
+            return \Illuminate\Support\Testing\Fakes\QueueFake::getConnectionName();
+        }
+        
+        /**
+         * Set the connection name for the queue.
+         *
+         * @param string $name
+         * @return $this 
+         * @static 
+         */ 
+        public static function setConnectionName($name)
+        {
+            return \Illuminate\Support\Testing\Fakes\QueueFake::setConnectionName($name);
+        }
+        
+        /**
+         * Get the number of queue jobs that are ready to process.
+         *
+         * @param string|null $queue
+         * @return int 
+         * @static 
+         */ 
+        public static function readyNow($queue = null)
+        {
+            return \Laravel\Horizon\RedisQueue::readyNow($queue);
+        }
+        
+        /**
+         * Migrate the delayed jobs that are ready to the regular queue.
+         *
+         * @param string $from
+         * @param string $to
+         * @return void 
+         * @static 
+         */ 
+        public static function migrateExpiredJobs($from, $to)
+        {
+            \Laravel\Horizon\RedisQueue::migrateExpiredJobs($from, $to);
+        }
+        
+        /**
+         * Delete a reserved job from the queue.
+         *
+         * @param string $queue
+         * @param \Illuminate\Queue\Jobs\RedisJob $job
+         * @return void 
+         * @static 
+         */ 
+        public static function deleteReserved($queue, $job)
+        {
+            \Laravel\Horizon\RedisQueue::deleteReserved($queue, $job);
+        }
+        
+        /**
+         * Delete a reserved job from the reserved queue and release it.
+         *
+         * @param string $queue
+         * @param \Illuminate\Queue\Jobs\RedisJob $job
+         * @param int $delay
+         * @return void 
+         * @static 
+         */ 
+        public static function deleteAndRelease($queue, $job, $delay)
+        {
+            \Laravel\Horizon\RedisQueue::deleteAndRelease($queue, $job, $delay);
+        }
+        
+        /**
+         * Get the queue or return the default.
+         *
+         * @param string|null $queue
+         * @return string 
+         * @static 
+         */ 
+        public static function getQueue($queue)
+        {
+            //Method inherited from \Illuminate\Queue\RedisQueue            
+            return \Laravel\Horizon\RedisQueue::getQueue($queue);
+        }
+        
+        /**
+         * Get the underlying Redis instance.
+         *
+         * @return \Illuminate\Contracts\Redis\Factory 
+         * @static 
+         */ 
+        public static function getRedis()
+        {
+            //Method inherited from \Illuminate\Queue\RedisQueue            
+            return \Laravel\Horizon\RedisQueue::getRedis();
         }
         
         /**
@@ -6522,32 +7405,7 @@ namespace Illuminate\Support\Facades {
         public static function getJobExpiration($job)
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::getJobExpiration($job);
-        }
-        
-        /**
-         * Get the connection name for the queue.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getConnectionName()
-        {
-            //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::getConnectionName();
-        }
-        
-        /**
-         * Set the connection name for the queue.
-         *
-         * @param string $name
-         * @return $this 
-         * @static 
-         */ 
-        public static function setConnectionName($name)
-        {
-            //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\SyncQueue::setConnectionName($name);
+            return \Laravel\Horizon\RedisQueue::getJobExpiration($job);
         }
         
         /**
@@ -6560,11 +7418,28 @@ namespace Illuminate\Support\Facades {
         public static function setContainer($container)
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            \Illuminate\Queue\SyncQueue::setContainer($container);
+            \Laravel\Horizon\RedisQueue::setContainer($container);
         }
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Http\RedirectResponse home(int $status = 302)
+     * @method static \Illuminate\Http\RedirectResponse back(int $status = 302, array $headers = [], $fallback = false)
+     * @method static \Illuminate\Http\RedirectResponse refresh(int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse guest(string $path, int $status = 302, array $headers = [], bool $secure = null)
+     * @method static intended(string $default = '/', int $status = 302, array $headers = [], bool $secure = null)
+     * @method static \Illuminate\Http\RedirectResponse to(string $path, int $status = 302, array $headers = [], bool $secure = null)
+     * @method static \Illuminate\Http\RedirectResponse away(string $path, int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse secure(string $path, int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse route(string $route, array $parameters = [], int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse action(string $action, array $parameters = [], int $status = 302, array $headers = [])
+     * @method static \Illuminate\Routing\UrlGenerator getUrlGenerator()
+     * @method static void setSession(\Illuminate\Session\Store $session)
+     * @see \Illuminate\Routing\Redirector
+     */ 
     class Redirect {
         
         /**
@@ -6683,7 +7558,7 @@ namespace Illuminate\Support\Facades {
          * Create a new redirect response to a named route.
          *
          * @param string $route
-         * @param array $parameters
+         * @param mixed $parameters
          * @param int $status
          * @param array $headers
          * @return \Illuminate\Http\RedirectResponse 
@@ -6698,7 +7573,7 @@ namespace Illuminate\Support\Facades {
          * Create a new redirect response to a controller action.
          *
          * @param string $action
-         * @param array $parameters
+         * @param mixed $parameters
          * @param int $status
          * @param array $headers
          * @return \Illuminate\Http\RedirectResponse 
@@ -6750,6 +7625,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -6771,6 +7647,10 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     */ 
     class Redis {
         
         /**
@@ -6811,6 +7691,49 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Http\Request instance()
+     * @method static string method()
+     * @method static string root()
+     * @method static string url()
+     * @method static string fullUrl()
+     * @method static string fullUrlWithQuery(array $query)
+     * @method static string path()
+     * @method static string decodedPath()
+     * @method static string|null segment(int $index, string|null $default = null)
+     * @method static array segments()
+     * @method static bool is(...$patterns)
+     * @method static bool routeIs(...$patterns)
+     * @method static bool fullUrlIs(...$patterns)
+     * @method static bool ajax()
+     * @method static bool pjax()
+     * @method static bool secure()
+     * @method static string ip()
+     * @method static array ips()
+     * @method static string userAgent()
+     * @method static \Illuminate\Http\Request merge(array $input)
+     * @method static \Illuminate\Http\Request replace(array $input)
+     * @method static \Symfony\Component\HttpFoundation\ParameterBag|mixed json(string $key = null, $default = null)
+     * @method static \Illuminate\Session\Store session()
+     * @method static \Illuminate\Session\Store|null getSession()
+     * @method static void setLaravelSession(\Illuminate\Contracts\Session\Session $session)
+     * @method static mixed user(string|null $guard = null)
+     * @method static \Illuminate\Routing\Route|object|string route(string|null $param = null)
+     * @method static string fingerprint()
+     * @method static \Illuminate\Http\Request setJson(\Symfony\Component\HttpFoundation\ParameterBag $json)
+     * @method static \Closure getUserResolver()
+     * @method static \Illuminate\Http\Request setUserResolver(\Closure $callback)
+     * @method static \Closure getRouteResolver()
+     * @method static \Illuminate\Http\Request setRouteResolver(\Closure $callback)
+     * @method static array toArray()
+     * @method static bool offsetExists(string $offset)
+     * @method static mixed offsetGet(string $offset)
+     * @method static void offsetSet(string $offset, $value)
+     * @method static void offsetUnset(string $offset)
+     * @see \Illuminate\Http\Request
+     */ 
     class Request {
         
         /**
@@ -7061,6 +7984,21 @@ namespace Illuminate\Support\Facades {
         public static function replace($input)
         {
             return \Illuminate\Http\Request::replace($input);
+        }
+        
+        /**
+         * This method belongs to Symfony HttpFoundation and is not usually needed when using Laravel.
+         * 
+         * Instead, you may use the "input" method.
+         *
+         * @param string $key
+         * @param mixed $default
+         * @return mixed 
+         * @static 
+         */ 
+        public static function get($key, $default = null)
+        {
+            return \Illuminate\Http\Request::get($key, $default);
         }
         
         /**
@@ -7505,26 +8443,6 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Gets a "parameter" value from any bag.
-         * 
-         * This method is mainly useful for libraries that want to provide some flexibility. If you don't need the
-         * flexibility in controllers, it is better to explicitly get request parameters from the appropriate
-         * public property instead (attributes, query, request).
-         * 
-         * Order of precedence: PATH (routing placeholders or custom attributes), GET, BODY
-         *
-         * @param string $key The key
-         * @param mixed $default The default value if the parameter key does not exist
-         * @return mixed 
-         * @static 
-         */ 
-        public static function get($key, $default = null)
-        {
-            //Method inherited from \Symfony\Component\HttpFoundation\Request            
-            return \Illuminate\Http\Request::get($key, $default);
-        }
-        
-        /**
          * Whether the request contains a Session which was started in one of the
          * previous requests.
          *
@@ -7563,6 +8481,18 @@ namespace Illuminate\Support\Facades {
         {
             //Method inherited from \Symfony\Component\HttpFoundation\Request            
             return \Illuminate\Http\Request::setSession($session);
+        }
+        
+        /**
+         * 
+         *
+         * @internal 
+         * @static 
+         */ 
+        public static function setSessionFactory($factory)
+        {
+            //Method inherited from \Symfony\Component\HttpFoundation\Request            
+            return \Illuminate\Http\Request::setSessionFactory($factory);
         }
         
         /**
@@ -7930,7 +8860,7 @@ namespace Illuminate\Support\Facades {
          * Gets the mime type associated with the format.
          *
          * @param string $format The format
-         * @return string The associated mime type (null if not found)
+         * @return string|null The associated mime type (null if not found)
          * @static 
          */ 
         public static function getMimeType($format)
@@ -8519,7 +9449,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the request contains any of the given inputs.
          *
-         * @param string|array $key
+         * @param string|array $keys
          * @return bool 
          * @static 
          */ 
@@ -8717,6 +9647,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -8758,6 +9689,23 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Http\Response make(string $content = '', int $status = 200, array $headers = [])
+     * @method static \Illuminate\Http\Response view(string $view, array $data = [], int $status = 200, array $headers = [])
+     * @method static \Illuminate\Http\JsonResponse json(string | array $data = [], int $status = 200, array $headers = [], int $options = 0)
+     * @method static \Illuminate\Http\JsonResponse jsonp(string $callback, string | array $data = [], int $status = 200, array $headers = [], int $options = 0)
+     * @method static \Symfony\Component\HttpFoundation\StreamedResponse stream(\Closure $callback, int $status = 200, array $headers = [])
+     * @method static \Symfony\Component\HttpFoundation\StreamedResponse streamDownload(\Closure $callback, string | null $name = null, array $headers = [], string | null $disposition = 'attachment')
+     * @method static \Symfony\Component\HttpFoundation\BinaryFileResponse download(\SplFileInfo | string $file, string | null $name = null, array $headers = [], string | null $disposition = 'attachment')
+     * @method static \Illuminate\Http\RedirectResponse redirectTo(string $path, int $status = 302, array $headers = [], bool | null $secure = null)
+     * @method static \Illuminate\Http\RedirectResponse redirectToRoute(string $route, array $parameters = [], int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse redirectToAction(string $action, array $parameters = [], int $status = 302, array $headers = [])
+     * @method static \Illuminate\Http\RedirectResponse redirectGuest(string $path, int $status = 302, array $headers = [], bool | null $secure = null)
+     * @method static \Illuminate\Http\RedirectResponse redirectToIntended(string $default = '/', int $status = 302, array $headers = [], bool | null $secure = null)
+     * @see \Illuminate\Contracts\Routing\ResponseFactory
+     */ 
     class Response {
         
         /**
@@ -8970,6 +9918,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -8991,6 +9940,37 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Routing\Route get(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route post(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route put(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route delete(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route patch(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route options(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route any(string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\Route match(array|string $methods, string $uri, \Closure|array|string|null $action = null)
+     * @method static \Illuminate\Routing\RouteRegistrar prefix(string  $prefix)
+     * @method static \Illuminate\Routing\PendingResourceRegistration resource(string $name, string $controller, array $options = [])
+     * @method static \Illuminate\Routing\PendingResourceRegistration apiResource(string $name, string $controller, array $options = [])
+     * @method static void apiResources(array $resources)
+     * @method static \Illuminate\Routing\RouteRegistrar middleware(array|string|null $middleware)
+     * @method static \Illuminate\Routing\Route substituteBindings(\Illuminate\Support\Facades\Route $route)
+     * @method static void substituteImplicitBindings(\Illuminate\Support\Facades\Route $route)
+     * @method static \Illuminate\Routing\RouteRegistrar as(string $value)
+     * @method static \Illuminate\Routing\RouteRegistrar domain(string $value)
+     * @method static \Illuminate\Routing\RouteRegistrar name(string $value)
+     * @method static \Illuminate\Routing\RouteRegistrar namespace(string $value)
+     * @method static \Illuminate\Routing\Router|\Illuminate\Routing\RouteRegistrar group(array|\Closure|string $attributes, \Closure|string $routes)
+     * @method static \Illuminate\Routing\Route redirect(string $uri, string $destination, int $status = 301)
+     * @method static \Illuminate\Routing\Route view(string $uri, string $view, array $data = [])
+     * @method static void bind(string $key, string|callable $binder)
+     * @method static \Illuminate\Routing\Route current()
+     * @method static string|null currentRouteName()
+     * @method static string|null currentRouteAction()
+     * @see \Illuminate\Routing\Router
+     */ 
     class Route {
         
         /**
@@ -9740,6 +10720,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -9775,6 +10756,16 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Database\Schema\Builder create(string $table, \Closure $callback)
+     * @method static \Illuminate\Database\Schema\Builder drop(string $table)
+     * @method static \Illuminate\Database\Schema\Builder dropIfExists(string $table)
+     * @method static \Illuminate\Database\Schema\Builder table(string $table, \Closure $callback)
+     * @method static void defaultStringLength(int $length)
+     * @see \Illuminate\Database\Schema\Builder
+     */ 
     class Schema {
         
         /**
@@ -9810,6 +10801,17 @@ namespace Illuminate\Support\Facades {
         public static function dropAllTables()
         {
             \Illuminate\Database\Schema\MySqlBuilder::dropAllTables();
+        }
+        
+        /**
+         * Drop all views from the database.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function dropAllViews()
+        {
+            \Illuminate\Database\Schema\MySqlBuilder::dropAllViews();
         }
         
         /**
@@ -9999,6 +11001,33 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static string getName()
+     * @method static string getId()
+     * @method static void setId(string $id)
+     * @method static bool start()
+     * @method static bool save()
+     * @method static array all()
+     * @method static bool exists(string|array $key)
+     * @method static bool has(string|array $key)
+     * @method static mixed get(string $key, $default = null)
+     * @method static void put(string|array $key, $value = null)
+     * @method static string token()
+     * @method static mixed remove(string $key)
+     * @method static void forget(string|array $keys)
+     * @method static void flush()
+     * @method static bool migrate(bool $destroy = false)
+     * @method static bool isStarted()
+     * @method static string|null previousUrl()
+     * @method static void setPreviousUrl(string $url)
+     * @method static \SessionHandlerInterface getHandler()
+     * @method static bool handlerNeedsRequest()
+     * @method static void setRequestOnHandler(\Illuminate\Http\Request $request)
+     * @see \Illuminate\Session\SessionManager
+     * @see \Illuminate\Session\Store
+     */ 
     class Session {
         
         /**
@@ -10040,6 +11069,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -10563,6 +11593,12 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Contracts\Filesystem\Filesystem disk(string $name = null)
+     * @see \Illuminate\Filesystem\FilesystemManager
+     */ 
     class Storage {
         
         /**
@@ -10665,12 +11701,12 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param mixed $disk
-         * @return void 
+         * @return $this 
          * @static 
          */ 
         public static function set($name, $disk)
         {
-            \Illuminate\Filesystem\FilesystemManager::set($name, $disk);
+            return \Illuminate\Filesystem\FilesystemManager::set($name, $disk);
         }
         
         /**
@@ -10693,6 +11729,18 @@ namespace Illuminate\Support\Facades {
         public static function getDefaultCloudDriver()
         {
             return \Illuminate\Filesystem\FilesystemManager::getDefaultCloudDriver();
+        }
+        
+        /**
+         * Unset the given disk instances.
+         *
+         * @param array|string $disk
+         * @return $this 
+         * @static 
+         */ 
+        public static function forgetDisk($disk)
+        {
+            return \Illuminate\Filesystem\FilesystemManager::forgetDisk($disk);
         }
         
         /**
@@ -11122,6 +12170,24 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static string current()
+     * @method static string full()
+     * @method static string previous($fallback = false)
+     * @method static string to(string $path, $extra = [], bool $secure = null)
+     * @method static string secure(string $path, array $parameters = [])
+     * @method static string asset(string $path, bool $secure = null)
+     * @method static string route(string $name, $parameters = [], bool $absolute = true)
+     * @method static string action(string $action, $parameters = [], bool $absolute = true)
+     * @method static \Illuminate\Contracts\Routing\UrlGenerator setRootControllerNamespace(string $rootNamespace)
+     * @method static string signedRoute(string $name, array $parameters = [], \DateTimeInterface|int $expiration = null)
+     * @method static string temporarySignedRoute(string $name, \DateTimeInterface|int $expiration, array $parameters = [])
+     * @method static string hasValidSignature(\Illuminate\Http\Request $request)
+     * @method static void defaults(array $defaults)
+     * @see \Illuminate\Routing\UrlGenerator
+     */ 
     class URL {
         
         /**
@@ -11527,6 +12593,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object $mixin
          * @return void 
+         * @throws \ReflectionException
          * @static 
          */ 
         public static function mixin($mixin)
@@ -11548,6 +12615,15 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static \Illuminate\Contracts\Validation\Validator make(array $data, array $rules, array $messages = [], array $customAttributes = [])
+     * @method static void extend(string $rule, \Closure | string $extension, string $message = null)
+     * @method static void extendImplicit(string $rule, \Closure | string $extension, string $message = null)
+     * @method static void replacer(string $rule, \Closure | string $replacer)
+     * @see \Illuminate\Validation\Factory
+     */ 
     class Validator {
         
         /**
@@ -11572,13 +12648,13 @@ namespace Illuminate\Support\Facades {
          * @param array $rules
          * @param array $messages
          * @param array $customAttributes
-         * @return void 
+         * @return array 
          * @throws \Illuminate\Validation\ValidationException
          * @static 
          */ 
         public static function validate($data, $rules, $messages = array(), $customAttributes = array())
         {
-            \Illuminate\Validation\Factory::validate($data, $rules, $messages, $customAttributes);
+            return \Illuminate\Validation\Factory::validate($data, $rules, $messages, $customAttributes);
         }
         
         /**
@@ -11684,6 +12760,19 @@ namespace Illuminate\Support\Facades {
          
     }
 
+    /**
+     * 
+     *
+     * @method static bool exists(string $view)
+     * @method static \Illuminate\Contracts\View\View file(string $path, array $data = [], array $mergeData = [])
+     * @method static \Illuminate\Contracts\View\View make(string $view, array $data = [], array $mergeData = [])
+     * @method static mixed share(array | string $key, $value = null)
+     * @method static array composer(array | string $views, \Closure | string $callback)
+     * @method static array creator(array | string $views, \Closure | string $callback)
+     * @method static \Illuminate\Contracts\View\Factory addNamespace(string $namespace, string | array $hints)
+     * @method static \Illuminate\Contracts\View\Factory replaceNamespace(string $namespace, string | array $hints)
+     * @see \Illuminate\View\Factory
+     */ 
     class View {
         
         /**
@@ -11721,6 +12810,7 @@ namespace Illuminate\Support\Facades {
          * @param array $data
          * @param array $mergeData
          * @return \Illuminate\Contracts\View\View 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function first($views, $data = array(), $mergeData = array())
@@ -12443,8 +13533,1653 @@ namespace Illuminate\Support\Facades {
  
 }
 
+namespace Chumper\Zipper\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class Zipper {
+        
+        /**
+         * Create a new zip Archive if the file does not exists
+         * opens a zip archive if the file exists
+         *
+         * @param $pathToFile string The file to open
+         * @param \Chumper\Zipper\RepositoryInterface|string $type The type of the archive, defaults to zip, possible are zip, phar
+         * @throws \RuntimeException
+         * @throws \Exception
+         * @throws \InvalidArgumentException
+         * @return $this Zipper instance
+         * @static 
+         */ 
+        public static function make($pathToFile, $type = 'zip')
+        {
+            return \Chumper\Zipper\Zipper::make($pathToFile, $type);
+        }
+        
+        /**
+         * Create a new zip archive or open an existing one
+         *
+         * @param $pathToFile
+         * @throws \Exception
+         * @return $this 
+         * @static 
+         */ 
+        public static function zip($pathToFile)
+        {
+            return \Chumper\Zipper\Zipper::zip($pathToFile);
+        }
+        
+        /**
+         * Create a new phar file or open one
+         *
+         * @param $pathToFile
+         * @throws \Exception
+         * @return $this 
+         * @static 
+         */ 
+        public static function phar($pathToFile)
+        {
+            return \Chumper\Zipper\Zipper::phar($pathToFile);
+        }
+        
+        /**
+         * Create a new rar file or open one
+         *
+         * @param $pathToFile
+         * @throws \Exception
+         * @return $this 
+         * @static 
+         */ 
+        public static function rar($pathToFile)
+        {
+            return \Chumper\Zipper\Zipper::rar($pathToFile);
+        }
+        
+        /**
+         * Extracts the opened zip archive to the specified location <br/>
+         * you can provide an array of files and folders and define if they should be a white list
+         * or a black list to extract. By default this method compares file names using "string starts with" logic
+         *
+         * @param $path string The path to extract to
+         * @param array $files An array of files
+         * @param int $methodFlags The Method the files should be treated
+         * @throws \Exception
+         * @static 
+         */ 
+        public static function extractTo($path, $files = array(), $methodFlags = 2)
+        {
+            return \Chumper\Zipper\Zipper::extractTo($path, $files, $methodFlags);
+        }
+        
+        /**
+         * Extracts matching files/folders from the opened zip archive to the specified location.
+         *
+         * @param string $extractToPath The path to extract to
+         * @param string $regex regular expression used to match files. See @link http://php.net/manual/en/reference.pcre.pattern.syntax.php
+         * @throws \InvalidArgumentException
+         * @throws \RuntimeException
+         * @static 
+         */ 
+        public static function extractMatchingRegex($extractToPath, $regex)
+        {
+            return \Chumper\Zipper\Zipper::extractMatchingRegex($extractToPath, $regex);
+        }
+        
+        /**
+         * Gets the content of a single file if available
+         *
+         * @param $filePath string The full path (including all folders) of the file in the zip
+         * @throws \Exception
+         * @return mixed returns the content or throws an exception
+         * @static 
+         */ 
+        public static function getFileContent($filePath)
+        {
+            return \Chumper\Zipper\Zipper::getFileContent($filePath);
+        }
+        
+        /**
+         * Add one or multiple files to the zip.
+         *
+         * @param $pathToAdd array|string An array or string of files and folders to add
+         * @param null|mixed $fileName
+         * @return $this Zipper instance
+         * @static 
+         */ 
+        public static function add($pathToAdd, $fileName = null)
+        {
+            return \Chumper\Zipper\Zipper::add($pathToAdd, $fileName);
+        }
+        
+        /**
+         * Add an empty directory
+         *
+         * @param $dirName
+         * @return \Zipper 
+         * @static 
+         */ 
+        public static function addEmptyDir($dirName)
+        {
+            return \Chumper\Zipper\Zipper::addEmptyDir($dirName);
+        }
+        
+        /**
+         * Add a file to the zip using its contents
+         *
+         * @param $filename string The name of the file to create
+         * @param $content string The file contents
+         * @return $this Zipper instance
+         * @static 
+         */ 
+        public static function addString($filename, $content)
+        {
+            return \Chumper\Zipper\Zipper::addString($filename, $content);
+        }
+        
+        /**
+         * Gets the status of the zip.
+         *
+         * @return int The status of the internal zip file
+         * @static 
+         */ 
+        public static function getStatus()
+        {
+            return \Chumper\Zipper\Zipper::getStatus();
+        }
+        
+        /**
+         * Remove a file or array of files and folders from the zip archive
+         *
+         * @param $fileToRemove array|string The path/array to the files in the zip
+         * @return $this Zipper instance
+         * @static 
+         */ 
+        public static function remove($fileToRemove)
+        {
+            return \Chumper\Zipper\Zipper::remove($fileToRemove);
+        }
+        
+        /**
+         * Returns the path of the current zip file if there is one.
+         *
+         * @return string The path to the file
+         * @static 
+         */ 
+        public static function getFilePath()
+        {
+            return \Chumper\Zipper\Zipper::getFilePath();
+        }
+        
+        /**
+         * Sets the password to be used for decompressing
+         *
+         * @param $password
+         * @return bool 
+         * @static 
+         */ 
+        public static function usePassword($password)
+        {
+            return \Chumper\Zipper\Zipper::usePassword($password);
+        }
+        
+        /**
+         * Closes the zip file and frees all handles
+         *
+         * @static 
+         */ 
+        public static function close()
+        {
+            return \Chumper\Zipper\Zipper::close();
+        }
+        
+        /**
+         * Sets the internal folder to the given path.<br/>
+         * Useful for extracting only a segment of a zip file.
+         *
+         * @param $path
+         * @return $this 
+         * @static 
+         */ 
+        public static function folder($path)
+        {
+            return \Chumper\Zipper\Zipper::folder($path);
+        }
+        
+        /**
+         * Resets the internal folder to the root of the zip file.
+         *
+         * @return $this 
+         * @static 
+         */ 
+        public static function home()
+        {
+            return \Chumper\Zipper\Zipper::home();
+        }
+        
+        /**
+         * Deletes the archive file
+         *
+         * @static 
+         */ 
+        public static function delete()
+        {
+            return \Chumper\Zipper\Zipper::delete();
+        }
+        
+        /**
+         * Get the type of the Archive
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getArchiveType()
+        {
+            return \Chumper\Zipper\Zipper::getArchiveType();
+        }
+        
+        /**
+         * Get the current internal folder pointer
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getCurrentFolderPath()
+        {
+            return \Chumper\Zipper\Zipper::getCurrentFolderPath();
+        }
+        
+        /**
+         * Checks if a file is present in the archive
+         *
+         * @param $fileInArchive
+         * @return bool 
+         * @static 
+         */ 
+        public static function contains($fileInArchive)
+        {
+            return \Chumper\Zipper\Zipper::contains($fileInArchive);
+        }
+        
+        /**
+         * 
+         *
+         * @return \Chumper\Zipper\RepositoryInterface 
+         * @static 
+         */ 
+        public static function getRepository()
+        {
+            return \Chumper\Zipper\Zipper::getRepository();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Chumper\Zipper\Filesystem 
+         * @static 
+         */ 
+        public static function getFileHandler()
+        {
+            return \Chumper\Zipper\Zipper::getFileHandler();
+        }
+        
+        /**
+         * Gets the path to the internal folder
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getInternalPath()
+        {
+            return \Chumper\Zipper\Zipper::getInternalPath();
+        }
+        
+        /**
+         * List all files that are within the archive
+         *
+         * @param string|null $regexFilter regular expression to filter returned files/folders. See @link http://php.net/manual/en/reference.pcre.pattern.syntax.php
+         * @throws \RuntimeException
+         * @return array 
+         * @static 
+         */ 
+        public static function listFiles($regexFilter = null)
+        {
+            return \Chumper\Zipper\Zipper::listFiles($regexFilter);
+        }
+         
+    }
+ 
+}
+
+namespace Barryvdh\Snappy\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class SnappyPdf {
+        
+        /**
+         * Get the Snappy instance.
+         *
+         * @return \Knp\Snappy\Pdf 
+         * @static 
+         */ 
+        public static function snappy()
+        {
+            return \Barryvdh\Snappy\PdfWrapper::snappy();
+        }
+        
+        /**
+         * Set temporary folder
+         *
+         * @param string $path
+         * @static 
+         */ 
+        public static function setTemporaryFolder($path)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setTemporaryFolder($path);
+        }
+        
+        /**
+         * Set the paper size (default A4)
+         *
+         * @param string $paper
+         * @param string $orientation
+         * @return $this 
+         * @static 
+         */ 
+        public static function setPaper($paper, $orientation = null)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setPaper($paper, $orientation);
+        }
+        
+        /**
+         * Set the orientation (default portrait)
+         *
+         * @param string $orientation
+         * @return $this 
+         * @static 
+         */ 
+        public static function setOrientation($orientation)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setOrientation($orientation);
+        }
+        
+        /**
+         * Show or hide warnings
+         *
+         * @param bool $warnings
+         * @return $this 
+         * @deprecated 
+         * @static 
+         */ 
+        public static function setWarnings($warnings)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setWarnings($warnings);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $name
+         * @param mixed $value
+         * @return $this 
+         * @static 
+         */ 
+        public static function setOption($name, $value)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setOption($name, $value);
+        }
+        
+        /**
+         * 
+         *
+         * @param array $options
+         * @return $this 
+         * @static 
+         */ 
+        public static function setOptions($options)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::setOptions($options);
+        }
+        
+        /**
+         * Load a HTML string
+         *
+         * @param Array|string|\Barryvdh\Snappy\Renderable $html
+         * @return $this 
+         * @static 
+         */ 
+        public static function loadHTML($html)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::loadHTML($html);
+        }
+        
+        /**
+         * Load a HTML file
+         *
+         * @param string $file
+         * @return $this 
+         * @static 
+         */ 
+        public static function loadFile($file)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::loadFile($file);
+        }
+        
+        /**
+         * Load a View and convert to HTML
+         *
+         * @param string $view
+         * @param array $data
+         * @param array $mergeData
+         * @return $this 
+         * @static 
+         */ 
+        public static function loadView($view, $data = array(), $mergeData = array())
+        {
+            return \Barryvdh\Snappy\PdfWrapper::loadView($view, $data, $mergeData);
+        }
+        
+        /**
+         * Output the PDF as a string.
+         *
+         * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function output()
+        {
+            return \Barryvdh\Snappy\PdfWrapper::output();
+        }
+        
+        /**
+         * Save the PDF to a file
+         *
+         * @param $filename
+         * @return $this 
+         * @static 
+         */ 
+        public static function save($filename, $overwrite = false)
+        {
+            return \Barryvdh\Snappy\PdfWrapper::save($filename, $overwrite);
+        }
+        
+        /**
+         * Make the PDF downloadable by the user
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function download($filename = 'document.pdf')
+        {
+            return \Barryvdh\Snappy\PdfWrapper::download($filename);
+        }
+        
+        /**
+         * Return a response with the PDF to show in the browser
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function inline($filename = 'document.pdf')
+        {
+            return \Barryvdh\Snappy\PdfWrapper::inline($filename);
+        }
+        
+        /**
+         * Return a response with the PDF to show in the browser
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse 
+         * @deprecated use inline() instead
+         * @static 
+         */ 
+        public static function stream($filename = 'document.pdf')
+        {
+            return \Barryvdh\Snappy\PdfWrapper::stream($filename);
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     */ 
+    class SnappyImage {
+        
+        /**
+         * Get the Snappy instance.
+         *
+         * @return \Knp\Snappy\Image 
+         * @static 
+         */ 
+        public static function snappy()
+        {
+            return \Barryvdh\Snappy\ImageWrapper::snappy();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setOption($name, $value)
+        {
+            return \Barryvdh\Snappy\ImageWrapper::setOption($name, $value);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setOptions($options)
+        {
+            return \Barryvdh\Snappy\ImageWrapper::setOptions($options);
+        }
+        
+        /**
+         * Load a HTML string
+         *
+         * @param string $string
+         * @return static 
+         * @static 
+         */ 
+        public static function loadHTML($string)
+        {
+            return \Barryvdh\Snappy\ImageWrapper::loadHTML($string);
+        }
+        
+        /**
+         * Load a HTML file
+         *
+         * @param string $file
+         * @return static 
+         * @static 
+         */ 
+        public static function loadFile($file)
+        {
+            return \Barryvdh\Snappy\ImageWrapper::loadFile($file);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function loadView($view, $data = array(), $mergeData = array())
+        {
+            return \Barryvdh\Snappy\ImageWrapper::loadView($view, $data, $mergeData);
+        }
+        
+        /**
+         * Output the PDF as a string.
+         *
+         * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function output()
+        {
+            return \Barryvdh\Snappy\ImageWrapper::output();
+        }
+        
+        /**
+         * Save the image to a file
+         *
+         * @param $filename
+         * @return static 
+         * @static 
+         */ 
+        public static function save($filename, $overwrite = false)
+        {
+            return \Barryvdh\Snappy\ImageWrapper::save($filename, $overwrite);
+        }
+        
+        /**
+         * Make the image downloadable by the user
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */ 
+        public static function download($filename = 'image.jpg')
+        {
+            return \Barryvdh\Snappy\ImageWrapper::download($filename);
+        }
+        
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function inline($filename = 'image.jpg')
+        {
+            return \Barryvdh\Snappy\ImageWrapper::inline($filename);
+        }
+        
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @deprecated Use inline() instead
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */ 
+        public static function stream($filename = 'image.jpg')
+        {
+            return \Barryvdh\Snappy\ImageWrapper::stream($filename);
+        }
+         
+    }
+ 
+}
+
+namespace AliyunOss\Laravel { 
+
+    /**
+     * Facade for the Aliyun Oss service
+     *
+     * @method static AliyunOssClient NewOssClient($name, array $args = []) Get a client from the service builder.
+     */ 
+    class AliyunOssFacade {
+        
+        /**
+         * 列举用户所有的Bucket[GetService], Endpoint类型为cname不能进行此操作
+         *
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\BucketListInfo 
+         * @static 
+         */ 
+        public static function listBuckets($options = null)
+        {
+            return \OSS\OssClient::listBuckets($options);
+        }
+        
+        /**
+         * 创建bucket，默认创建的bucket的ACL是OssClient::OSS_ACL_TYPE_PRIVATE
+         *
+         * @param string $bucket
+         * @param string $acl
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function createBucket($bucket, $acl = 'private', $options = null)
+        {
+            return \OSS\OssClient::createBucket($bucket, $acl, $options);
+        }
+        
+        /**
+         * 删除bucket
+         * 如果Bucket不为空（Bucket中有Object，或者有分块上传的碎片），则Bucket无法删除，
+         * 必须删除Bucket中的所有Object以及碎片后，Bucket才能成功删除。
+         *
+         * @param string $bucket
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucket($bucket, $options = null)
+        {
+            return \OSS\OssClient::deleteBucket($bucket, $options);
+        }
+        
+        /**
+         * 判断bucket是否存在
+         *
+         * @param string $bucket
+         * @return bool 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function doesBucketExist($bucket)
+        {
+            return \OSS\OssClient::doesBucketExist($bucket);
+        }
+        
+        /**
+         * 获取bucket的ACL配置情况
+         *
+         * @param string $bucket
+         * @param array $options
+         * @throws OssException
+         * @return string 
+         * @static 
+         */ 
+        public static function getBucketAcl($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketAcl($bucket, $options);
+        }
+        
+        /**
+         * 设置bucket的ACL配置情况
+         *
+         * @param string $bucket bucket名称
+         * @param string $acl 读写权限，可选值 ['private', 'public-read', 'public-read-write']
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putBucketAcl($bucket, $acl, $options = null)
+        {
+            return \OSS\OssClient::putBucketAcl($bucket, $acl, $options);
+        }
+        
+        /**
+         * 获取object的ACL属性
+         *
+         * @param string $bucket
+         * @param string $object
+         * @throws OssException
+         * @return string 
+         * @static 
+         */ 
+        public static function getObjectAcl($bucket, $object)
+        {
+            return \OSS\OssClient::getObjectAcl($bucket, $object);
+        }
+        
+        /**
+         * 设置object的ACL属性
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $acl 读写权限，可选值 ['default', 'private', 'public-read', 'public-read-write']
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putObjectAcl($bucket, $object, $acl)
+        {
+            return \OSS\OssClient::putObjectAcl($bucket, $object, $acl);
+        }
+        
+        /**
+         * 获取Bucket的访问日志配置情况
+         *
+         * @param string $bucket bucket名称
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return \OSS\LoggingConfig 
+         * @static 
+         */ 
+        public static function getBucketLogging($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketLogging($bucket, $options);
+        }
+        
+        /**
+         * 开启Bucket访问日志记录功能，只有Bucket的所有者才能更改
+         *
+         * @param string $bucket bucket名称
+         * @param string $targetBucket 日志文件存放的bucket
+         * @param string $targetPrefix 日志的文件前缀
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putBucketLogging($bucket, $targetBucket, $targetPrefix, $options = null)
+        {
+            return \OSS\OssClient::putBucketLogging($bucket, $targetBucket, $targetPrefix, $options);
+        }
+        
+        /**
+         * 关闭bucket访问日志记录功能
+         *
+         * @param string $bucket bucket名称
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketLogging($bucket, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketLogging($bucket, $options);
+        }
+        
+        /**
+         * 将bucket设置成静态网站托管模式
+         *
+         * @param string $bucket bucket名称
+         * @param \OSS\WebsiteConfig $websiteConfig
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putBucketWebsite($bucket, $websiteConfig, $options = null)
+        {
+            return \OSS\OssClient::putBucketWebsite($bucket, $websiteConfig, $options);
+        }
+        
+        /**
+         * 获取bucket的静态网站托管状态
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\WebsiteConfig 
+         * @static 
+         */ 
+        public static function getBucketWebsite($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketWebsite($bucket, $options);
+        }
+        
+        /**
+         * 关闭bucket的静态网站托管模式
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketWebsite($bucket, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketWebsite($bucket, $options);
+        }
+        
+        /**
+         * 在指定的bucket上设定一个跨域资源共享(CORS)的规则，如果原规则存在则覆盖原规则
+         *
+         * @param string $bucket bucket名称
+         * @param \OSS\CorsConfig $corsConfig 跨域资源共享配置，具体规则参见SDK文档
+         * @param array $options array
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putBucketCors($bucket, $corsConfig, $options = null)
+        {
+            return \OSS\OssClient::putBucketCors($bucket, $corsConfig, $options);
+        }
+        
+        /**
+         * 获取Bucket的CORS配置情况
+         *
+         * @param string $bucket bucket名称
+         * @param array $options 可以为空
+         * @throws OssException
+         * @return \OSS\CorsConfig 
+         * @static 
+         */ 
+        public static function getBucketCors($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketCors($bucket, $options);
+        }
+        
+        /**
+         * 关闭指定Bucket对应的CORS功能并清空所有规则
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketCors($bucket, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketCors($bucket, $options);
+        }
+        
+        /**
+         * 为指定Bucket增加CNAME绑定
+         *
+         * @param string $bucket bucket名称
+         * @param string $cname
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function addBucketCname($bucket, $cname, $options = null)
+        {
+            return \OSS\OssClient::addBucketCname($bucket, $cname, $options);
+        }
+        
+        /**
+         * 获取指定Bucket已绑定的CNAME列表
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\CnameConfig 
+         * @static 
+         */ 
+        public static function getBucketCname($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketCname($bucket, $options);
+        }
+        
+        /**
+         * 解除指定Bucket的CNAME绑定
+         *
+         * @param string $bucket bucket名称
+         * @param \OSS\CnameConfig $cnameConfig
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketCname($bucket, $cname, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketCname($bucket, $cname, $options);
+        }
+        
+        /**
+         * 为指定Bucket创建LiveChannel
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName  $channelName
+         * @param \OSS\LiveChannelConfig $channelConfig
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\LiveChannelInfo 
+         * @static 
+         */ 
+        public static function putBucketLiveChannel($bucket, $channelName, $channelConfig, $options = null)
+        {
+            return \OSS\OssClient::putBucketLiveChannel($bucket, $channelName, $channelConfig, $options);
+        }
+        
+        /**
+         * 设置LiveChannel的status
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param string  channelStatus $channelStatus 为enabled或disabled
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putLiveChannelStatus($bucket, $channelName, $channelStatus, $options = null)
+        {
+            return \OSS\OssClient::putLiveChannelStatus($bucket, $channelName, $channelStatus, $options);
+        }
+        
+        /**
+         * 获取LiveChannel信息
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\GetLiveChannelInfo 
+         * @static 
+         */ 
+        public static function getLiveChannelInfo($bucket, $channelName, $options = null)
+        {
+            return \OSS\OssClient::getLiveChannelInfo($bucket, $channelName, $options);
+        }
+        
+        /**
+         * 获取LiveChannel状态信息
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\GetLiveChannelStatus 
+         * @static 
+         */ 
+        public static function getLiveChannelStatus($bucket, $channelName, $options = null)
+        {
+            return \OSS\OssClient::getLiveChannelStatus($bucket, $channelName, $options);
+        }
+        
+        /**
+         * 获取LiveChannel推流记录
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\GetLiveChannelHistory 
+         * @static 
+         */ 
+        public static function getLiveChannelHistory($bucket, $channelName, $options = null)
+        {
+            return \OSS\OssClient::getLiveChannelHistory($bucket, $channelName, $options);
+        }
+        
+        /**
+         * 获取指定Bucket下的live channel列表
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\LiveChannelListInfo 
+         * @static 
+         */ 
+        public static function listBucketLiveChannels($bucket, $options = null)
+        {
+            return \OSS\OssClient::listBucketLiveChannels($bucket, $options);
+        }
+        
+        /**
+         * 为指定LiveChannel生成播放列表
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param string $playlistName 指定生成的点播播放列表的名称，必须以“.m3u8”结尾
+         * @param array $setTime startTime和EndTime以unix时间戳格式给定,跨度不能超过一天
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function postVodPlaylist($bucket, $channelName, $playlistName, $setTime)
+        {
+            return \OSS\OssClient::postVodPlaylist($bucket, $channelName, $playlistName, $setTime);
+        }
+        
+        /**
+         * 删除指定Bucket的LiveChannel
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketLiveChannel($bucket, $channelName, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketLiveChannel($bucket, $channelName, $options);
+        }
+        
+        /**
+         * 生成带签名的推流地址
+         *
+         * @param string $bucket bucket名称
+         * @param string  channelName $channelName
+         * @param int  timeout 设置超时时间，单位为秒
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\推流地址 
+         * @static 
+         */ 
+        public static function signRtmpUrl($bucket, $channelName, $timeout = 60, $options = null)
+        {
+            return \OSS\OssClient::signRtmpUrl($bucket, $channelName, $timeout, $options);
+        }
+        
+        /**
+         * 检验跨域资源请求, 发送跨域请求之前会发送一个preflight请求（OPTIONS）并带上特定的来源域，
+         * HTTP方法和header信息等给OSS以决定是否发送真正的请求。 OSS可以通过putBucketCors接口
+         * 来开启Bucket的CORS支持，开启CORS功能之后，OSS在收到浏览器preflight请求时会根据设定的
+         * 规则评估是否允许本次请求
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $origin 请求来源域
+         * @param string $request_method 表明实际请求中会使用的HTTP方法
+         * @param string $request_headers 表明实际请求中会使用的除了简单头部之外的headers
+         * @param array $options
+         * @return array 
+         * @throws OssException
+         * @link http://help.aliyun.com/document_detail/oss/api-reference/cors/OptionObject.html
+         * @static 
+         */ 
+        public static function optionsObject($bucket, $object, $origin, $request_method, $request_headers, $options = null)
+        {
+            return \OSS\OssClient::optionsObject($bucket, $object, $origin, $request_method, $request_headers, $options);
+        }
+        
+        /**
+         * 设置Bucket的Lifecycle配置
+         *
+         * @param string $bucket bucket名称
+         * @param \OSS\LifecycleConfig $lifecycleConfig Lifecycle配置类
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function putBucketLifecycle($bucket, $lifecycleConfig, $options = null)
+        {
+            return \OSS\OssClient::putBucketLifecycle($bucket, $lifecycleConfig, $options);
+        }
+        
+        /**
+         * 获取Bucket的Lifecycle配置情况
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\LifecycleConfig 
+         * @static 
+         */ 
+        public static function getBucketLifecycle($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketLifecycle($bucket, $options);
+        }
+        
+        /**
+         * 删除指定Bucket的生命周期配置
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteBucketLifecycle($bucket, $options = null)
+        {
+            return \OSS\OssClient::deleteBucketLifecycle($bucket, $options);
+        }
+        
+        /**
+         * 设置一个bucket的referer访问白名单和是否允许referer字段为空的请求访问
+         * Bucket Referer防盗链具体见OSS防盗链
+         *
+         * @param string $bucket bucket名称
+         * @param \OSS\RefererConfig $refererConfig
+         * @param array $options
+         * @return \OSS\ResponseCore 
+         * @throws null
+         * @static 
+         */ 
+        public static function putBucketReferer($bucket, $refererConfig, $options = null)
+        {
+            return \OSS\OssClient::putBucketReferer($bucket, $refererConfig, $options);
+        }
+        
+        /**
+         * 获取Bucket的Referer配置情况
+         * Bucket Referer防盗链具体见OSS防盗链
+         *
+         * @param string $bucket bucket名称
+         * @param array $options
+         * @throws OssException
+         * @return \OSS\RefererConfig 
+         * @static 
+         */ 
+        public static function getBucketReferer($bucket, $options = null)
+        {
+            return \OSS\OssClient::getBucketReferer($bucket, $options);
+        }
+        
+        /**
+         * 获取bucket下的object列表
+         *
+         * @param string $bucket
+         * @param array $options 其中options中的参数如下
+         * $options = array(
+         *      'max-keys'  => max-keys用于限定此次返回object的最大数，如果不设定，默认为100，max-keys取值不能大于1000。
+         *      'prefix'    => 限定返回的object key必须以prefix作为前缀。注意使用prefix查询时，返回的key中仍会包含prefix。
+         *      'delimiter' => 是一个用于对Object名字进行分组的字符。所有名字包含指定的前缀且第一次出现delimiter字符之间的object作为一组元素
+         *      'marker'    => 用户设定结果从marker之后按字母排序的第一个开始返回。
+         * )
+         * 其中 prefix，marker用来实现分页显示效果，参数的长度必须小于256字节。
+         * @throws OssException
+         * @return \OSS\ObjectListInfo 
+         * @static 
+         */ 
+        public static function listObjects($bucket, $options = null)
+        {
+            return \OSS\OssClient::listObjects($bucket, $options);
+        }
+        
+        /**
+         * 创建虚拟目录 (本函数会在object名称后增加'/', 所以创建目录的object名称不需要'/'结尾，否则，目录名称会变成'//')
+         * 
+         * 暂不开放此接口
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function createObjectDir($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::createObjectDir($bucket, $object, $options);
+        }
+        
+        /**
+         * 上传内存中的内容
+         *
+         * @param string $bucket bucket名称
+         * @param string $object objcet名称
+         * @param string $content 上传的内容
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function putObject($bucket, $object, $content, $options = null)
+        {
+            return \OSS\OssClient::putObject($bucket, $object, $content, $options);
+        }
+        
+        /**
+         * 上传本地文件
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $file 本地文件路径
+         * @param array $options
+         * @return null 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function uploadFile($bucket, $object, $file, $options = null)
+        {
+            return \OSS\OssClient::uploadFile($bucket, $object, $file, $options);
+        }
+        
+        /**
+         * 追加上传内存中的内容
+         *
+         * @param string $bucket bucket名称
+         * @param string $object objcet名称
+         * @param string $content 本次追加上传的内容
+         * @param array $options
+         * @return int next append position
+         * @throws OssException
+         * @static 
+         */ 
+        public static function appendObject($bucket, $object, $content, $position, $options = null)
+        {
+            return \OSS\OssClient::appendObject($bucket, $object, $content, $position, $options);
+        }
+        
+        /**
+         * 追加上传本地文件
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $file 追加上传的本地文件路径
+         * @param array $options
+         * @return int next append position
+         * @throws OssException
+         * @static 
+         */ 
+        public static function appendFile($bucket, $object, $file, $position, $options = null)
+        {
+            return \OSS\OssClient::appendFile($bucket, $object, $file, $position, $options);
+        }
+        
+        /**
+         * 拷贝一个在OSS上已经存在的object成另外一个object
+         *
+         * @param string $fromBucket 源bucket名称
+         * @param string $fromObject 源object名称
+         * @param string $toBucket 目标bucket名称
+         * @param string $toObject 目标object名称
+         * @param array $options
+         * @return null 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function copyObject($fromBucket, $fromObject, $toBucket, $toObject, $options = null)
+        {
+            return \OSS\OssClient::copyObject($fromBucket, $fromObject, $toBucket, $toObject, $options);
+        }
+        
+        /**
+         * 获取Object的Meta信息
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $options 具体参考SDK文档
+         * @return array 
+         * @static 
+         */ 
+        public static function getObjectMeta($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::getObjectMeta($bucket, $object, $options);
+        }
+        
+        /**
+         * 删除某个Object
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteObject($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::deleteObject($bucket, $object, $options);
+        }
+        
+        /**
+         * 删除同一个Bucket中的多个Object
+         *
+         * @param string $bucket bucket名称
+         * @param array $objects object列表
+         * @param array $options
+         * @return \OSS\ResponseCore 
+         * @throws null
+         * @static 
+         */ 
+        public static function deleteObjects($bucket, $objects, $options = null)
+        {
+            return \OSS\OssClient::deleteObjects($bucket, $objects, $options);
+        }
+        
+        /**
+         * 获得Object内容
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param array $options 该参数中必须设置ALIOSS::OSS_FILE_DOWNLOAD，ALIOSS::OSS_RANGE可选，可以根据实际情况设置；如果不设置，默认会下载全部内容
+         * @return string 
+         * @static 
+         */ 
+        public static function getObject($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::getObject($bucket, $object, $options);
+        }
+        
+        /**
+         * 检测Object是否存在
+         * 通过获取Object的Meta信息来判断Object是否存在， 用户需要自行解析ResponseCore判断object是否存在
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param array $options
+         * @return bool 
+         * @static 
+         */ 
+        public static function doesObjectExist($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::doesObjectExist($bucket, $object, $options);
+        }
+        
+        /**
+         * 计算文件可以分成多少个part，以及每个part的长度以及起始位置
+         * 方法必须在 <upload_part()>中调用
+         *
+         * @param integer $file_size 文件大小
+         * @param integer $partSize part大小,默认5M
+         * @return array An array 包含 key-value 键值对. Key 为 `seekTo` 和 `length`.
+         * @static 
+         */ 
+        public static function generateMultiuploadParts($file_size, $partSize = 5242880)
+        {
+            return \OSS\OssClient::generateMultiuploadParts($file_size, $partSize);
+        }
+        
+        /**
+         * 初始化multi-part upload
+         *
+         * @param string $bucket Bucket名称
+         * @param string $object Object名称
+         * @param array $options Key-Value数组
+         * @throws OssException
+         * @return string 返回uploadid
+         * @static 
+         */ 
+        public static function initiateMultipartUpload($bucket, $object, $options = null)
+        {
+            return \OSS\OssClient::initiateMultipartUpload($bucket, $object, $options);
+        }
+        
+        /**
+         * 分片上传的块上传接口
+         *
+         * @param string $bucket Bucket名称
+         * @param string $object Object名称
+         * @param string $uploadId
+         * @param array $options Key-Value数组
+         * @return string eTag
+         * @throws OssException
+         * @static 
+         */ 
+        public static function uploadPart($bucket, $object, $uploadId, $options = null)
+        {
+            return \OSS\OssClient::uploadPart($bucket, $object, $uploadId, $options);
+        }
+        
+        /**
+         * 获取已成功上传的part
+         *
+         * @param string $bucket Bucket名称
+         * @param string $object Object名称
+         * @param string $uploadId uploadId
+         * @param array $options Key-Value数组
+         * @return \OSS\ListPartsInfo 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function listParts($bucket, $object, $uploadId, $options = null)
+        {
+            return \OSS\OssClient::listParts($bucket, $object, $uploadId, $options);
+        }
+        
+        /**
+         * 中止进行一半的分片上传操作
+         *
+         * @param string $bucket Bucket名称
+         * @param string $object Object名称
+         * @param string $uploadId uploadId
+         * @param array $options Key-Value数组
+         * @return null 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function abortMultipartUpload($bucket, $object, $uploadId, $options = null)
+        {
+            return \OSS\OssClient::abortMultipartUpload($bucket, $object, $uploadId, $options);
+        }
+        
+        /**
+         * 在将所有数据Part都上传完成后，调用此接口完成本次分块上传
+         *
+         * @param string $bucket Bucket名称
+         * @param string $object Object名称
+         * @param string $uploadId uploadId
+         * @param array $listParts array( array("PartNumber"=> int, "ETag"=>string))
+         * @param array $options Key-Value数组
+         * @throws OssException
+         * @return null 
+         * @static 
+         */ 
+        public static function completeMultipartUpload($bucket, $object, $uploadId, $listParts, $options = null)
+        {
+            return \OSS\OssClient::completeMultipartUpload($bucket, $object, $uploadId, $listParts, $options);
+        }
+        
+        /**
+         * 罗列出所有执行中的Multipart Upload事件，即已经被初始化的Multipart Upload但是未被
+         * Complete或者Abort的Multipart Upload事件
+         *
+         * @param string $bucket bucket
+         * @param array $options 关联数组
+         * @throws OssException
+         * @return \OSS\ListMultipartUploadInfo 
+         * @static 
+         */ 
+        public static function listMultipartUploads($bucket, $options = null)
+        {
+            return \OSS\OssClient::listMultipartUploads($bucket, $options);
+        }
+        
+        /**
+         * 从一个已存在的Object中拷贝数据来上传一个Part
+         *
+         * @param string $fromBucket 源bucket名称
+         * @param string $fromObject 源object名称
+         * @param string $toBucket 目标bucket名称
+         * @param string $toObject 目标object名称
+         * @param int $partNumber 分块上传的块id
+         * @param string $uploadId 初始化multipart upload返回的uploadid
+         * @param array $options Key-Value数组
+         * @return null 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function uploadPartCopy($fromBucket, $fromObject, $toBucket, $toObject, $partNumber, $uploadId, $options = null)
+        {
+            return \OSS\OssClient::uploadPartCopy($fromBucket, $fromObject, $toBucket, $toObject, $partNumber, $uploadId, $options);
+        }
+        
+        /**
+         * multipart上传统一封装，从初始化到完成multipart，以及出错后中止动作
+         *
+         * @param string $bucket bucket名称
+         * @param string $object object名称
+         * @param string $file 需要上传的本地文件的路径
+         * @param array $options Key-Value数组
+         * @return null 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function multiuploadFile($bucket, $object, $file, $options = null)
+        {
+            return \OSS\OssClient::multiuploadFile($bucket, $object, $file, $options);
+        }
+        
+        /**
+         * 上传本地目录内的文件或者目录到指定bucket的指定prefix的object中
+         *
+         * @param string $bucket bucket名称
+         * @param string $prefix 需要上传到的object的key前缀，可以理解成bucket中的子目录，结尾不能是'/'，接口中会补充'/'
+         * @param string $localDirectory 需要上传的本地目录
+         * @param string $exclude 需要排除的目录
+         * @param bool $recursive 是否递归的上传localDirectory下的子目录内容
+         * @param bool $checkMd5
+         * @return array 返回两个列表 array("succeededList" => array("object"), "failedList" => array("object"=>"errorMessage"))
+         * @throws OssException
+         * @static 
+         */ 
+        public static function uploadDir($bucket, $prefix, $localDirectory, $exclude = '.|..|.svn|.git', $recursive = false, $checkMd5 = true)
+        {
+            return \OSS\OssClient::uploadDir($bucket, $prefix, $localDirectory, $exclude, $recursive, $checkMd5);
+        }
+        
+        /**
+         * 支持生成get和put签名, 用户可以生成一个具有一定有效期的
+         * 签名过的url
+         *
+         * @param string $bucket
+         * @param string $object
+         * @param int $timeout
+         * @param string $method
+         * @param array $options Key-Value数组
+         * @return string 
+         * @throws OssException
+         * @static 
+         */ 
+        public static function signUrl($bucket, $object, $timeout = 60, $method = 'GET', $options = null)
+        {
+            return \OSS\OssClient::signUrl($bucket, $object, $timeout, $method, $options);
+        }
+        
+        /**
+         * 设置最大尝试次数
+         *
+         * @param int $maxRetries
+         * @return void 
+         * @static 
+         */ 
+        public static function setMaxTries($maxRetries = 3)
+        {
+            \OSS\OssClient::setMaxTries($maxRetries);
+        }
+        
+        /**
+         * 获取最大尝试次数
+         *
+         * @return int 
+         * @static 
+         */ 
+        public static function getMaxRetries()
+        {
+            return \OSS\OssClient::getMaxRetries();
+        }
+        
+        /**
+         * 打开sts enable标志，使用户构造函数中传入的$sts生效
+         *
+         * @param boolean $enable
+         * @static 
+         */ 
+        public static function setSignStsInUrl($enable)
+        {
+            return \OSS\OssClient::setSignStsInUrl($enable);
+        }
+        
+        /**
+         * 
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isUseSSL()
+        {
+            return \OSS\OssClient::isUseSSL();
+        }
+        
+        /**
+         * 
+         *
+         * @param boolean $useSSL
+         * @static 
+         */ 
+        public static function setUseSSL($useSSL)
+        {
+            return \OSS\OssClient::setUseSSL($useSSL);
+        }
+        
+        /**
+         * 用来检查sdk所以来的扩展是否打开
+         *
+         * @throws OssException
+         * @static 
+         */ 
+        public static function checkEnv()
+        {
+            return \OSS\OssClient::checkEnv();
+        }
+        
+        /**
+         * //* 设置http库的请求超时时间，单位秒
+         *
+         * @param int $timeout
+         * @static 
+         */ 
+        public static function setTimeout($timeout)
+        {
+            return \OSS\OssClient::setTimeout($timeout);
+        }
+        
+        /**
+         * 设置http库的连接超时时间，单位秒
+         *
+         * @param int $connectTimeout
+         * @static 
+         */ 
+        public static function setConnectTimeout($connectTimeout)
+        {
+            return \OSS\OssClient::setConnectTimeout($connectTimeout);
+        }
+         
+    }
+ 
+}
+
 namespace Barryvdh\Debugbar { 
 
+    /**
+     * 
+     *
+     */ 
     class Facade {
         
         /**
@@ -12991,6 +15726,18 @@ namespace Barryvdh\Debugbar {
  
 }
 
+namespace Laravel\Horizon { 
+
+    /**
+     * 
+     *
+     */ 
+    class Horizon {
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -13105,7 +15852,7 @@ namespace  {
              * Add a basic where clause to the query.
              *
              * @param string|array|\Closure $column
-             * @param string $operator
+             * @param mixed $operator
              * @param mixed $value
              * @param string $boolean
              * @return $this 
@@ -13120,7 +15867,7 @@ namespace  {
              * Add an "or where" clause to the query.
              *
              * @param \Closure|array|string $column
-             * @param string $operator
+             * @param mixed $operator
              * @param mixed $value
              * @return \Illuminate\Database\Eloquent\Builder|static 
              * @static 
@@ -13915,6 +16662,25 @@ namespace  {
             }
          
             /**
+             * Add a subquery join clause to the query.
+             *
+             * @param \Closure|\Illuminate\Database\Query\Builder|string $query
+             * @param string $as
+             * @param string $first
+             * @param string|null $operator
+             * @param string|null $second
+             * @param string $type
+             * @param bool $where
+             * @return \Illuminate\Database\Query\Builder|static 
+             * @throws \InvalidArgumentException
+             * @static 
+             */ 
+            public static function joinSub($query, $as, $first, $operator = null, $second = null, $type = 'inner', $where = false)
+            {    
+                return \Illuminate\Database\Query\Builder::joinSub($query, $as, $first, $operator, $second, $type, $where);
+            }
+         
+            /**
              * Add a left join to the query.
              *
              * @param string $table
@@ -13945,6 +16711,22 @@ namespace  {
             }
          
             /**
+             * Add a subquery left join to the query.
+             *
+             * @param \Closure|\Illuminate\Database\Query\Builder|string $query
+             * @param string $as
+             * @param string $first
+             * @param string|null $operator
+             * @param string|null $second
+             * @return \Illuminate\Database\Query\Builder|static 
+             * @static 
+             */ 
+            public static function leftJoinSub($query, $as, $first, $operator = null, $second = null)
+            {    
+                return \Illuminate\Database\Query\Builder::leftJoinSub($query, $as, $first, $operator, $second);
+            }
+         
+            /**
              * Add a right join to the query.
              *
              * @param string $table
@@ -13972,6 +16754,22 @@ namespace  {
             public static function rightJoinWhere($table, $first, $operator, $second)
             {    
                 return \Illuminate\Database\Query\Builder::rightJoinWhere($table, $first, $operator, $second);
+            }
+         
+            /**
+             * Add a subquery right join to the query.
+             *
+             * @param \Closure|\Illuminate\Database\Query\Builder|string $query
+             * @param string $as
+             * @param string $first
+             * @param string|null $operator
+             * @param string|null $second
+             * @return \Illuminate\Database\Query\Builder|static 
+             * @static 
+             */ 
+            public static function rightJoinSub($query, $as, $first, $operator = null, $second = null)
+            {    
+                return \Illuminate\Database\Query\Builder::rightJoinSub($query, $as, $first, $operator, $second);
             }
          
             /**
@@ -14254,11 +17052,11 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param string $value
+             * @param mixed $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
-            public static function orWhereDate($column, $operator, $value)
+            public static function orWhereDate($column, $operator, $value = null)
             {    
                 return \Illuminate\Database\Query\Builder::orWhereDate($column, $operator, $value);
             }
@@ -14512,6 +17310,61 @@ namespace  {
             }
          
             /**
+             * Add a "where JSON contains" clause to the query.
+             *
+             * @param string $column
+             * @param mixed $value
+             * @param string $boolean
+             * @param bool $not
+             * @return $this 
+             * @static 
+             */ 
+            public static function whereJsonContains($column, $value, $boolean = 'and', $not = false)
+            {    
+                return \Illuminate\Database\Query\Builder::whereJsonContains($column, $value, $boolean, $not);
+            }
+         
+            /**
+             * Add a "or where JSON contains" clause to the query.
+             *
+             * @param string $column
+             * @param mixed $value
+             * @return $this 
+             * @static 
+             */ 
+            public static function orWhereJsonContains($column, $value)
+            {    
+                return \Illuminate\Database\Query\Builder::orWhereJsonContains($column, $value);
+            }
+         
+            /**
+             * Add a "where JSON not contains" clause to the query.
+             *
+             * @param string $column
+             * @param mixed $value
+             * @param string $boolean
+             * @return $this 
+             * @static 
+             */ 
+            public static function whereJsonDoesntContain($column, $value, $boolean = 'and')
+            {    
+                return \Illuminate\Database\Query\Builder::whereJsonDoesntContain($column, $value, $boolean);
+            }
+         
+            /**
+             * Add a "or where JSON not contains" clause to the query.
+             *
+             * @param string $column
+             * @param mixed $value
+             * @return $this 
+             * @static 
+             */ 
+            public static function orWhereJsonDoesntContain($column, $value)
+            {    
+                return \Illuminate\Database\Query\Builder::orWhereJsonDoesntContain($column, $value);
+            }
+         
+            /**
              * Handles dynamic "where" clauses to the query.
              *
              * @param string $method
@@ -14731,7 +17584,7 @@ namespace  {
              * Constrain the query to the next "page" of results after a given ID.
              *
              * @param int $perPage
-             * @param int $lastId
+             * @param int|null $lastId
              * @param string $column
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -15154,6 +18007,7 @@ namespace  {
              *
              * @param object $mixin
              * @return void 
+             * @throws \ReflectionException
              * @static 
              */ 
             public static function mixin($mixin)
@@ -15230,7 +18084,17 @@ namespace  {
 
     class View extends \Illuminate\Support\Facades\View {}
 
+    class Zipper extends \Chumper\Zipper\Facades\Zipper {}
+
+    class PDF extends \Barryvdh\Snappy\Facades\SnappyPdf {}
+
+    class SnappyImage extends \Barryvdh\Snappy\Facades\SnappyImage {}
+
+    class OSS extends \AliyunOss\Laravel\AliyunOssFacade {}
+
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
+
+    class Horizon extends \Laravel\Horizon\Horizon {}
  
 }
 

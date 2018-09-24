@@ -61,12 +61,11 @@ class ArticlesController extends Controller
         $article_data['name'] = $request->input('name');
         $article_data['desc'] = $request->input('desc');
         $article_data['config'] = $request->except(['template_id','name','desc']);
-
         $article->fill($article_data);
         $article->save();
 
         //计算参数
-        $res = $article->generate($request->all(),$article->id);
+        // $article->generate();
         return response()->json(['status'=>200,'data'=>$res]);
     }
 
@@ -118,6 +117,7 @@ class ArticlesController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
+        $article_data['status'] = 0;
         $article_data['template_id'] = $request->input('template_id');
         $article_data['name'] = $request->input('name');
         $article_data['desc'] = $request->input('desc');
@@ -125,13 +125,9 @@ class ArticlesController extends Controller
         $article->fill($article_data);
         $article->save();
 
-        //删除原文件后，重新生成
-        $directory = 'public/articles/'.$article->id;
-        Storage::deleteDirectory($directory);
-
         //计算参数
-        $res = $article->generate($request->all(),$article->id);
-        return response()->json(['status'=>200,'data'=>$res]);
+        // $article->generate();
+        return response()->json(['status'=>200]);
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use SnappyImage;
 use App\Handlers\OssUploadImageHandler;
+use Chumper\Zipper\Zipper;
 
 class Article extends Model
 {
@@ -34,185 +35,191 @@ class Article extends Model
         return $this->belongsTo(Template::class);
     }
 
-     /**
-      * 生成
-      */
-      public function generate($data,$id){
-          //自定义参数
-          $my_params = $data['params'];
+      public function generate(){
+          //删除原文件后，重新生成
+        $directory = 'public/articles/'.$this->id;
+        Storage::deleteDirectory($directory);
 
-          //移除空的自定义参数
-          $params = array();
-          foreach($my_params as $key=>$param){
-              if($param['content']){
-                  //切割字符串
-                  $param['content'] = explode("\n",trim($param['content']));
-                  $params[] = $param;
-              }
-          }
-          //查找模板信息
-          $template = Template::find($data['template_id']);
-          $template_content = $template->content;
-          $template_images = $template->images;
+         //自定义参数
+         $my_params = $this->config['params'];
 
-          $template_tmp_paragraphs = $template->paragraphs;
-          $template_paragraphs = array();
-          foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){
-               $template_paragraphs[$key]['content'] = explode("\n",trim($template_tmp_paragraph['content']));
-               $template_paragraphs[$key]['name'] = $template_tmp_paragraph['name'];
-               $template_paragraphs[$key]['count'] = substr_count($template_content,$template_tmp_paragraph['name']);
-          }
+         //移除空的自定义参数
+         $params = array();
+         foreach($my_params as $key=>$param){
+             if($param['content']){
+                 //切割字符串
+                 $param['content'] = explode("\n",trim($param['content']));
+                 $params[] = $param;
+             }
+         }
+         //查找模板信息
+         $template = Template::find($this->template_id);
+         $template_content = $template->content;
+         $template_images = $template->images;
 
-          //查找模板中图片和段落出现的次数
-          $template_images_count = substr_count($template_content,'图片');
-          // $template_paragraphs_count = substr_count($template_content,'段落');
-          //查找地址信息
-          $city_name = DB::table('citys')->where('id',$data['city']['data'])->value('name');
+         $template_tmp_paragraphs = $template->paragraphs;
+         $template_paragraphs = array();
+         foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){
+              $template_paragraphs[$key]['content'] = explode("\n",trim($template_tmp_paragraph['content']));
+              $template_paragraphs[$key]['name'] = $template_tmp_paragraph['name'];
+              $template_paragraphs[$key]['count'] = substr_count($template_content,$template_tmp_paragraph['name']);
+         }
 
-          //客户姓名
-          $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
-          $sexs = ['先生','女士'];
+         //查找模板中图片和段落出现的次数
+         $template_images_count = substr_count($template_content,'图片');
+         // $template_paragraphs_count = substr_count($template_content,'段落');
+         //查找地址信息
+         $city_name = DB::table('citys')->where('id',$this->config['city']['data'])->value('name');
 
-          $file_base_path = 'public/articles/'.$id.'/';
+         //客户姓名
+         $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
+         $sexs = ['先生','女士'];
 
-          //遍历结果集
-          $oss = new OssUploadImageHandler();
+         $file_base_path = $directory.'/';
 
-          foreach($data['countys']['data'] as $county){
-              foreach($data['cars']['data'] as $car){
-                  //查找汽车相关型号
-                  $car_models = $car['models'];
-                  $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
+         //遍历结果集
+         $oss = new OssUploadImageHandler();
 
-                  foreach($car_models as $car_model){
-                      if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
-                          //计算车子价格
-                          $price = rand($car_model['min'],$car_model['max']);
-                          //客户姓名
-                          $name = array_random($names).array_random($sexs);
+         foreach($this->config['countys']['data'] as $county){
+             foreach($this->config['cars']['data'] as $car){
+                 //查找汽车相关型号
+                 $car_models = $car['models'];
+                 $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
 
-                          //生成第二张图片
-                          $image = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
+                 foreach($car_models as $car_model){
+                     if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
+                         //计算车子价格
+                         $price = rand($car_model['min'],$car_model['max']);
+                         //客户姓名
+                         $name = array_random($names).array_random($sexs);
 
-                          //替换内容
-                          $replace_text =  str_replace('{name}',$name,$template_content);
-                          $replace_text =  str_replace('{city}',$city_name,$replace_text);
-                          $replace_text =  str_replace('{county}',$county,$replace_text);
-                          $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
-                          $replace_text =  str_replace('{car_model}',$car_model_name,$replace_text);
-                          $replace_text =  str_replace('{price}',$price,$replace_text);
-                          $replace_text =  str_replace('{image}',$image,$replace_text);
-                          //随机替换模板中的段落和图片
-                          foreach($template_paragraphs as $template_paragraph){
-                              for($i=0;$i<$template_paragraph['count'];$i++){
-                                  $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                              }
-                          }
+                         //生成第二张图片
+                         $image = $this->toImage($this->id,$car_brand.$car_model_name,$price,$name);
 
-                          for($i=0;$i<$template_images_count;$i++){
-                              $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                          }
+                         //替换内容
+                         $replace_text =  str_replace('{name}',$name,$template_content);
+                         $replace_text =  str_replace('{city}',$city_name,$replace_text);
+                         $replace_text =  str_replace('{county}',$county,$replace_text);
+                         $replace_text =  str_replace('{car_brand}',$car_brand,$replace_text);
+                         $replace_text =  str_replace('{car_model}',$car_model_name,$replace_text);
+                         $replace_text =  str_replace('{price}',$price,$replace_text);
+                         $replace_text =  str_replace('{image}',$image,$replace_text);
+                         //随机替换模板中的段落和图片
+                         foreach($template_paragraphs as $template_paragraph){
+                             for($i=0;$i<$template_paragraph['count'];$i++){
+                                 $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
+                             }
+                         }
 
-                          //判断自定义参数个数
-                          switch (count($params))
-                          {
-                              case 0:
-                                  $sort = array(
-                                      $data['city']['sort']=>$city_name,
-                                      $data['countys']['sort']=>$county,
-                                      $data['cars']['sort']=>$car_brand.$car_model_name,
-                                      $data['cars']['price_sort']=>$price.'万',
-                                  );
-                                  ksort($sort);
-                                  $title = implode('',$sort);
-                                  //替换title
-                                  $replace_text =  str_replace('{title}',$title,$replace_text);
+                         for($i=0;$i<$template_images_count;$i++){
+                             $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
+                         }
 
-                                  //文件名规则生成
-                                  $file_path = $file_base_path.'/'.$title.'.txt';
-                                  //生成文件
-                                  Storage::put($file_path,$replace_text);
-                                  break;
-                              case 1:
-                                  foreach($params[0]['content'] as $param0){
-                                      $sort = array(
-                                          $data['city']['sort']=>$city_name,
-                                          $data['countys']['sort']=>$county,
-                                          $data['cars']['sort']=>$car_brand.$car_model_name,
-                                          $data['cars']['price_sort']=>$price.'万',
-                                          $params[0]['sort'] => $param0
-                                      );
-                                      ksort($sort);
-                                      $title = implode('',$sort);
-                                      //替换title
-                                      $replace_text =  str_replace('{title}',$title,$replace_text);
-                                      //文件名规则生成
-                                      $file_path = $file_base_path.'/'.$title.'.txt';
-                                      //生成文件
-                                      Storage::put($file_path,$replace_text);
-                                  }
-                                  break;
-                              case 2:
-                                  foreach($params[0]['content'] as $param0){
-                                       foreach($params[1]['content'] as $param1){
-                                          $sort = array(
-                                              $data['city']['sort']=>$city_name,
-                                              $data['countys']['sort']=>$county,
-                                              $data['cars']['sort']=>$car_brand.$car_model_name,
-                                              $data['cars']['price_sort']=>$price.'万',
-                                              $params[0]['sort'] => $param0,
-                                              $params[1]['sort'] => $param1,
-                                          );
-                                          ksort($sort);
-                                          $title = implode('',$sort);
-                                          //替换title
-                                          $replace_text =  str_replace('{title}',$title,$replace_text);
+                         //判断自定义参数个数
+                         switch (count($params))
+                         {
+                             case 0:
+                                 $sort = array(
+                                     $this->config['city']['sort']=>$city_name,
+                                     $this->config['countys']['sort']=>$county,
+                                     $this->config['cars']['sort']=>$car_brand.$car_model_name,
+                                     $this->config['cars']['price_sort']=>$price.'万',
+                                 );
+                                 ksort($sort);
+                                 $title = implode('',$sort);
+                                 //替换title
+                                 $replace_text =  str_replace('{title}',$title,$replace_text);
 
-                                          //文件名规则生成
-                                          $file_path = $file_base_path.'/'.$title.'.txt';
-                                          //生成文件
-                                          Storage::put($file_path,$replace_text);
-                                      }
-                                  }
-                                  break;
-                              case 3:
-                                  foreach($params[0]['content'] as $param0){
+                                 //文件名规则生成
+                                 $file_path = $file_base_path.'/'.$title.'.txt';
+                                 //生成文件
+                                 Storage::put($file_path,$replace_text);
+                                 break;
+                             case 1:
+                                 foreach($params[0]['content'] as $param0){
+                                     $sort = array(
+                                         $this->config['city']['sort']=>$city_name,
+                                         $this->config['countys']['sort']=>$county,
+                                         $this->config['cars']['sort']=>$car_brand.$car_model_name,
+                                         $this->config['cars']['price_sort']=>$price.'万',
+                                         $params[0]['sort'] => $param0
+                                     );
+                                     ksort($sort);
+                                     $title = implode('',$sort);
+                                     //替换title
+                                     $replace_text =  str_replace('{title}',$title,$replace_text);
+                                     //文件名规则生成
+                                     $file_path = $file_base_path.'/'.$title.'.txt';
+                                     //生成文件
+                                     Storage::put($file_path,$replace_text);
+                                 }
+                                 break;
+                             case 2:
+                                 foreach($params[0]['content'] as $param0){
                                       foreach($params[1]['content'] as $param1){
-                                          foreach($params[2]['content'] as $param2){
-                                              $sort = array(
-                                                  $data['city']['sort']=>$city_name,
-                                                  $data['countys']['sort']=>$county,
-                                                  $data['cars']['sort']=>$car_brand.$car_model_name,
-                                                  $data['cars']['price_sort']=>$price.'万',
-                                                  $params[0]['sort'] => $param0,
-                                                  $params[1]['sort'] => $param1,
-                                                  $params[2]['sort'] => $param2,
-                                              );
-                                              ksort($sort);
-                                              $title = implode('',$sort);
-                                              //替换title
-                                              $replace_text =  str_replace('{title}',$title,$replace_text);
-                                             
-                                              //文件名规则生成
-                                              $file_path = $file_base_path.'/'.$title.'.txt';
-                                              //生成文件
-                                              Storage::put($file_path,$replace_text);
-                                          }
-                                      }
-                                  }
-                                  break;
-                          }
-                      }
-                  }
-              }
-          }
+                                         $sort = array(
+                                             $this->config['city']['sort']=>$city_name,
+                                             $this->config['countys']['sort']=>$county,
+                                             $this->config['cars']['sort']=>$car_brand.$car_model_name,
+                                             $this->config['cars']['price_sort']=>$price.'万',
+                                             $params[0]['sort'] => $param0,
+                                             $params[1]['sort'] => $param1,
+                                         );
+                                         ksort($sort);
+                                         $title = implode('',$sort);
+                                         //替换title
+                                         $replace_text =  str_replace('{title}',$title,$replace_text);
 
-          //压缩输出
-          $zipper = new \Chumper\Zipper\Zipper;
-          $base_path = storage_path('app/public/articles/'.$id);
-          $files = glob($base_path.'/*.txt');
-          $zipper->make($base_path.'/articles'.$id.'.zip')->add($files)->close();
-          return $files;
+                                         //文件名规则生成
+                                         $file_path = $file_base_path.'/'.$title.'.txt';
+                                         //生成文件
+                                         Storage::put($file_path,$replace_text);
+                                     }
+                                 }
+                                 break;
+                             case 3:
+                                 foreach($params[0]['content'] as $param0){
+                                     foreach($params[1]['content'] as $param1){
+                                         foreach($params[2]['content'] as $param2){
+                                             $sort = array(
+                                                 $this->config['city']['sort']=>$city_name,
+                                                 $this->config['countys']['sort']=>$county,
+                                                 $this->config['cars']['sort']=>$car_brand.$car_model_name,
+                                                 $this->config['cars']['price_sort']=>$price.'万',
+                                                 $params[0]['sort'] => $param0,
+                                                 $params[1]['sort'] => $param1,
+                                                 $params[2]['sort'] => $param2,
+                                             );
+                                             ksort($sort);
+                                             $title = implode('',$sort);
+                                             //替换title
+                                             $replace_text =  str_replace('{title}',$title,$replace_text);
+
+                                             //文件名规则生成
+                                             $file_path = $file_base_path.'/'.$title.'.txt';
+                                             //生成文件
+                                             Storage::put($file_path,$replace_text);
+                                         }
+                                     }
+                                 }
+                                 break;
+                         }
+                     }
+                 }
+             }
+         }
+
+         //压缩输出
+         $zipper = new Zipper;
+         $base_path = storage_path('app/public/articles/'.$this->id);
+         $files = glob($base_path.'/*.txt');
+         $zipper->make($base_path.'/articles'.$this->id.'.zip')->add($files)->close();
+
+         //修改文章状态
+         DB::table('articles')->where('id',$this->id)->update([
+             'status'=>1
+         ]);
+         return $files;
       }
 
       /**
@@ -221,7 +228,7 @@ class Article extends Model
       public function toImage($id,$car,$price,$name){
           $html = $this->imageHtml($car,$price,$name);
 
-          $file = 'upload.png';
+          $file = $id.'upload.jpg';
           //判断图片文件是否存在，如果存在就先删除
           if(file_exists($file)) unlink($file);
 

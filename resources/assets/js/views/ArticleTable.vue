@@ -16,6 +16,16 @@
                           width="55">
                         </el-table-column>
                         <el-table-column
+                          prop="status"
+                          label="状态"
+                          sortable
+                          width="100">
+                          <template slot-scope="scope">
+                              <el-tag v-if="scope.row.status == 1" type="success">已完成<i class="el-icon-success"></i></el-tag>
+                              <el-tag v-else type="danger">生成中<i class="el-icon-loading"></i></el-tag>
+                          </template>
+                         </el-table-column>
+                        <el-table-column
                           prop="id"
                           label="Id"
                           sortable

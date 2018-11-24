@@ -96310,7 +96310,7 @@ var render = function() {
                                               _c(
                                                 "el-input",
                                                 {
-                                                  staticStyle: { width: "20%" },
+                                                  staticStyle: { width: "30%" },
                                                   attrs: {
                                                     min: "1",
                                                     placeholder: "最小值",
@@ -96343,7 +96343,7 @@ var render = function() {
                                               _c(
                                                 "el-input",
                                                 {
-                                                  staticStyle: { width: "20%" },
+                                                  staticStyle: { width: "30%" },
                                                   attrs: {
                                                     min: "1",
                                                     placeholder: "最大值",

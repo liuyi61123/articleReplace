@@ -95,10 +95,10 @@
                                 <template v-if="param.brand > 0">
                                     <div class="line" v-for="(model,key) in cars[param.brand].models">
                                         <el-checkbox v-model="param.models[key].name" :true-label="model.name">{{model.name}}</el-checkbox>
-                                        <el-input v-model="param.models[key].min" style="width:20%" min="1" placeholder="最小值" type="number">
+                                        <el-input v-model="param.models[key].min" style="width:30%" min="1" placeholder="最小值" type="number">
                                             <template slot="append">万</template>
                                         </el-input>
-                                        <el-input v-model="param.models[key].max" style="width:20%" min="1" placeholder="最大值" type="number">
+                                        <el-input v-model="param.models[key].max" style="width:30%" min="1" placeholder="最大值" type="number">
                                             <template slot="append">万</template>
                                         </el-input>
                                     </div>

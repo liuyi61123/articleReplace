@@ -197,8 +197,8 @@
            },
            addParagraph(){
                //添加参数
-               if(this.paragraphIndex >= 2){
-                   this.$message.error('不能超过3个参数')
+               if(this.paragraphIndex >= 100){
+                   this.$message.error('不能超过100个参数')
                }else{
                    this.paragraphIndex++
                    Vue.set(this.template.paragraphs, this.template.paragraphs.length, {name:'',content:''})

@@ -57,6 +57,8 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
+        // return response()->json(['all'=>$request->all()]);
+
         $article_data['template_id'] = $request->input('template_id');
         $article_data['name'] = $request->input('name');
         $article_data['desc'] = $request->input('desc');
@@ -67,7 +69,7 @@ class ArticlesController extends Controller
 
         //计算参数
         $res = $article->generate($request->all(),$article->id);
-        return response()->json(['status'=>200,'data'=>$res]);
+        return response()->json(['status'=>200,'data'=>$res,'ext'=>$request->all()]);
     }
 
     /**

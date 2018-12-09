@@ -29,6 +29,9 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="省">
+                            <el-col :span="2">
+                                <el-switch  v-model="article.province.status"></el-switch>
+                            </el-col>
                             <el-col :span="8">
                                 <el-select v-model="article.province.data" placeholder="请选择" @change="changeProvince">
                                     <el-option v-for="province in provinces"
@@ -38,11 +41,14 @@
                                     </el-option>
                                   </el-select>
                             </el-col>
-                            <!-- <el-col :span="3"> -->
-                              <!-- <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number> -->
-                            <!-- </el-col> -->
+                            <el-col :span="3">
+                              <el-input-number v-model="article.province.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
                         </el-form-item>
                         <el-form-item label="市">
+                            <el-col :span="2">
+                                <el-switch  v-model="article.city.status"></el-switch>
+                            </el-col>
                             <el-col :span="8">
                                 <el-select v-model="article.city.data" placeholder="请选择" @change="changeCity">
                                     <el-option  v-for="city in citys"
@@ -57,7 +63,10 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="区">
-                            <el-col :span="24">
+                            <el-col :span="2">
+                                <el-switch  v-model="article.countys.status"></el-switch>
+                            </el-col>
+                            <el-col :span="22">
                                 <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                                 <el-checkbox-group :min="1" v-model="article.countys.data">
                                       <el-checkbox v-for="county of countys" :label="county.name" :key="county.id" @change="handleCheckedCitiesChange"></el-checkbox>
@@ -67,18 +76,11 @@
                               <el-input-number v-model="article.countys.sort" controls-position="right" :min="1" :max="10"></el-input-number>
                             </el-col>
                         </el-form-item>
-                        <!-- <el-form-item label="类型">
-                            <el-col :span="4">
-                                <el-select v-model="article.type" placeholder="请选择">
-                                    <el-option  v-for="type in types"
-                                      :key="type.id"
-                                      :label="type.name"
-                                      :value="type.id">
-                                  </el-option>
-                                </el-select>
-                            </el-col>
-                        </el-form-item> -->
+
                         <el-form-item label="品牌">
+                          <el-col :span="2">
+                            <el-switch  v-model="article.cars.status" @change="carStatusChange"></el-switch>
+                          </el-col>
                           <div v-for="(param,index) in article.cars.data">
                             <el-col :span="4">
                               <el-select v-model="param.brand" filterable placeholder="请选择" @change="changeCar(param.brand,index)">
@@ -116,6 +118,7 @@
                         </el-form-item>
 
                         <el-form-item label="价格排序">
+                            <el-switch v-model="article.cars.price_status"></el-switch>
                             <el-input-number v-model="article.cars.price_sort" controls-position="right" :min="1" :max="10"></el-input-number>
                         </el-form-item>
 
@@ -191,20 +194,25 @@
                     desc:'',
                     template_id:1,
                     province:{
-                        sort:0,
+                        status:true,
+                        sort:1,
                         data:1
                     },
                     city:{
-                        sort:1,
+                        status:true,
+                        sort:2,
                         data:''
                     },
                     countys:{
-                        sort:2,
+                        status:true,
+                        sort:3,
                         data:[]
                     },
                     cars:{
-                        sort:3,
-                        price_sort:4,
+                        status:true,
+                        price_status:true,
+                        sort:4,
+                        price_sort:5,
                         data:[
                           {
                             brand:'',
@@ -228,6 +236,11 @@
             }
         },
         methods: {
+            carStatusChange(e){
+                if(!e){
+                    this.article.cars.price_status = false
+                }
+            },
             changeProvince(e){
                 this.countys = []
                 this.article.countys.data = []

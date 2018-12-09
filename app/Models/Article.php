@@ -67,7 +67,9 @@ class Article extends Model
           $template_images_count = substr_count($template_content,'图片');
           // $template_paragraphs_count = substr_count($template_content,'段落');
           //查找地址信息
-          $city_name = DB::table('citys')->where('id',$data['city']['data'])->value('name');
+          $province_name = $data['province']['status']?DB::table('citys')->where('id',$data['province']['data'])->value('name'):'';
+          $city_name = $data['city']['status']?DB::table('citys')->where('id',$data['city']['data'])->value('name'):'';
+          $city_name = $province_name.$city_name;
 
           //客户姓名
           $names = ['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨'];
@@ -78,21 +80,41 @@ class Article extends Model
           //遍历结果集
           $oss = new OssUploadImageHandler();
 
+          if(!$data['countys']['status']){
+              $data['countys']['data'] = [''];
+          }
+          if(!$data['cars']['status']){
+              $data['cars']['data'] = [''];
+          }
+
           foreach($data['countys']['data'] as $county){
               foreach($data['cars']['data'] as $car){
                   //查找汽车相关型号
-                  $car_models = $car['models'];
-                  $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
+                  if(!$data['cars']['status']){
+                      $car_models = [
+                          ['name'=>'']
+                      ];
+                      $car_brand = '';
+                  }else{
+                      $car_models = $car['models'];
+                      $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
+                  }
 
                   foreach($car_models as $car_model){
-                      if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
+                      if(isset($car_model['name'])){
+                          $car_model_name = $car_model['name'];
                           //计算车子价格
-                          $price = rand($car_model['min'],$car_model['max']);
+                          $price = $data['cars']['price_status']?rand($car_model['min'],$car_model['max']):'';
+
                           //客户姓名
                           $name = array_random($names).array_random($sexs);
 
                           //生成第二张图片
-                          $image = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
+                          if($data['cars']['status']&&$data['cars']['price_status']){
+                              $image = $this->toImage($id,$car_brand.$car_model_name,$price,$name);
+                          }else{
+                              $image = '';
+                          }
 
                           //替换内容
                           $replace_text =  str_replace('{name}',$name,$template_content);
@@ -192,7 +214,7 @@ class Article extends Model
                                               $title = implode('',$sort);
                                               //替换title
                                               $replace_text =  str_replace('{title}',$title,$replace_text);
-                                             
+
                                               //文件名规则生成
                                               $file_path = $file_base_path.'/'.$title.'.txt';
                                               //生成文件
@@ -235,7 +257,7 @@ class Article extends Model
       }
 
       protected function imageHtml($car,$price,$name){
-
+          $car = $car?$car:'weizhi';
           //借款期限
           $period = array_random([12,6]);
 
@@ -245,7 +267,7 @@ class Article extends Model
           $boarding = date('Y年m月',rand($start_time,$end_time));
 
           //汽车本身评估价格
-          $evaluation_car = $price-8-rand(1,3);
+          $evaluation_car = $price?$price-8-rand(1,3):10;
           //额度评估
           $evaluation = round($price*(100+rand(10,20))/100,1);
           //客户需要

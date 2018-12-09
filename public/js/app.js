@@ -95653,6 +95653,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['id'],
@@ -95677,20 +95680,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 desc: '',
                 template_id: 1,
                 province: {
-                    sort: 0,
+                    status: true,
+                    sort: 1,
                     data: 1
                 },
                 city: {
-                    sort: 1,
+                    status: true,
+                    sort: 2,
                     data: ''
                 },
                 countys: {
-                    sort: 2,
+                    status: true,
+                    sort: 3,
                     data: []
                 },
                 cars: {
-                    sort: 3,
-                    price_sort: 4,
+                    status: true,
+                    price_status: true,
+                    sort: 4,
+                    price_sort: 5,
                     data: [{
                         brand: '',
                         models: []
@@ -95709,6 +95717,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        carStatusChange: function carStatusChange(e) {
+            if (!e) {
+                this.article.cars.price_status = false;
+            }
+        },
         changeProvince: function changeProvince(e) {
             this.countys = [];
             this.article.countys.data = [];
@@ -96064,6 +96077,23 @@ var render = function() {
                       [
                         _c(
                           "el-col",
+                          { attrs: { span: 2 } },
+                          [
+                            _c("el-switch", {
+                              model: {
+                                value: _vm.article.province.status,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.province, "status", $$v)
+                                },
+                                expression: "article.province.status"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
                           { attrs: { span: 8 } },
                           [
                             _c(
@@ -96091,6 +96121,28 @@ var render = function() {
                             )
                           ],
                           1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 3 } },
+                          [
+                            _c("el-input-number", {
+                              attrs: {
+                                "controls-position": "right",
+                                min: 1,
+                                max: 10
+                              },
+                              model: {
+                                value: _vm.article.province.sort,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.province, "sort", $$v)
+                                },
+                                expression: "article.province.sort"
+                              }
+                            })
+                          ],
+                          1
                         )
                       ],
                       1
@@ -96100,6 +96152,23 @@ var render = function() {
                       "el-form-item",
                       { attrs: { label: "市" } },
                       [
+                        _c(
+                          "el-col",
+                          { attrs: { span: 2 } },
+                          [
+                            _c("el-switch", {
+                              model: {
+                                value: _vm.article.city.status,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.city, "status", $$v)
+                                },
+                                expression: "article.city.status"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
                         _c(
                           "el-col",
                           { attrs: { span: 8 } },
@@ -96159,7 +96228,24 @@ var render = function() {
                       [
                         _c(
                           "el-col",
-                          { attrs: { span: 24 } },
+                          { attrs: { span: 2 } },
+                          [
+                            _c("el-switch", {
+                              model: {
+                                value: _vm.article.countys.status,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.countys, "status", $$v)
+                                },
+                                expression: "article.countys.status"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 22 } },
                           [
                             _c(
                               "el-checkbox",
@@ -96230,6 +96316,24 @@ var render = function() {
                       "el-form-item",
                       { attrs: { label: "品牌" } },
                       [
+                        _c(
+                          "el-col",
+                          { attrs: { span: 2 } },
+                          [
+                            _c("el-switch", {
+                              on: { change: _vm.carStatusChange },
+                              model: {
+                                value: _vm.article.cars.status,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.article.cars, "status", $$v)
+                                },
+                                expression: "article.cars.status"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
                         _vm._l(_vm.article.cars.data, function(param, index) {
                           return _c(
                             "div",
@@ -96450,6 +96554,16 @@ var render = function() {
                       "el-form-item",
                       { attrs: { label: "价格排序" } },
                       [
+                        _c("el-switch", {
+                          model: {
+                            value: _vm.article.cars.price_status,
+                            callback: function($$v) {
+                              _vm.$set(_vm.article.cars, "price_status", $$v)
+                            },
+                            expression: "article.cars.price_status"
+                          }
+                        }),
+                        _vm._v(" "),
                         _c("el-input-number", {
                           attrs: {
                             "controls-position": "right",

@@ -31,12 +31,7 @@ class ArticleRequest extends FormRequest
                     'template_id' => 'required|integer',
                     'name' => 'required',
                     'desc' => 'nullable',
-                    // 'title' => 'required',
-                    // 'keywords' => 'required',
-                    // 'description' => 'required',
-                    // 'content' => 'required',
-                    // 'param_names' => 'required',
-                    // 'param_contents' => 'required',
+                    'config'=>'nullable|array'
                 ];
             }
             // UPDATE
@@ -48,6 +43,7 @@ class ArticleRequest extends FormRequest
                     'template_id' => 'required|integer',
                     'name' => 'required',
                     'desc' => 'nullable',
+                    'config'=>'nullable|array'
                 ];
             }
             case 'GET':

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use OSS\Core\OssException;
@@ -30,49 +31,40 @@ class HomeController extends Controller
     }
 
     public function test1(){
-        $client = new Client();
-        $header = [
-            'headers' => [
-                'Authorization' => 'APPCODE 127f2a01c31746f3bf412ffee5686388',
+
+        $body = [
+            'form_params'=>[
+                'txt'=>'本公司常年从事软件开发工作，经验丰富',
+                'th'=>3
             ]
         ];
-
-
-        //获取某个品牌的所有型号
-        $model_api = 'https://api02.aliyun.venuscn.com/area/query?parent_id=';
-        $parentid = 99537;
-        $response = $client->request('GET', $model_api.$parentid, $header);
-        $contents = json_decode($response->getBody()->getContents(),true);
-        $citylists = array();
-        // dd($contents);
-
-        foreach($contents['data'] as $value){
-            $citylists[] = array(
-                'id'=>$value['id'],
-                'name'=>$value['name'],
-                'pid'=>$value['parent_id']
-            );
-        }
-
-        // $carlists = array_merge(array_sort($carlists));
-        dd($citylists);
+        $header = [
+            'headers' => [
+                'Content-Type'=>'application/x-www-form-urlencoded',
+                'Authorization' => '96BD53AD97644476891D41753BAFCFC5',
+            ]
+        ];
+        $client = new Client([
+            'base_uri' => 'http://apis.5118.com/',
+            'headers' => [
+                'Content-Type'=>'application/x-www-form-urlencoded',
+                'Authorization' => 'APIKEY 96BD53AD97644476891D41753BAFCFC5',
+            ]
+        ]);
+        dump($client);
+        $brand_api = 'wyc/akey';
+        $response = $client->request('POST', $brand_api,$body);
+        dump($client);
+        dump($response);
+        $brands = json_decode($response->getBody()->getContents(),true);
+        dump($brands);
     }
 
     public function test2(){
-        try{
-            $lists = \OSS::listObjects(env('OSS_BUCKET'),[
-                'max-keys'=>1000,
-                'prefix'=>'cars/宝马/x1/',
-                'delimiter'=>'',
-                'marker'=>'',
-            ]);
-
-        }catch(OssException $e){
-            dd($e);
-        }
-
-        foreach($lists->getObjectList() as $list){
-            dump($list->getKey());
+        $files = Storage::files('public/original/start/1');
+        foreach($files as $file){
+            $content = Storage::get($file);
+            dump($content);
         }
     }
 

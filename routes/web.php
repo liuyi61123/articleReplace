@@ -17,3 +17,6 @@ Route::delete('templates/delete_image', 'TemplatesController@delete_image')->nam
 Route::resource('templates', 'TemplatesController');//模板
 Route::resource('params', 'ParamsController');//参数
 Route::resource('images', 'ImagesController');//图片
+
+Route::get('/original', 'OriginalController@index')->name('original.index');//伪原创
+Route::post('/original', 'OriginalController@store')->name('original.store');//伪原创

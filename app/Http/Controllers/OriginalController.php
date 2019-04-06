@@ -28,8 +28,7 @@ class OriginalController extends Controller
         $start_path = $request->input('start_path');
         $over_path = $request->input('over_path');
         $th = $request->input('th');
-
-        $this->dispatch(new PseudoOriginal($start_path,$over_path,$th));
+        PseudoOriginal::dispatch($start_path,$over_path,$th);
 
         return response()->json(['msg'=>'正在生成中']);
     }

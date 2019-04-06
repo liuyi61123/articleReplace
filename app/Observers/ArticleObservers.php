@@ -15,6 +15,6 @@ class ArticleObserver
      */
     public function saved(Article $article)
     {
-        GenerateArticle::dispatch($article);
+        // GenerateArticle::dispatch($article);
     }
 }

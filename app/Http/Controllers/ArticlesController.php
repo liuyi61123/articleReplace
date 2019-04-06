@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\GenerateArticle;
 
 class ArticlesController extends Controller
 {
@@ -65,8 +66,9 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        // $article->generate();
-        return response()->json(['status'=>200,'data'=>$res]);
+        $article->generate();
+        // GenerateArticle::dispatch($article);
+        return response()->json(['status'=>200]);
     }
 
     /**
@@ -126,7 +128,8 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        // $article->generate();
+        $article->generate();
+        // GenerateArticle::dispatch($article);
         return response()->json(['status'=>200]);
     }
 

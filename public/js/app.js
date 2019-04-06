@@ -86995,6 +86995,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            loading: false,
             form: {
                 start_path: '',
                 over_path: '',
@@ -87012,18 +87013,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submitForm: function submitForm(formName) {
             var _this = this;
 
+            this.fullScreen(true);
             var data = this.form;
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
-                    axios.post('/original', data).then(function (response) {
+                    axios.post('/original', data).then(function (res) {
+                        _this.fullScreen(false);
                         console.log(res);
                         _this.$message({
-                            message: '正在生成中',
+                            message: '已完成',
                             type: 'success'
                         });
+                        window.location = '/';
                     }).catch(function (error) {
                         console.log(error);
-                        _this.loading = false;
+                        _this.fullScreen(false);
                         _this.$message.error('错了哦，这是一条错误消息');
                     });
                 } else {
@@ -87031,6 +87035,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return false;
                 }
             });
+        },
+        fullScreen: function fullScreen(bool) {
+            if (bool) {
+                this.loading = this.$loading({
+                    lock: true,
+                    text: '正在生成中',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            } else {
+                this.loading.close();
+            }
         }
     },
     created: function created() {}

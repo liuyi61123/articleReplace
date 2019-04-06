@@ -41,7 +41,7 @@ class PseudoOriginal implements ShouldQueue
         $files = Storage::files($start_directory);
         foreach($files as $file){
             $content = Storage::get($file);
-            $file_name = explode($start_directory,$file);
+            $file_name = explode($start_directory,$file)[1];
             $response = $this->sendOriginal($content,$this->th);
             if($response){
                 //保存新生成的文件
@@ -71,7 +71,7 @@ class PseudoOriginal implements ShouldQueue
         $brand_api = 'wyc/akey';
         $response = $client->request('POST', $brand_api,$body);
         $brands = json_decode($response->getBody()->getContents(),true);
-        if($brands['code'] == 0){
+        if($brands['errcode'] == 0){
             return $brands['data'];
         }else{
             return false;

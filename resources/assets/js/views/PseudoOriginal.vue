@@ -34,6 +34,7 @@
     export default {
         data () {
             return {
+                loading:false,
                 form:{
                     start_path:'',
                     over_path:'',
@@ -56,28 +57,42 @@
         },
         methods: {
             submitForm(formName){
-
+                this.fullScreen(true)
                 let data = this.form
                 this.$refs[formName].validate((valid) => {
                   if (valid) {
                       axios.post('/original',data)
-                      .then((response)=> {
+                      .then(res=> {
+                          this.fullScreen(false)
                           console.log(res)
                           this.$message({
-                              message: '正在生成中',
+                              message: '已完成',
                               type: 'success'
-                          });
+                          })
+                          window.location = '/'
                       })
-                      .catch((error)=>{
-                         console.log(error);
-                         this.loading = false;
+                      .catch(error=>{
+                         console.log(error)
+                         this.fullScreen(false)
                          this.$message.error('错了哦，这是一条错误消息');
                      })
                   } else {
-                    console.log('error submit!!');
-                    return false;
+                    console.log('error submit!!')
+                    return false
                   }
                 })
+            },
+            fullScreen(bool) {
+                if(bool){
+                    this.loading = this.$loading({
+                      lock: true,
+                      text: '正在生成中',
+                      spinner: 'el-icon-loading',
+                      background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                }else{
+                    this.loading.close();
+                }
             }
         },
         created(){

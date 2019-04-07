@@ -9,12 +9,12 @@
                     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                       <el-form-item label="文章目录" prop="start_path">
                         <el-input v-model="form.start_path">
-                          <template slot="prepend">storage/app/public/original/start/start_path/</template>
+                          <template slot="prepend">storage/app/public/original/start/</template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="保存目录"  prop="over_path">
                         <el-input v-model="form.over_path">
-                            <template slot="prepend">storage/app/public/original/start/over_path/</template>
+                            <template slot="prepend">storage/app/public/original/start/</template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="相关词" prop="th">

@@ -87111,9 +87111,7 @@ var render = function() {
                           },
                           [
                             _c("template", { slot: "prepend" }, [
-                              _vm._v(
-                                "storage/app/public/original/start/start_path/"
-                              )
+                              _vm._v("storage/app/public/original/start/")
                             ])
                           ],
                           2
@@ -87139,9 +87137,7 @@ var render = function() {
                           },
                           [
                             _c("template", { slot: "prepend" }, [
-                              _vm._v(
-                                "storage/app/public/original/start/over_path/"
-                              )
+                              _vm._v("storage/app/public/original/start/")
                             ])
                           ],
                           2

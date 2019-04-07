@@ -56,8 +56,8 @@ class PseudoOriginal implements ShouldQueue
     {
         $body = [
             'form_params'=>[
-                'txt'=>'本公司常年从事软件开发工作，经验丰富',
-                'th'=>3
+                'txt'=>$content,
+                'th'=>$th
             ]
         ];
         $client = new Client([

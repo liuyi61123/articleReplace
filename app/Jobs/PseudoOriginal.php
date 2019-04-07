@@ -75,8 +75,9 @@ class PseudoOriginal implements ShouldQueue
         $type = $response->getHeader('content-type');
         $parsed = Psr7\parse_header($type);
         $brands = json_decode($response->getBody()->getContents(),true);
+        info($brands['data']);
         $utf8_brands= mb_convert_encoding($brands, 'UTF-8', $parsed[0]['charset'] ?: 'UTF-8');
-
+        info($utf8_brands['data']);
         if($utf8_brands['errcode'] == 0){
             return $utf8_brands['data'];
         }else{

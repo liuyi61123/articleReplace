@@ -5,7 +5,6 @@ namespace App\Jobs;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -48,7 +47,7 @@ class PseudoOriginal implements ShouldQueue
             if($response){
                 //保存新生成的文件
                 Storage::put($over_directory.$file_name,$response);
-                sleep(1);
+                sleep(2);
             }
         }
 
@@ -72,15 +71,9 @@ class PseudoOriginal implements ShouldQueue
 
         $brand_api = 'wyc/akey';
         $response = $client->request('POST', $brand_api,$body);
-        //转换utf-8
-        $type = $response->getHeader('content-type');
-        $parsed = Psr7\parse_header($type);
         $brands = json_decode($response->getBody()->getContents(),true);
-        Log::info($brands);
-        $utf8_brands= mb_convert_encoding($brands, 'utf-8', $parsed[0]['charset'] ?: 'utf-8');
-        Log::info($utf8_brands['data']);
-        if($utf8_brands['errcode'] == 0){
-            return $utf8_brands['data'];
+        if($brands['errcode'] == 0){
+            return $brands['data'];
         }else{
             return false;
         }

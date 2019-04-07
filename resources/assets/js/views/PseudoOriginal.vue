@@ -14,7 +14,7 @@
                       </el-form-item>
                       <el-form-item label="保存目录"  prop="over_path">
                         <el-input v-model="form.over_path">
-                            <template slot="prepend">storage/app/public/original/start/</template>
+                            <template slot="prepend">storage/app/public/original/over/</template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="相关词" prop="th">

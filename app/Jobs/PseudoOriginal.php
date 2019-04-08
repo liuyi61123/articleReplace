@@ -43,10 +43,12 @@ class PseudoOriginal implements ShouldQueue
         foreach($files as $file){
             $content = Storage::get($file);
             $file_name = explode($start_directory,$file)[1];
+            $title = explode('.',$file_name)[0];
             $response = $this->sendOriginal($content,$this->th);
+            $title = $this->sendOriginal($title,$this->th);
             if($response){
                 //保存新生成的文件
-                Storage::put($over_directory.$file_name,$response);
+                Storage::put($over_directory.$title.'.txt',$response);
                 sleep(2);
             }
         }

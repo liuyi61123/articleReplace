@@ -2,9 +2,10 @@
 
 namespace App\Jobs;
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -47,20 +48,20 @@ class PseudoOriginal implements ShouldQueue
 
             $response_content = $this->sendOriginal($content,$this->th);
             $response_title = $this->sendOriginal($title,$this->th);
-            if($response){
+
+            if($response_content&&$response_title){
                 //保存新生成的文件
                 Storage::put($over_directory.$response_title.'.txt',$response_content);
                 sleep(1);
             }
         }
-
     }
 
-    protected function sendOriginal($content,$th)
+    protected function sendOriginal($text,$th)
     {
         $body = [
             'form_params'=>[
-                'txt'=>$content,
+                'txt'=>$text,
                 'th'=>$th
             ]
         ];
@@ -72,13 +73,20 @@ class PseudoOriginal implements ShouldQueue
             ]
         ]);
 
-        $brand_api = 'wyc/akey';
-        $response = $client->request('POST', $brand_api,$body);
-        $brands = json_decode($response->getBody()->getContents(),true);
-        if($brands['errcode'] == 0){
-            return $brands['data'];
-        }else{
-            return $content;
+        $brand_api = config('com5118.wyc.api');
+        try {
+            $response = $client->request('POST', $brand_api,$body);
+            $brands = json_decode($response->getBody()->getContents(),true);
+            if($brands['errcode'] == 0){
+                return $brands['data'];
+            }else{
+                Log::warning($brands['errcode']);
+                return $text;
+            }
+        } catch (Exception $e) {
+            report($e);
+    
+            return false;
         }
     }
 }

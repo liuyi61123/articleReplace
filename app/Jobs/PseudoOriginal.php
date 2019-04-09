@@ -44,12 +44,13 @@ class PseudoOriginal implements ShouldQueue
             $content = Storage::get($file);
             $file_name = explode($start_directory,$file)[1];
             $title = explode('.',$file_name)[0];
-            $response = $this->sendOriginal($content,$this->th);
-            $title = $this->sendOriginal($title,$this->th);
+
+            $response_content = $this->sendOriginal($content,$this->th);
+            $response_title = $this->sendOriginal($title,$this->th);
             if($response){
                 //保存新生成的文件
-                Storage::put($over_directory.$title.'.txt',$response);
-                sleep(2);
+                Storage::put($over_directory.$response_title.'.txt',$response_content);
+                sleep(1);
             }
         }
 
@@ -64,10 +65,10 @@ class PseudoOriginal implements ShouldQueue
             ]
         ];
         $client = new Client([
-            'base_uri' => 'http://apis.5118.com/',
+            'base_uri' => config('com5118.base_url'),
             'headers' => [
                 'Content-Type'=>'application/x-www-form-urlencoded',
-                'Authorization' => 'APIKEY 96BD53AD97644476891D41753BAFCFC5',
+                'Authorization' => 'APIKEY '.config('com5118.wyc.key'),
             ]
         ]);
 
@@ -77,7 +78,7 @@ class PseudoOriginal implements ShouldQueue
         if($brands['errcode'] == 0){
             return $brands['data'];
         }else{
-            return false;
+            return $content;
         }
     }
 }

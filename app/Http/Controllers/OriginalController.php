@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Jobs\PseudoOriginal;
+use App\Http\Requests\OriginRequest;
 
 class OriginalController extends Controller
 {
@@ -23,12 +24,13 @@ class OriginalController extends Controller
         return view('original.index');
     }
 
-    public function store(Request $request)
+    public function store(OriginRequest $request)
     {
+        $channel = $request->input('channel');
         $start_path = $request->input('start_path');
         $over_path = $request->input('over_path');
         $th = $request->input('th');
-        PseudoOriginal::dispatch($start_path,$over_path,$th);
+        PseudoOriginal::dispatch($channel,$start_path,$over_path,$th);
 
         return response()->json(['msg'=>'正在生成中']);
     }

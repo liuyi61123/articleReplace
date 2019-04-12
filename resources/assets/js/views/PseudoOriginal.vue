@@ -7,6 +7,12 @@
                 </div>
                 <div class="text item">
                     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+                      <el-form-item label="API渠道" prop="channel">
+                        <el-select v-model="form.channel" placeholder="请选择API渠道">
+                            <el-option label="5118" value="5118"></el-option>
+                            <el-option label="奶盘" value="naipan"></el-option>
+                            </el-select>
+                        </el-form-item>
                       <el-form-item label="文章目录" prop="start_path">
                         <el-input v-model="form.start_path">
                           <template slot="prepend">storage/app/public/original/start/</template>
@@ -36,11 +42,15 @@
             return {
                 loading:false,
                 form:{
+                    channel:'',
                     start_path:'',
                     over_path:'',
                     th:3,
                 },
                 rules:{
+                    channel:[
+                        { required: true, message: 'API渠道', trigger: 'change' },
+                    ],
                     start_path:[
                         { required: true, message: '文章目录', trigger: 'blur' },
                         { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
@@ -69,7 +79,12 @@
                               message: '已完成',
                               type: 'success'
                           })
-                          window.location = '/'
+                        //  清空form
+                        this.form = {
+                                start_path:'',
+                                over_path:'',
+                                th:3,
+                            }
                       })
                       .catch(error=>{
                          console.log(error)

@@ -86030,7 +86030,7 @@ var content = __webpack_require__(203);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(204)("ea6b638e", content, false, {});
+var update = __webpack_require__(204)("3afcedd9", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -86991,17 +86991,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             loading: false,
             form: {
+                channel: '',
                 start_path: '',
                 over_path: '',
                 th: 3
             },
             rules: {
+                channel: [{ required: true, message: 'API渠道', trigger: 'change' }],
                 start_path: [{ required: true, message: '文章目录', trigger: 'blur' }, { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }],
                 over_path: [{ required: true, message: '保存目录', trigger: 'blur' }, { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }],
                 th: [{ required: true, message: '相关词', trigger: 'blur' }]
@@ -87024,7 +87032,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             message: '已完成',
                             type: 'success'
                         });
-                        window.location = '/';
+                        //  清空form
+                        _this.form = {
+                            start_path: '',
+                            over_path: '',
+                            th: 3
+                        };
                     }).catch(function (error) {
                         console.log(error);
                         _this.fullScreen(false);
@@ -87094,6 +87107,37 @@ var render = function() {
                     }
                   },
                   [
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "API渠道", prop: "channel" } },
+                      [
+                        _c(
+                          "el-select",
+                          {
+                            attrs: { placeholder: "请选择API渠道" },
+                            model: {
+                              value: _vm.form.channel,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "channel", $$v)
+                              },
+                              expression: "form.channel"
+                            }
+                          },
+                          [
+                            _c("el-option", {
+                              attrs: { label: "5118", value: "5118" }
+                            }),
+                            _vm._v(" "),
+                            _c("el-option", {
+                              attrs: { label: "奶盘", value: "naipan" }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
                     _c(
                       "el-form-item",
                       { attrs: { label: "文章目录", prop: "start_path" } },

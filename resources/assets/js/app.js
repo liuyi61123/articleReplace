@@ -12,6 +12,8 @@ Vue.component('create-edit-article', require('./views/CreateEditArticle.vue'));/
 Vue.component('template-table', require('./views/TemplateTable.vue'));//模板列表
 Vue.component('create-edit-template', require('./views/CreateEditTemplate.vue'));//编辑和新建模板
 Vue.component('pseudo-original', require('./views/PseudoOriginal.vue'));//编辑和新建模板
+Vue.component('baidu-url-create', require('./views/BaiduUrlCreate.vue'));//新建baidu_url
+Vue.component('baidu-url-table', require('./views/BaiduUrlTable.vue'));//baidu_url列表
 
 //组件
 // Vue.component('upload-image', require('./views/components/UploadImage.vue'));//编辑和新建模板

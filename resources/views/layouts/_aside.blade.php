@@ -25,5 +25,11 @@
              <span slot="title">伪原创</span>
          </el-menu-item>
      </a>
+     <a href="{{ route('baidu_urls.index') }}">
+        <el-menu-item index="2">
+            <i class="el-icon-edit-outline"></i>
+            <span slot="title">百度URL</span>
+        </el-menu-item>
+    </a>
     </el-menu>
 </div>

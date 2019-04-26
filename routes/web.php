@@ -20,3 +20,9 @@ Route::resource('images', 'ImagesController');//图片
 
 Route::get('/original', 'OriginalController@index')->name('original.index');//伪原创
 Route::post('/original', 'OriginalController@store')->name('original.store');//伪原创
+
+Route::get('/baidu_urls', 'BaiduUrlsController@index')->name('baidu_urls.index');//百度收录
+Route::get('/baidu_urls/create', 'BaiduUrlsController@create')->name('baidu_urls.create');//百度收录
+Route::post('/baidu_urls', 'BaiduUrlsController@store')->name('baidu_urls.store');//百度收录
+Route::delete('/baidu_urls/{id}', 'BaiduUrlsController@destroy')->name('baidu_urls.destroy');//百度收录
+Route::get('/baidu_urls/{id}/search', 'BaiduUrlsController@search')->name('baidu_urls.search');//百度收录

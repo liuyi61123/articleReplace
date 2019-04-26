@@ -16127,6 +16127,8 @@ Vue.component('create-edit-article', __webpack_require__(193)); //编辑和新�
 Vue.component('template-table', __webpack_require__(196)); //模板列表
 Vue.component('create-edit-template', __webpack_require__(199)); //编辑和新建模板
 Vue.component('pseudo-original', __webpack_require__(209)); //编辑和新建模板
+Vue.component('baidu-url-create', __webpack_require__(217)); //新建baidu_url
+Vue.component('baidu-url-table', __webpack_require__(220)); //baidu_url列表
 
 //组件
 // Vue.component('upload-image', require('./views/components/UploadImage.vue'));//编辑和新建模板
@@ -86030,7 +86032,7 @@ var content = __webpack_require__(203);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(204)("3afcedd9", content, false, {});
+var update = __webpack_require__(204)("ea6b638e", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -87255,6 +87257,694 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(14)
+/* script */
+var __vue_script__ = __webpack_require__(218)
+/* template */
+var __vue_template__ = __webpack_require__(219)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/BaiduUrlCreate.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-427ac403", Component.options)
+  } else {
+    hotAPI.reload("data-v-427ac403", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 218 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            loading: false,
+            urls: ''
+        };
+    },
+
+    methods: {
+        submitForm: function submitForm() {
+            var _this = this;
+
+            this.fullScreen(true);
+            var urls = this.urls;
+            if (urls) {
+                axios.post('/baidu_urls', {
+                    urls: urls
+                }).then(function (res) {
+                    _this.fullScreen(false);
+                    console.log(res);
+                    if (res.data.status == 200) {
+                        _this.$message({
+                            message: '已完成',
+                            type: 'success'
+                        });
+                        //  清空urls
+                        _this.urls = '';
+                        window.location.href = '/baidu_urls';
+                    } else {
+                        _this.$message.error(res.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    _this.fullScreen(false);
+                    _this.$message.error('错了哦，这是一条错误消息');
+                });
+            } else {
+                this.$message.error('url不能为空');
+            }
+        },
+        fullScreen: function fullScreen(bool) {
+            if (bool) {
+                this.loading = this.$loading({
+                    lock: true,
+                    text: '正在生成中',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            } else {
+                this.loading.close();
+            }
+        }
+    },
+    created: function created() {}
+});
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-row",
+    { attrs: { gutter: 20 } },
+    [
+      _c(
+        "el-col",
+        { attrs: { span: 24 } },
+        [
+          _c("el-card", { staticClass: "box-card" }, [
+            _c(
+              "div",
+              {
+                staticClass: "clearfix",
+                attrs: { slot: "header" },
+                slot: "header"
+              },
+              [_c("span", [_vm._v("百度Url")])]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "text item" },
+              [
+                _c(
+                  "el-form",
+                  { attrs: { "label-width": "100px" } },
+                  [
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "文章目录" } },
+                      [
+                        _c("el-input", {
+                          attrs: {
+                            type: "textarea",
+                            autosize: { minRows: 4 },
+                            rows: 2,
+                            placeholder: "请输入url，一行一个"
+                          },
+                          model: {
+                            value: _vm.urls,
+                            callback: function($$v) {
+                              _vm.urls = $$v
+                            },
+                            expression: "urls"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      [
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { type: "primary" },
+                            on: {
+                              click: function($event) {
+                                _vm.submitForm()
+                              }
+                            }
+                          },
+                          [_vm._v("执行")]
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-427ac403", module.exports)
+  }
+}
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(14)
+/* script */
+var __vue_script__ = __webpack_require__(221)
+/* template */
+var __vue_template__ = __webpack_require__(222)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/BaiduUrlTable.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-dda401d2", Component.options)
+  } else {
+    hotAPI.reload("data-v-dda401d2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 221 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            total: 0, //总数
+            current_page: 1, //当前页数
+            per_page: 1, //每页显示数量
+            tableData: []
+        };
+    },
+
+    methods: {
+        //新建
+        createArticle: function createArticle() {
+            window.location.href = "/baidu_urls/create";
+        },
+
+        //导出zip
+        searchArticle: function searchArticle(index, row) {
+            var _this = this;
+
+            axios.get('/baidu_urls/' + row.id + '/search').then(function (response) {
+                console.log(response);
+                if (response.data.status == 200) {
+                    _this.$message({
+                        message: '成功',
+                        type: 'success'
+                    });
+                    //重新加载数据
+                    _this.getPage(1);
+                } else {
+                    _this.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                _this.$message.error('错了哦，这是一条错误消息');
+            });
+        },
+
+        //删除
+        deleteBaiduUrl: function deleteBaiduUrl(index, row) {
+            var _this2 = this;
+
+            axios.delete('/baidu_urls/' + row.id).then(function (response) {
+                console.log(response);
+                var message = {};
+                if (response.data.status == 200) {
+                    _this2.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    //重新加载数据
+                    _this2.tableData.splice(index, 1);
+                } else {
+                    _this2.$message({
+                        message: '删除失败',
+                        type: 'error'
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                _this2.$message.error('错了哦，这是一条错误消息');
+            });
+        },
+        currentChange: function currentChange(page) {
+            this.getPage(page);
+        },
+        prevClick: function prevClick(page) {
+            this.getPage(page);
+        },
+        nextClick: function nextClick(page) {
+            this.getPage(page);
+        },
+        getPage: function getPage(page) {
+            var _this3 = this;
+
+            //加载table数据
+            page = page || 1;
+            axios.get('/baidu_urls?page=' + page).then(function (response) {
+                console.log(response);
+                _this3.total = response.data.total;
+                _this3.current_page = response.data.current_page;
+                _this3.per_page = response.data.per_page;
+                _this3.tableData = [];
+                response.data.data.map(function (value, index) {
+                    _this3.tableData.push(value);
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    created: function created() {
+        //加载table数据
+        this.getPage(1);
+    }
+});
+
+/***/ }),
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-row",
+    { attrs: { gutter: 20 } },
+    [
+      _c(
+        "el-col",
+        { attrs: { span: 24 } },
+        [
+          _c("el-card", { staticClass: "box-card" }, [
+            _c(
+              "div",
+              {
+                staticClass: "clearfix",
+                attrs: { slot: "header" },
+                slot: "header"
+              },
+              [
+                _c("span", [_vm._v("百度Url查询列表")]),
+                _vm._v(" "),
+                _c(
+                  "el-button",
+                  {
+                    staticStyle: { float: "right" },
+                    attrs: { type: "success", size: "small" },
+                    on: {
+                      click: function($event) {
+                        _vm.createArticle()
+                      }
+                    }
+                  },
+                  [_vm._v("新建")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "text item" },
+              [
+                _c(
+                  "el-table",
+                  {
+                    staticStyle: { width: "100%" },
+                    attrs: { data: _vm.tableData, border: "" }
+                  },
+                  [
+                    _c("el-table-column", {
+                      attrs: { type: "selection", width: "55" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "status",
+                        label: "状态",
+                        sortable: "",
+                        width: "100"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              scope.row.status == 1
+                                ? _c("el-tag", { attrs: { type: "success" } }, [
+                                    _vm._v("已完成"),
+                                    _c("i", { staticClass: "el-icon-success" })
+                                  ])
+                                : _c("el-tag", { attrs: { type: "danger" } }, [
+                                    _vm._v("生成中"),
+                                    _c("i", { staticClass: "el-icon-loading" })
+                                  ])
+                            ]
+                          }
+                        }
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "id",
+                        label: "Id",
+                        sortable: "",
+                        width: "100"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "task_id", label: "任务ID", width: "100" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "urls", label: "Url" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "created_at",
+                        label: "创建时间",
+                        sortable: ""
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "updated_at",
+                        label: "更新时间",
+                        sortable: ""
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { fixed: "right", align: "center", label: "操作" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { size: "mini", type: "warning" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.searchArticle(scope.$index, scope.row)
+                                    }
+                                  }
+                                },
+                                [_vm._v("导出")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { size: "mini", type: "danger" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteBaiduUrl(
+                                        scope.$index,
+                                        scope.row
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("删除")]
+                              )
+                            ]
+                          }
+                        }
+                      ])
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("el-pagination", {
+                  attrs: {
+                    background: "",
+                    layout: "prev, pager, next",
+                    "current-page": _vm.current_page,
+                    "page-size": _vm.per_page,
+                    total: _vm.total
+                  },
+                  on: {
+                    "update:currentPage": function($event) {
+                      _vm.current_page = $event
+                    },
+                    "update:pageSize": function($event) {
+                      _vm.per_page = $event
+                    },
+                    "prev-click": _vm.prevClick,
+                    "next-click": _vm.nextClick,
+                    "current-change": _vm.currentChange
+                  }
+                })
+              ],
+              1
+            )
+          ])
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-dda401d2", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

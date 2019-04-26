@@ -87444,7 +87444,7 @@ var render = function() {
                         _c("el-input", {
                           attrs: {
                             type: "textarea",
-                            autosize: { minRows: 4 },
+                            autosize: { minRows: 4, maxRows: 50 },
                             rows: 2,
                             placeholder: "请输入url，一行一个"
                           },

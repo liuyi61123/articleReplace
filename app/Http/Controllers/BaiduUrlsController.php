@@ -37,7 +37,11 @@ class BaiduUrlsController extends Controller
     public function store(Request $request)
     {
         $urls = $request->input('urls');
-        $urls = str_replace("\n",'|',$urls);
+        $urls = array_unique(explode("\n",$urls));
+        if(count($urls)>50){
+            return response()->json(['status'=>400,'msg'=>'最多50条']);
+        }
+        $urls = implode('|',$urls);
 
         $body = [
             'form_params'=>[

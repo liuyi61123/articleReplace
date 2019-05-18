@@ -16,6 +16,7 @@ class PseudoOriginal implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $channel;
+    protected $is_title;
     protected $start_path;
     protected $over_path;
     protected $th;
@@ -24,9 +25,10 @@ class PseudoOriginal implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($channel,$start_path,$over_path,$th)
+    public function __construct($channel,$is_title,$start_path,$over_path,$th)
     {
         $this->channel = $channel;
+        $this->is_title = $is_title;
         $this->start_path = $start_path;
         $this->over_path = $over_path;
         $this->th = $th;
@@ -50,7 +52,11 @@ class PseudoOriginal implements ShouldQueue
             $suffix = explode('.',$file_name)[1];
 
             $response_content = $this->sendOriginal($this->channel,$content,$this->th);
-            $response_title = $this->sendOriginal($this->channel,$title,$this->th);
+            if($this->is_title){
+                $response_title = $this->sendOriginal($this->channel,$title,$this->th);
+            }else{
+                $response_title = $title;
+            }
 
             if($response_content&&$response_title){
                 //保存新生成的文件

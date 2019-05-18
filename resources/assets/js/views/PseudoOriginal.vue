@@ -11,8 +11,14 @@
                         <el-select v-model="form.channel" placeholder="请选择API渠道">
                             <el-option label="5118" value="5118"></el-option>
                             <el-option label="奶盘" value="naipan"></el-option>
-                            </el-select>
-                        </el-form-item>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="伪原创标题" prop="isTitle">
+                        <el-switch
+                            v-model="form.isTitle"
+                        >
+                      </el-switch>
+                      </el-form-item>
                       <el-form-item label="文章目录" prop="start_path">
                         <el-input v-model="form.start_path">
                           <template slot="prepend">storage/app/public/original/start/</template>
@@ -43,6 +49,7 @@
                 loading:false,
                 form:{
                     channel:'',
+                    isTitle:true,
                     start_path:'',
                     over_path:'',
                     th:3,
@@ -50,6 +57,9 @@
                 rules:{
                     channel:[
                         { required: true, message: 'API渠道', trigger: 'change' },
+                    ],
+                    isTitle:[
+                        { required: true, message: '伪原创标题', trigger: 'change' },
                     ],
                     start_path:[
                         { required: true, message: '文章目录', trigger: 'blur' },
@@ -67,10 +77,10 @@
         },
         methods: {
             submitForm(formName){
-                this.fullScreen(true)
                 let data = this.form
                 this.$refs[formName].validate((valid) => {
                   if (valid) {
+                      this.fullScreen(true)
                       axios.post('/original',data)
                       .then(res=> {
                           this.fullScreen(false)
@@ -81,6 +91,7 @@
                           })
                         //  清空form
                         this.form = {
+                                isTitle:true,
                                 start_path:'',
                                 over_path:'',
                                 th:3,
@@ -89,7 +100,7 @@
                       .catch(error=>{
                          console.log(error)
                          this.fullScreen(false)
-                         this.$message.error('错了哦，这是一条错误消息');
+                         this.$message.error('错了哦，这是一条错误消息')
                      })
                   } else {
                     console.log('error submit!!')
@@ -106,7 +117,7 @@
                       background: 'rgba(0, 0, 0, 0.7)'
                     });
                 }else{
-                    this.loading.close();
+                    this.loading.close()
                 }
             }
         },

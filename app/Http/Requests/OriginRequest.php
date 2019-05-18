@@ -18,6 +18,7 @@ class OriginRequest extends Request
                 'required',
                 Rule::in([5118, 'naipan']),
             ],
+            'isTitle' => 'required|boolean',
             'start_path' => 'required',
             'over_path' => 'required',
             'th' => 'required|numeric',

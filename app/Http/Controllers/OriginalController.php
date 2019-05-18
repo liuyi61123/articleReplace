@@ -27,10 +27,11 @@ class OriginalController extends Controller
     public function store(OriginRequest $request)
     {
         $channel = $request->input('channel');
+        $is_title = $request->input('isTitle');
         $start_path = $request->input('start_path');
         $over_path = $request->input('over_path');
         $th = $request->input('th');
-        PseudoOriginal::dispatch($channel,$start_path,$over_path,$th);
+        PseudoOriginal::dispatch($channel,$is_title,$start_path,$over_path,$th);
 
         return response()->json(['msg'=>'正在生成中']);
     }

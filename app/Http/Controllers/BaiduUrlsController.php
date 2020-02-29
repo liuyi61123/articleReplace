@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Jobs\BaiduUrl as BaiduUrlJob;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;

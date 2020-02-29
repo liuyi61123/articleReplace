@@ -26,3 +26,9 @@ Route::get('/baidu_urls/create', 'BaiduUrlsController@create')->name('baidu_urls
 Route::post('/baidu_urls', 'BaiduUrlsController@store')->name('baidu_urls.store');//百度收录
 Route::delete('/baidu_urls/{id}', 'BaiduUrlsController@destroy')->name('baidu_urls.destroy');//百度收录
 Route::get('/baidu_urls/{id}/search', 'BaiduUrlsController@search')->name('baidu_urls.search');//百度收录
+
+Route::post('websites/upload', 'WebsitesController@upload');//网站管理
+Route::post('websites/remove', 'WebsitesController@removeUrls');//网站管理
+Route::resource('websites', 'WebsitesController');//网站管理
+Route::get('website-categories/api', 'WebsiteCategoriesController@api');//网站api
+Route::resource('website-categories', 'WebsiteCategoriesController');//网站分类

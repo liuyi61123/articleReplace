@@ -34,7 +34,7 @@
     </a>
     <el-submenu index="5">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-s-platform"></i>
           <span>网站自提交</span>
         </template>
         <el-menu-item-group>
@@ -44,8 +44,11 @@
             <a href="{{ route('website-categories.index') }}">
                 <el-menu-item index="5-2">网站分类</el-menu-item>
             </a>
-            <a href="{{ route('website-categories.index') }}">
-                <el-menu-item index="5-2">推送页面</el-menu-item>
+            <a href="{{ route('website-pushes.manual') }}">
+                <el-menu-item index="5-3">手动推送</el-menu-item>
+            </a>
+            <a href="{{ route('website-pushes.index') }}">
+                <el-menu-item index="5-4">自动推送</el-menu-item>
             </a>
         </el-menu-item-group>
       </el-submenu>

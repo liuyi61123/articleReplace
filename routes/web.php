@@ -29,6 +29,11 @@ Route::get('/baidu_urls/{id}/search', 'BaiduUrlsController@search')->name('baidu
 
 Route::post('websites/upload', 'WebsitesController@upload');//网站管理
 Route::post('websites/remove', 'WebsitesController@removeUrls');//网站管理
+Route::get('websites/api', 'WebsitesController@api');//网站管理
 Route::resource('websites', 'WebsitesController');//网站管理
+
 Route::get('website-categories/api', 'WebsiteCategoriesController@api');//网站api
 Route::resource('website-categories', 'WebsiteCategoriesController');//网站分类
+
+Route::get('website-pushes/manual', 'WebsitePushesController@manual')->name('website-pushes.manual');//手动提交
+Route::resource('website-pushes', 'WebsitePushesController');

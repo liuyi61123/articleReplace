@@ -54,3 +54,31 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+//自定义函数
+window.array_number_data = (arr,number)=>{
+    if(!arr||arr.length == 0){
+        return []
+    }
+    let result = []
+    let i = 0
+    arr.map(item=>{
+        if(result[i]&&(result[i].length >= number)){
+            //不处理了
+            i++
+            result[i] = [
+                item 
+            ]
+        }else{
+            if(result[i]){
+                result[i].push(item)
+            }else{
+                result[i] = [
+                    item 
+                ] 
+            }
+        }
+    })
+
+    return result
+}

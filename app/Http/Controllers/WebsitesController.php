@@ -75,6 +75,17 @@ class WebsitesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function api(Request $request)
+    {
+        $websites = Website::all();
+        return response()->json($websites);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -155,6 +166,12 @@ class WebsitesController extends Controller
     public function destroy(Website $website)
     {
         $website->delete();
+
+        $file_name = 'websites/'.$website->id.'.txt';
+        $exists = Storage::disk('public')->exists($file_name); 
+        if($exists){
+            Storage::disk('public')->delete($file_name); 
+        }
         return response()->json(['status'=>200]);
     }
 }

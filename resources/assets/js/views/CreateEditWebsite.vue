@@ -14,7 +14,7 @@
                             <el-input v-model="website.url" placeholder="网址"></el-input>
                         </el-form-item>
                         <el-form-item label="分类" prop="category_id">
-                            <el-select v-model="website.category_id" placeholder="请选择">
+                            <el-select class="select" v-model="website.category_id" placeholder="请选择">
                                 <el-option
                                     v-for="item in categories"
                                     :key="item.id"
@@ -25,10 +25,15 @@
                         </el-form-item>
 
                         <el-form-item label="百度站长">
-                            <el-input v-model="website.config.baidu_zz.token" placeholder="token"></el-input>
+                            <el-col :span="11">
+                                <el-input v-model="website.config.baidu_zz.site" placeholder="站点名"></el-input>
+                            </el-col>
+                            <el-col :offset="2" :span="11">
+                                <el-input v-model="website.config.baidu_zz.token" placeholder="token"></el-input>
+                            </el-col>
                         </el-form-item>
 
-                         <el-form-item label="百度熊掌">
+                        <el-form-item label="百度熊掌">
                             <el-col :span="11">
                                 <el-input v-model="website.config.baidu_xz.appid" placeholder="appid"></el-input>
                             </el-col>
@@ -38,11 +43,17 @@
                         </el-form-item>
 
                         <el-form-item label="神马平台">
-                            <el-col :span="11">
-                                <el-input v-model="website.config.shenma.appid" placeholder="user_name"></el-input>
+                            <el-col :span="5">
+                                <el-input v-model="website.config.shenma.site" placeholder="站点名"></el-input>
                             </el-col>
-                            <el-col :offset="2" :span="11">
-                                <el-input v-model="website.config.shenma.token" placeholder="token"></el-input>
+                            <el-col :offset="1" :span="5">
+                                <el-input v-model="website.config.shenma.user_name" placeholder="站长平台账号"></el-input>
+                            </el-col>
+                            <el-col :offset="1" :span="5">
+                                <el-input v-model="website.config.shenma.token" placeholder="authKey"></el-input>
+                            </el-col>
+                            <el-col :offset="1" :span="5">
+                                <el-input v-model="website.config.shenma.resource_name" placeholder="资源类型"></el-input>
                             </el-col>
                         </el-form-item>
 
@@ -68,6 +79,7 @@
                     category_id:'',
                     config:{
                         baidu_zz:{
+                            site:'',
                             token:''
                         },
                         baidu_xz:{
@@ -75,8 +87,10 @@
                             token:''
                         },
                         shenma:{
+                            site:'',
                             user_name:'',
-                            token:''
+                            token:'',
+                            resource_name:'mip_add',
                         },
                     }
                 },
@@ -84,7 +98,7 @@
                 rules: {
                     name: [
                         { required: true, message: '请输入网站名称', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
                     ],
                     category_id: [
                         { required: true, message: '请选择分类', trigger: 'change' }
@@ -176,5 +190,8 @@
 <style lang="css">
     .input-with-select{
         width: 100px;
+    }
+    .select{
+        display: block;
     }
 </style>

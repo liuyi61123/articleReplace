@@ -1,6 +1,6 @@
 <div class="el-aside">
     <div class="website-title">
-        <h2>文章系统</h2>
+        <h2>牛广工具</h2>
     </div>
     <el-menu
       style="border-right:solid 0px #e6e6e6"

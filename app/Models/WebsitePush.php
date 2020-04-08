@@ -113,7 +113,7 @@ class WebsitePush extends Model
     
                 $countu_urls = count($urls);
                 foreach($urls as $k=>$url){
-                    $post_data = ['urls'=>$url];
+                    $post_data = implode(PHP_EOL,$url);
     
                     $count_platforms = count($item['platforms']);
                     foreach($item['platforms'] as $ke=>$platform){
@@ -156,8 +156,11 @@ class WebsitePush extends Model
     public static function sendUrls($base_url,$query,$urls)
     {
         $body = [
-            'form_params'=>[
-                'urls'=>$urls,
+            'multipart'=>[
+                [
+                    'name'     => 'urls',
+                    'contents' => $urls,
+                ]
             ]
         ];
         

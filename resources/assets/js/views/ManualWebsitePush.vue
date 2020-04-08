@@ -148,8 +148,6 @@
                 })
             },
             sendUrl(data,max,now){
-                console.log(max)
-                console.log(now)
                 axios({
                     method: 'post',
                     url: '/website-pushes',

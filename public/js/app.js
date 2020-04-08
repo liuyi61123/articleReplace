@@ -100216,8 +100216,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         sendUrl: function sendUrl(data, max, now) {
             var _this3 = this;
 
-            console.log(max);
-            console.log(now);
             axios({
                 method: 'post',
                 url: '/website-pushes',

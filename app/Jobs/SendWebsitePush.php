@@ -50,9 +50,14 @@ class SendWebsitePush implements ShouldQueue
             //停止执行
             return false;
         }
-
+        
         $body = [
-            'form_params'=>$this->post_data
+            'multipart'=>[
+                [
+                    'name'     => 'urls',
+                    'contents' => $this->post_data,
+                ]
+            ]
         ];
         
         $client = new Client([
@@ -70,7 +75,7 @@ class SendWebsitePush implements ShouldQueue
                 //百度站长
                 if(isset($brands['error'])||($brands['remain'] == 0)){
                     //记录错误日志
-                    $brands['urls'] = $this->post_data['urls'];
+                    $brands['urls'] = $this->post_data;
                     $error = $website_push->error;
                     $error[] = $brands;
                    
@@ -81,7 +86,7 @@ class SendWebsitePush implements ShouldQueue
                 //神马搜索
                 if($brands['returnCode'] != 200){
                     //记录错误日志
-                    $brands['urls'] = $this->post_data['urls'];
+                    $brands['urls'] = $this->post_data;
                     $error = $website_push->error;
                     $error[] = $brands;
                     
@@ -92,7 +97,7 @@ class SendWebsitePush implements ShouldQueue
                 //百度熊掌(天级)
                 if(isset($brands['error'])||($brands['remain_realtime'] == 0)){
                     //记录错误日志
-                    $brands['urls'] = $this->post_data['urls'];
+                    $brands['urls'] = $this->post_data;
                     $error = $website_push->error;
                     $error[] = $brands;
                     $website_push->error = $error;
@@ -102,7 +107,7 @@ class SendWebsitePush implements ShouldQueue
                 //百度熊掌（周级）
                 if(isset($brands['error'])||($brands['remain_batch'] == 0)){
                     //记录错误日志
-                    $brands['urls'] = $this->post_data['urls'];
+                    $brands['urls'] = $this->post_data;
                     $error = $website_push->error;
                     $error[] = $brands;
                     $website_push->error = $error;

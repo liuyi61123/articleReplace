@@ -16,7 +16,7 @@
                         </el-switch>
                     </el-form-item>
                     <el-form-item label="延时秒数">
-                        <el-input-number v-model="push.delay" :min="0" :max="10000" label="延时秒数"></el-input-number>
+                        <el-input-number v-model="push.delay" :min="3" :max="1000" label="延时秒数"></el-input-number>
                     </el-form-item>
                     <div class="box-card">
                         <el-card v-for="(item,index) in push.config" :key="item.id">
@@ -65,7 +65,7 @@
                 push:{
                     type:'automatic',
                     is_automatic:false,
-                    delay:0,
+                    delay:5,
                     name:'',
                     config:[
                         {

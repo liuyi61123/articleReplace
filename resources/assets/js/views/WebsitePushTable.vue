@@ -59,14 +59,12 @@
                           </template>
                          </el-table-column>
                         <el-table-column
-                          width="200"
                           align="center"
                           prop="created_at"
                           label="创建时间"
                           sortable>
                         </el-table-column>
                         <el-table-column
-                          width="200"
                           align="center"
                           prop="updated_at"
                           label="最后更新时间"

@@ -44,6 +44,7 @@ class WebsitePush extends Model
         'is_automatic' => 'boolean',
         'config' => 'array',
         'error' => 'array',
+        'result' => 'array',
     ];
 
     /**
@@ -71,9 +72,6 @@ class WebsitePush extends Model
         }elseif($platform == 'baidu_xz_z'){
             $config['type'] = 'batch';
         }
-        if(isset($config['site'])){
-            $config['site'] = urldecode($config['site']);
-        }
 
         $urls = implode("\n",$data['urls']);
         $result = self::sendUrls($platformMap[$platform]['base_url'],$config,$urls);
@@ -92,13 +90,14 @@ class WebsitePush extends Model
         }
 
         $this->status = 1;
-        $this->error = '';
+        $this->error = array();
         $this->save();
 
         $platformMap = self::$platformMap;
 
         $config = $this->config;
         $count_config = count($config);
+        $i = 1;
         foreach($config as $key=>$item){
             $website = Website::findOrFail($item['website_id']);
             $websiteConfig = $website->config;
@@ -133,9 +132,6 @@ class WebsitePush extends Model
                         }elseif($platform == 'baidu_xz_z'){
                             $query['type'] = 'batch';
                         }
-                        if(isset($query['site'])){
-                            $query['site'] = urldecode($query['site']);
-                        }
         
                         $base_url = $platformMap[$platform]['base_url'];
         
@@ -145,8 +141,9 @@ class WebsitePush extends Model
                         }else{
                             $last = false;
                         }
-        
-                        SendWebsitePush::dispatch($this->id,$platform,$base_url,$query,$post_data,$last)->delay(now()->addSeconds($this->delay));
+                        
+                        SendWebsitePush::dispatch($this->id,$platform,$base_url,$query,$post_data,$last)->delay(now()->addSeconds($this->delay*$i));
+                        $i++;
                     }
                 }
             }

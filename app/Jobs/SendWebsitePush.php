@@ -60,6 +60,7 @@ class SendWebsitePush implements ShouldQueue
         ]);
 
         $url = '?'.urldecode(http_build_query($this->query));
+
         try {
             $response = $client->request('POST', $url,$body);
             $brands = json_decode($response->getBody()->getContents(),true);
@@ -70,12 +71,9 @@ class SendWebsitePush implements ShouldQueue
                 if(isset($brands['error'])||($brands['remain'] == 0)){
                     //记录错误日志
                     $brands['urls'] = $this->post_data['urls'];
-                    if($website_push->error){
-                        $website_push->error[] = $brands;
-                        $error = $website_push->error;
-                    }else{
-                        $error[] = $brands;
-                    }
+                    $error = $website_push->error;
+                    $error[] = $brands;
+                   
                     $website_push->error = $error;
                     $website_push->save();
                 }
@@ -84,12 +82,9 @@ class SendWebsitePush implements ShouldQueue
                 if($brands['returnCode'] != 200){
                     //记录错误日志
                     $brands['urls'] = $this->post_data['urls'];
-                    if($website_push->error){
-                        $website_push->error[] = $brands;
-                        $error = $website_push->error;
-                    }else{
-                        $error[] = $brands;
-                    }
+                    $error = $website_push->error;
+                    $error[] = $brands;
+                    
                     $website_push->error = $error;
                     $website_push->save();
                 }
@@ -98,12 +93,8 @@ class SendWebsitePush implements ShouldQueue
                 if(isset($brands['error'])||($brands['remain_realtime'] == 0)){
                     //记录错误日志
                     $brands['urls'] = $this->post_data['urls'];
-                    if($website_push->error){
-                        $website_push->error[] = $brands;
-                        $error = $website_push->error;
-                    }else{
-                        $error[] = $brands;
-                    }
+                    $error = $website_push->error;
+                    $error[] = $brands;
                     $website_push->error = $error;
                     $website_push->save();
                 }
@@ -112,12 +103,8 @@ class SendWebsitePush implements ShouldQueue
                 if(isset($brands['error'])||($brands['remain_batch'] == 0)){
                     //记录错误日志
                     $brands['urls'] = $this->post_data['urls'];
-                    if($website_push->error){
-                        $website_push->error[] = $brands;
-                        $error = $website_push->error;
-                    }else{
-                        $error[] = $brands;
-                    }
+                    $error = $website_push->error;
+                    $error[] = $brands;
                     $website_push->error = $error;
                     $website_push->save();
                 }
@@ -134,13 +121,8 @@ class SendWebsitePush implements ShouldQueue
                 $website_push->status  = 3;
             }
 
-            if($website_push->error){
-                $website_push->error[] = $brands;
-                $error = $website_push->error;
-            }else{
-                $error[] = $e;
-            }
-            
+            $error = $website_push->error;
+            $error[] = $e;
             $website_push->error = $error;
             $website_push->save();
         }

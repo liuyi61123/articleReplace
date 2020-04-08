@@ -20,6 +20,7 @@ class CreateWebsitePushesTable extends Migration
             $table->unsignedInteger('delay')->default(0)->comment('延时秒数');
             $table->string('name')->comment('任务名称');
             $table->text('config')->comment('配置信息');
+            $table->text('result')->nullable()->comment('提交结果');
             $table->text('error')->nullable()->comment('错误信息');
             $table->timestamps();
         });

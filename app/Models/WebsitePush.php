@@ -146,13 +146,7 @@ class WebsitePush extends Model
                             $last = false;
                         }
         
-                        $info = [
-                            $this->id,$platform,$base_url,$query,$post_data,$last
-                        ];
-                        
-                        // \Log::info($info);
                         SendWebsitePush::dispatch($this->id,$platform,$base_url,$query,$post_data,$last)->delay(now()->addSeconds($this->delay));
-                        
                     }
                 }
             }

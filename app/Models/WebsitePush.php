@@ -104,53 +104,56 @@ class WebsitePush extends Model
             $websiteConfig = $website->config;
 
             //读取urls
-            $urls = Storage::disk('public')->get('websites/'.$item['website_id'].'.txt'); 
-            //按照number分割数组
-            $urls = array_unique(array_filter(explode(PHP_EOL,$urls)));
-            $urls = array_number_data($urls,$item['number']);
-
-
-            $countu_urls = count($urls);
-            foreach($urls as $k=>$url){
-                $post_data = ['urls'=>$url];
-
-                $count_platforms = count($item['platforms']);
-                foreach($item['platforms'] as $ke=>$platform){
-                    //获取对应平台配置信息
-                    if(str_is('baidu_xz*', $platform)){
-                        $query = $websiteConfig['baidu_xz'];
-                    }else{
-                        $query = $websiteConfig[$platform];
-                    }
+            $exists = Storage::disk('public')->exists('websites/'.$item['website_id'].'.txt'); 
+            if($exists){
+                $urls = Storage::disk('public')->get('websites/'.$item['website_id'].'.txt'); 
+                //按照number分割数组
+                $urls = array_unique(array_filter(explode(PHP_EOL,$urls)));
+                $urls = array_number_data($urls,$item['number']);
     
-                    if(in_array('',array_unique(array_values($query)))){
-                        return ['msg'=>'未配置平台信息'];
-                    }
-                    if($platform == 'baidu_xz_t'){
-                        $query['type'] = 'realtime';
-                    }elseif($platform == 'baidu_xz_z'){
-                        $query['type'] = 'batch';
-                    }
-                    if(isset($query['site'])){
-                        $query['site'] = urldecode($query['site']);
-                    }
     
-                    $base_url = $platformMap[$platform]['base_url'];
+                $countu_urls = count($urls);
+                foreach($urls as $k=>$url){
+                    $post_data = ['urls'=>$url];
     
-                    if((($key+1) == $count_config)&&(($ke+1) == $count_platforms)&&(($k+1) == $countu_urls)){
-                        //最后一次循环
-                        $last = true;
-                    }else{
-                        $last = false;
+                    $count_platforms = count($item['platforms']);
+                    foreach($item['platforms'] as $ke=>$platform){
+                        //获取对应平台配置信息
+                        if(str_is('baidu_xz*', $platform)){
+                            $query = $websiteConfig['baidu_xz'];
+                        }else{
+                            $query = $websiteConfig[$platform];
+                        }
+        
+                        if(in_array('',array_unique(array_values($query)))){
+                            return ['msg'=>'未配置平台信息'];
+                        }
+                        if($platform == 'baidu_xz_t'){
+                            $query['type'] = 'realtime';
+                        }elseif($platform == 'baidu_xz_z'){
+                            $query['type'] = 'batch';
+                        }
+                        if(isset($query['site'])){
+                            $query['site'] = urldecode($query['site']);
+                        }
+        
+                        $base_url = $platformMap[$platform]['base_url'];
+        
+                        if((($key+1) == $count_config)&&(($ke+1) == $count_platforms)&&(($k+1) == $countu_urls)){
+                            //最后一次循环
+                            $last = true;
+                        }else{
+                            $last = false;
+                        }
+        
+                        $info = [
+                            $this->id,$platform,$base_url,$query,$post_data,$last
+                        ];
+                        
+                        // \Log::info($info);
+                        SendWebsitePush::dispatch($this->id,$platform,$base_url,$query,$post_data,$last)->delay(now()->addSeconds($this->delay));
+                        
                     }
-    
-                    $info = [
-                        $this->id,$platform,$base_url,$query,$post_data,$last
-                    ];
-                    
-                    // \Log::info($info);
-                    SendWebsitePush::dispatch($this->id,$platform,$base_url,$query,$post_data,$last)->delay(now()->addSeconds($this->delay));
-                    
                 }
             }
         }

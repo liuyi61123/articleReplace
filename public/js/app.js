@@ -99454,6 +99454,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -99769,6 +99776,16 @@ var render = function() {
                         align: "center",
                         prop: "created_at",
                         label: "创建时间",
+                        sortable: ""
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        width: "200",
+                        align: "center",
+                        prop: "updated_at",
+                        label: "最后更新时间",
                         sortable: ""
                       }
                     }),

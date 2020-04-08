@@ -99457,10 +99457,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -99634,10 +99630,6 @@ var render = function() {
                     attrs: { data: _vm.tableData, border: "" }
                   },
                   [
-                    _c("el-table-column", {
-                      attrs: { type: "selection", width: "55" }
-                    }),
-                    _vm._v(" "),
                     _c("el-table-column", {
                       attrs: {
                         align: "center",

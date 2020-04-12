@@ -25,9 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-
+        //定时执行提交链接
         $schedule->call(function () {
             $website_pushes = WebsitePush::where([
                 ['is_automatic','=',true],
@@ -36,7 +34,16 @@ class Kernel extends ConsoleKernel
             foreach($website_pushes as $website_push){
                 $website_push->automatic();
             }
-        })->daily('10:00');
+        })->daily(env('WEBSITE_PUSH_START','8:00'));
+        //定时关闭提交链接
+        $schedule->call(function () {
+            $website_pushes = WebsitePush::where([
+                ['is_automatic','=',true],
+                ['status','=',1],
+            ])->update([
+                'status'=>2
+            ]);
+        })->daily(env('WEBSITE_PUSH_END','23:55'));
     }
 
     /**

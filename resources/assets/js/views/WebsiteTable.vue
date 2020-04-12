@@ -80,6 +80,7 @@
                 class="upload-demo"
                 ref="upload"
                 action="/websites/upload"
+                :on-preview="previewFile"
                 :on-remove="removeFile"
                 :on-success="uploadSuccess"
                 list-type="text"
@@ -142,6 +143,11 @@
             submitUpload(type){
                 this.uploadData.type = type
                 this.$refs.upload.submit()
+            },
+            //
+            previewFile(e){
+                console.log(e)
+                window.open(e.url)
             },
             //上传成功回掉
             uploadSuccess(e){

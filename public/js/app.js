@@ -98145,6 +98145,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -98187,6 +98188,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submitUpload: function submitUpload(type) {
             this.uploadData.type = type;
             this.$refs.upload.submit();
+        },
+
+        //
+        previewFile: function previewFile(e) {
+            console.log(e);
+            window.open(e.url);
         },
 
         //上传成功回掉
@@ -98471,6 +98478,7 @@ var render = function() {
               staticClass: "upload-demo",
               attrs: {
                 action: "/websites/upload",
+                "on-preview": _vm.previewFile,
                 "on-remove": _vm.removeFile,
                 "on-success": _vm.uploadSuccess,
                 "list-type": "text",

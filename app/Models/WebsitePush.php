@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\SendWebsitePush;
+use GuzzleHttp\Exception\ClientException;
 
 class WebsitePush extends Model
 {
@@ -169,13 +170,14 @@ class WebsitePush extends Model
         ]);
 
         $url = '?'.urldecode(http_build_query($query));
-        try {
+
+        try{
             $response = $client->request('POST', $url,$body);
             $brands = json_decode($response->getBody()->getContents(),true);
             return $brands;
-        } catch (Exception $e) {
-            return $e;
+        }catch(ClientException $e){
+            $reason = json_decode($e->getResponse()->getBody()->getContents(),true);
+            return $reason;
         }
-        
     }
 }

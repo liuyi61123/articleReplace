@@ -101647,7 +101647,7 @@ var render = function() {
                     { attrs: { label: "延时秒数" } },
                     [
                       _c("el-input-number", {
-                        attrs: { min: 3, max: 1000, label: "延时秒数" },
+                        attrs: { min: 1, max: 1000, label: "延时秒数" },
                         model: {
                           value: _vm.push.delay,
                           callback: function($$v) {

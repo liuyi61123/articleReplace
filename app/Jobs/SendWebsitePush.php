@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use GuzzleHttp\Client;
 use App\Models\WebsitePush;
 use Illuminate\Support\Facades\Storage;
+use GuzzleHttp\Exception\ClientException;
 
 class SendWebsitePush implements ShouldQueue
 {
@@ -121,13 +122,14 @@ class SendWebsitePush implements ShouldQueue
                 $website_push->status  = 3;
                 $website_push->save();
             }
-        } catch (Exception $e) {
+        } catch (ClientException $e) {
             if($this->last){
                 $website_push->status  = 3;
             }
 
+            $reason = json_decode($e->getResponse()->getBody()->getContents(),true);
             $error = $website_push->error;
-            $error[] = $e;
+            $error[] = $reason;
             $website_push->error = $error;
             $website_push->save();
         }

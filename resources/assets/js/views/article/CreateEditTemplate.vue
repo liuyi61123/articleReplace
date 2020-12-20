@@ -77,7 +77,7 @@
 </template>
 
 <script>
-    import ImageList from '../components/ImageList'
+    import ImageList from '../../components/ImageList'
     export default {
         components:{
             ImageList
@@ -110,7 +110,7 @@
                 // 发送 POST 请求
                 axios({
                     method: this.id?'put':'post',
-                    url: this.id?'/templates/'+this.id:'/templates',
+                    url: this.id?'/article/templates/'+this.id:'/article/templates',
                     data:this.template,
                 })
                 .then((response)=> {
@@ -120,7 +120,7 @@
                             message: '修改成功',
                             type: 'success'
                         });
-                        window.location.href="/templates";
+                        window.location.href="/article/templates";
                    })
                    .catch((error)=>{
                        console.log(error.response)
@@ -216,7 +216,7 @@
             if(this.id){
                  this.title = '编辑模板';
                 //读取要编辑的文章数据
-                axios.get('/templates/'+this.id+'/edit')
+                axios.get('/article/templates/'+this.id+'/edit')
                 .then((response)=> {
                     this.template = response.data
                     this.template.images = response.data.images ||[]

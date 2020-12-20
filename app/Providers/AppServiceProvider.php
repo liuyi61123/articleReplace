@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Observers\ArticleObserver;
-use App\Models\Article;
+use App\Models\Article\Article;
 
 class AppServiceProvider extends ServiceProvider
 {

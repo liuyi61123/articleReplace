@@ -3,8 +3,8 @@
         <el-col :span="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <span>模板列表</span>
-                    <el-button type="success" size="small" style="float: right;" @click="createTemplate()">新建</el-button>
+                    <span>文章列表</span>
+                    <el-button type="success" size="small" style="float: right;" @click="createArticle()">新建</el-button>
                 </div>
                 <div class="text item">
                     <el-table
@@ -16,28 +16,58 @@
                           width="55">
                         </el-table-column>
                         <el-table-column
+                          prop="status"
+                          label="状态"
+                          sortable
+                          width="100">
+                          <template slot-scope="scope">
+                              <el-tag v-if="scope.row.status == 1" type="success">已完成<i class="el-icon-success"></i></el-tag>
+                              <el-tag v-else type="danger">生成中<i class="el-icon-loading"></i></el-tag>
+                          </template>
+                         </el-table-column>
+                        <el-table-column
                           prop="id"
                           label="Id"
                           sortable
-                          width="180">
+                          width="100">
+                         </el-table-column>
+                         <el-table-column
+                           prop="name"
+                           label="名称">
                          </el-table-column>
                         <el-table-column
-                          prop="name"
-                          label="名称">
+                          prop="template.name"
+                          label="模板">
                         </el-table-column>
                         <el-table-column
+                          prop="template.updated_at"
+                          label="更新时间"
+                          sortable>
+                        </el-table-column>
+                        <!-- <el-table-column
+                          prop="config"
+                          label="配置">
+                          <template slot-scope="scope">
+                              {{scope.row.config}}
+                          </template>
+                        </el-table-column> -->
+                        <el-table-column
                         fixed="right"
-                        label="操作"
-                        align="center">
+                        align="center"
+                        label="操作">
                         <template slot-scope="scope">
                             <el-button
                               size="mini"
                               type="primary"
-                              @click="editTemplate(scope.$index, scope.row)">编辑</el-button>
+                              @click="editArticle(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                              size="mini"
+                              type="warning"
+                              @click="exportArticle(scope.$index, scope.row)">导出</el-button>
                               <el-button
                                 size="mini"
                                 type="danger"
-                                @click="deleteTemplate(scope.$index, scope.row)">删除</el-button>
+                                @click="deleteArticle(scope.$index, scope.row)">删除</el-button>
                           </template>
                       </el-table-column>
                     </el-table>
@@ -45,7 +75,7 @@
                       background
                       layout="prev, pager, next"
                       :current-page.sync="current_page"
-                      :page-size="per_page"
+                      :page-size.sync="per_page"
                       :total="total"
                       @prev-click="prevClick"
                       @next-click="nextClick"
@@ -70,16 +100,20 @@
         },
         methods: {
             //新建
-            createTemplate(){
-                window.location.href="/templates/create";
+            createArticle(){
+                window.location.href="/article/articles/create";
             },
             //编辑
-            editTemplate(index, row){
-                window.location.href="/templates/"+row.id+"/edit";
+            editArticle(index, row){
+                window.location.href="/article/articles/"+row.id+"/edit";
+            },
+            //导出zip
+            exportArticle(index, row){
+                window.location.href="/article/articles/export/"+row.id;
             },
             //删除
-            deleteTemplate(index, row){
-                axios.delete('/templates/'+row.id)
+            deleteArticle(index, row){
+                axios.delete('/articles/'+row.id)
                .then((response)=> {
                     console.log(response);
                     let message = {};
@@ -90,11 +124,6 @@
                         });
                         //重新加载数据
                         this.tableData.splice(index, 1);
-                    }else if (response.data.status == 500) {
-                        this.$message({
-                            message: response.data.msg,
-                            type: 'warning'
-                        });
                     }else{
                         this.$message({
                             message: '删除失败',
@@ -120,7 +149,7 @@
            getPage(page){
                //加载table数据
                page = page || 1
-               axios.get('/templates?page='+page)
+               axios.get('/article/articles?page='+page)
                .then((response)=> {
                    console.log(response)
                    this.total = response.data.total

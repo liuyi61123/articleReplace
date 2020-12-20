@@ -280,7 +280,7 @@
                 // 发送 POST 请求
                 axios({
                     method: this.id?'put':'post',
-                    url: this.id?'/articles/'+this.id:'/articles',
+                    url: this.id?'/article/articles/'+this.id:'/article/articles',
                     data:this.article
                 })
                 .then((response)=> {
@@ -291,7 +291,7 @@
                                 message: '保存成功',
                                 type: 'success'
                             });
-                            window.location.href="/articles";
+                            window.location.href="/article/articles";
                         }else{
                             this.$message({
                                 message: '保存失败',
@@ -337,7 +337,7 @@
             },
             //获取模板列表
             getTemplates(){
-                axios.get('/templates?type=all')
+                axios.get('/article/templates?type=all')
                 .then((response)=> {
                     this.templates = response.data
                 })
@@ -347,7 +347,7 @@
             },
             //获取省区信息
             getProvinces(pid){
-                axios.get('/articles/citys/'+pid)
+                axios.get('/article/articles/citys/'+pid)
                 .then((response)=> {
                     this.provinces = response.data
                 })
@@ -369,7 +369,7 @@
             },
             //获取市区信息
             getCountys(pid){
-                axios.get('/articles/citys/'+pid)
+                axios.get('/article/articles/citys/'+pid)
                 .then((response)=> {
                     this.countys = response.data
                     if(!this.id){
@@ -384,7 +384,7 @@
             },
             //获取品牌信息
             getCars(){
-                axios.get('/articles/cars')
+                axios.get('/article/articles/cars')
                 .then((response)=> {
                     this.cars = response.data
                 })
@@ -413,7 +413,7 @@
             if(this.id){
                 this.title = '编辑文章';
                 //读取要编辑的文章数据
-                axios.get('/articles/'+this.id+'/edit')
+                axios.get('/article/articles/'+this.id+'/edit')
                 .then((response)=> {
                     console.log(response)
                     this.article = response.data.config

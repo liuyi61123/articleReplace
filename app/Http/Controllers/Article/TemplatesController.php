@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Article;
 
-use App\Models\Template;
+use App\Models\Article\Template;
 use App\Http\Requests\TemplateRequest;
 use Illuminate\Http\Request;
 use App\Handlers\OssUploadImageHandler;
@@ -36,7 +36,7 @@ class TemplatesController extends Controller
             }
             return response()->json($output);
         }else{
-            return view('templates.index');
+            return view('article.templates.index');
         }
     }
 
@@ -47,7 +47,7 @@ class TemplatesController extends Controller
      */
     public function create()
     {
-        return view('templates.create');
+        return view('article.templates.create');
     }
 
     /**
@@ -76,7 +76,7 @@ class TemplatesController extends Controller
             return response()->json($template->toArray());
         }else{
             $id = $template->id;
-            return view('templates.edit',compact('id'));
+            return view('article.templates.edit',compact('id'));
         }
     }
 

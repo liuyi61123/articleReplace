@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Article;
 
-use App\Models\Article;
+use App\Models\Article\Article;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
@@ -35,7 +35,7 @@ class ArticlesController extends Controller
             $output = $article->with('template')->paginate(20);
             return response()->json($output);
         }else{
-            return view('articles.index');
+            return view('article.articles.index');
         }
     }
 
@@ -46,7 +46,7 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        return view('article.articles.create');
     }
 
     /**
@@ -106,7 +106,7 @@ class ArticlesController extends Controller
             $article = Article::find($id);
             return response()->json($article);
         }else{
-            return view('articles.edit',compact('id'));
+            return view('article.articles.edit',compact('id'));
         }
     }
 

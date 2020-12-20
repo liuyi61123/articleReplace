@@ -3,8 +3,8 @@
         <el-col :span="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <span>文章列表</span>
-                    <el-button type="success" size="small" style="float: right;" @click="createArticle()">新建</el-button>
+                    <span>自定义参数</span>
+                    <el-button type="success" size="small" style="float: right;" @click="createAction()">新建</el-button>
                 </div>
                 <div class="text item">
                     <el-table
@@ -16,41 +16,24 @@
                           width="55">
                         </el-table-column>
                         <el-table-column
-                          prop="status"
-                          label="状态"
-                          sortable
-                          width="100">
-                          <template slot-scope="scope">
-                              <el-tag v-if="scope.row.status == 1" type="success">已完成<i class="el-icon-success"></i></el-tag>
-                              <el-tag v-else type="danger">生成中<i class="el-icon-loading"></i></el-tag>
-                          </template>
-                         </el-table-column>
-                        <el-table-column
                           prop="id"
                           label="Id"
                           sortable
                           width="100">
                          </el-table-column>
                          <el-table-column
-                           prop="name"
+                           prop="title"
                            label="名称">
                          </el-table-column>
                         <el-table-column
-                          prop="template.name"
-                          label="模板">
+                          prop="category"
+                          label="分类">
                         </el-table-column>
                         <el-table-column
-                          prop="template.updated_at"
+                          prop="updated_at"
                           label="更新时间"
                           sortable>
                         </el-table-column>
-                        <!-- <el-table-column
-                          prop="config"
-                          label="配置">
-                          <template slot-scope="scope">
-                              {{scope.row.config}}
-                          </template>
-                        </el-table-column> -->
                         <el-table-column
                         fixed="right"
                         align="center"
@@ -59,15 +42,11 @@
                             <el-button
                               size="mini"
                               type="primary"
-                              @click="editArticle(scope.$index, scope.row)">编辑</el-button>
+                              @click="editAction(scope.$index, scope.row)">编辑</el-button>
                             <el-button
-                              size="mini"
-                              type="warning"
-                              @click="exportArticle(scope.$index, scope.row)">导出</el-button>
-                              <el-button
                                 size="mini"
                                 type="danger"
-                                @click="deleteArticle(scope.$index, scope.row)">删除</el-button>
+                                @click="deleteAction(scope.$index, scope.row)">删除</el-button>
                           </template>
                       </el-table-column>
                     </el-table>
@@ -100,20 +79,16 @@
         },
         methods: {
             //新建
-            createArticle(){
-                window.location.href="/articles/create";
+            createAction(){
+                window.location.href="/article/params/create";
             },
             //编辑
-            editArticle(index, row){
-                window.location.href="/articles/"+row.id+"/edit";
-            },
-            //导出zip
-            exportArticle(index, row){
-                window.location.href="/articles/export/"+row.id;
+            editAction(index, row){
+                window.location.href="/article/params/"+row.id+"/edit";
             },
             //删除
-            deleteArticle(index, row){
-                axios.delete('/articles/'+row.id)
+            deleteAction(index, row){
+                axios.delete('/article/params/'+row.id)
                .then((response)=> {
                     console.log(response);
                     let message = {};
@@ -149,7 +124,7 @@
            getPage(page){
                //加载table数据
                page = page || 1
-               axios.get('/articles?page='+page)
+               axios.get('/article/params?page='+page)
                .then((response)=> {
                    console.log(response)
                    this.total = response.data.total

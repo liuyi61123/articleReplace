@@ -7,10 +7,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 // 页面
-Vue.component('article-table', require('./views/ArticleTable.vue'));//文章列表
-Vue.component('create-edit-article', require('./views/CreateEditArticle.vue'));//编辑和新建文章
-Vue.component('template-table', require('./views/TemplateTable.vue'));//模板列表
-Vue.component('create-edit-template', require('./views/CreateEditTemplate.vue'));//编辑和新建模板
+Vue.component('article-param-table', require('./views/article/ParamTable.vue'));//参数列表
+Vue.component('article-create-edit-param', require('./views/article/CreateEditParam.vue'));
+Vue.component('article-article-table', require('./views/article/ArticleTable.vue'));//文章列表
+Vue.component('article-create-edit-article', require('./views/article/CreateEditArticle.vue'));//编辑和新建文章
+Vue.component('article-template-table', require('./views/article/TemplateTable.vue'));//模板列表
+Vue.component('article-create-edit-template', require('./views/article/CreateEditTemplate.vue'));//编辑和新建模板
+
 Vue.component('pseudo-original', require('./views/PseudoOriginal.vue'));//编辑和新建模板
 Vue.component('baidu-url-create', require('./views/BaiduUrlCreate.vue'));//新建baidu_url
 Vue.component('baidu-url-table', require('./views/BaiduUrlTable.vue'));//新建baidu_url

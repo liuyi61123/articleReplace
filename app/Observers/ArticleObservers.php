@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Article;
+use App\Models\Article\Article;
 use App\Jobs\GenerateArticle;
 
 class ArticleObserver

@@ -7,15 +7,25 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/', 'ArticlesController@index')->name('home');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
-Route::get('/articles/export/{id}', 'ArticlesController@export')->name('articles.export');
-Route::get('/articles/citys/{pid}', 'ArticlesController@citys')->name('articles.citys');
-Route::get('/articles/cars', 'ArticlesController@cars')->name('articles.cars');
-Route::resource('articles', 'ArticlesController');//文章
-Route::post('templates/upload_image', 'TemplatesController@upload_image')->name('template.upload_image');//上传图片
-Route::delete('templates/delete_image', 'TemplatesController@delete_image')->name('template.delete_image');//删除图片
-Route::resource('templates', 'TemplatesController');//模板
-Route::resource('params', 'ParamsController');//参数
-Route::resource('images', 'ImagesController');//图片
+//文章生成相关路由
+Route::group([
+    'prefix'    => 'article',
+    'namespace' => 'Article',
+],function(){
+    Route::get('/articles/export/{id}', 'ArticlesController@export')->name('articles.export');
+    Route::get('/articles/citys/{pid}', 'ArticlesController@citys')->name('articles.citys');
+    Route::get('/articles/cars', 'ArticlesController@cars')->name('articles.cars');
+    Route::resource('articles', 'ArticlesController');//文章
+
+    Route::post('templates/upload_image', 'TemplatesController@upload_image')->name('template.upload_image');//上传图片
+    Route::delete('templates/delete_image', 'TemplatesController@delete_image')->name('template.delete_image');//删除图片
+    Route::resource('templates', 'TemplatesController');//模板
+
+    Route::resource('images', 'ImagesController');//图片
+
+    Route::resource('params', 'ParamsController');//自定义参数
+});
+
 
 Route::get('/original', 'OriginalController@index')->name('original.index');//伪原创
 Route::post('/original', 'OriginalController@store')->name('original.store');//伪原创

@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <param-table></param-table>
+    <article-template-table></article-template-table>
 @endsection

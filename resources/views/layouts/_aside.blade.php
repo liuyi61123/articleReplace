@@ -8,18 +8,23 @@
       background-color="rgb(48, 65, 86)"
       text-color="#fff"
       >
-      <a href="{{ route('articles.index') }}">
-          <el-menu-item index="1">
-              <i class="el-icon-document"></i>
-              <span slot="title">文章</span>
-          </el-menu-item>
-      </a>
-       <a href="{{ route('templates.index') }}">
-          <el-menu-item index="2">
-              <i class="el-icon-printer"></i>
-              <span slot="title">模板</span>
-          </el-menu-item>
-      </a>
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-document"></i>
+          <span>文章系统</span>
+        </template>
+        <el-menu-item-group>
+            <a href="{{ route('articles.index') }}">
+                <el-menu-item index="1-1">文章列表</el-menu-item>
+            </a>
+            <a href="{{ route('templates.index') }}">
+                <el-menu-item index="1-2">模板列表</el-menu-item>
+            </a>
+            <a href="{{ route('params.index') }}">
+                <el-menu-item index="1-3">自定义参数</el-menu-item>
+            </a>
+        </el-menu-item-group>
+      </el-submenu>
       <a href="{{ route('original.index') }}">
          <el-menu-item index="3">
              <i class="el-icon-edit-outline"></i>

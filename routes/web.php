@@ -4,7 +4,7 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/', 'ArticlesController@index')->name('home');
+Route::get('/', 'Article\ArticlesController@index')->name('home');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('/api/test', 'Article\ApiController@test')->name('article.api.test');
 

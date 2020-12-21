@@ -60,10 +60,12 @@ class APiController extends Controller
         $oss = new \App\Handlers\OssUploadImageHandler();
         $oss_files = $oss->listArrays('',[
             'max-keys'=>1000,
-            'prefix'=>'uploads/paragraphs/test1',
+            'prefix'=>'uploads/paragraphs/11',
             'delimiter'=>'',
             'marker'=>'',
         ]);
+        dd($oss_files);
+
         $content = $oss->getObject($oss_files['list'][1]['uid'],'');
         // return $content;
         dd($content);

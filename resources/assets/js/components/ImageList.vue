@@ -52,7 +52,7 @@
                .then((response)=>{
                    console.log(response)
                    //判断是不是最后一页了
-                   if(response.data.list){
+                   if(response.data.list&&(response.data.list.length >0)){
                        response.data.list.map((value,index)=>{
                            this.list.push(value)
                        })
@@ -87,7 +87,7 @@
                     axios.get('/article/images')
                     .then((response)=>{
                         console.log(response)
-                        if(response.data.list.length<=18){
+                        if(response.data.list.length<18){
                             this.isLoadMore = true
                         }
                         this.list = response.data.list

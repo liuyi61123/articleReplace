@@ -77,18 +77,21 @@ class OssUploadImageHandler
     * 获取oss文件列表(数组)
     */
    public function listArrays($bucket='',$option=[]){
-       $lists = $this->listObjects($bucket,$option);
+        $lists = $this->listObjects($bucket,$option);
 
-       $arrays = array();
-       foreach($lists as $key=>$list){
+        $arrays = array();
+        foreach($lists as $key=>$list){
            $prefix_https = config('oss.prefix_https')?'https://':'http://';
            $arrays[] = array(
                'uid'=>$list->getKey(),
                'url'=>$prefix_https.config('oss.bucket_prefix').$list->getKey()
            );
-       }
-       $last = end($lists)->getKey();
-       return ['list'=>$arrays,'last'=>$last];
+        }
+        $last = '';
+        if(end($lists)){
+            $last = end($lists)->getKey();
+        }
+        return ['list'=>$arrays,'last'=>$last];
    }
 
    /**

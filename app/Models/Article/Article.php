@@ -104,7 +104,7 @@ class Article extends Model
                                 'isTitle'=>$fixed_params['cars']['isTitle'],
                                 'priceIsTitle'=>$fixed_params['cars']['priceIsTitle'],
                                 'car_brand'=>$car_brand,
-                                'car_model'=>$car_model,
+                                'car_model'=>$car_model['name'],
                                 'price'=>$price,
                             ];
                             $this->customParams($custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
@@ -139,8 +139,8 @@ class Article extends Model
             }
         }elseif(count($template_fixed_params) == 2){
             //两个固定参数
-            $province_name = DB::table('citys')->where('id',$this->config['province']['data'])->value('name');
-            $city_name = DB::table('citys')->where('id',$this->config['city']['data'])->value('name');
+            $province_name = DB::table('citys')->where('id',$fixed_params['province']['data'])->value('name');
+            $city_name = DB::table('citys')->where('id',$fixed_params['city']['data'])->value('name');
             
             foreach($fixed_params['countys']['data'] as $county){
                 foreach($fixed_params['cars']['data'] as $car){
@@ -175,7 +175,7 @@ class Article extends Model
                                 'isTitle'=>$fixed_params['cars']['isTitle'],
                                 'priceIsTitle'=>$fixed_params['cars']['priceIsTitle'],
                                 'car_brand'=>$car_brand,
-                                'car_model'=>$car_model,
+                                'car_model'=>$car_model['name'],
                                 'price'=>$price,
                             ];
                             $this->customParams($custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
@@ -203,6 +203,7 @@ class Article extends Model
 
     protected function customParams($article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files)
     {
+        // return $car;
         $directory = 'public/articles/'.$this->id;
         $oss = new OssUploadImageHandler();
         $count_fixed_paragraphs = count($fixed_paragraphs_files);
@@ -260,7 +261,7 @@ class Article extends Model
                         $replace_text =  str_replace('{price}',$car['price'],$replace_text);
 
                         if($car['isTitle']){
-                            $sort[$car['sort']] = $car['brand'].$car['model'];
+                            $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
                         }
                         if($car['priceIsTitle']){
                             $sort[$car['price_sort']] = $car['price'].'万';
@@ -334,7 +335,7 @@ class Article extends Model
                             $replace_text =  str_replace('{price}',$car['price'],$replace_text);
     
                             if($car['isTitle']){
-                                $sort[$car['sort']] = $car['brand'].$car['model'];
+                                $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
                             }
                             if($car['priceIsTitle']){
                                 $sort[$car['price_sort']] = $car['price'].'万';
@@ -414,7 +415,7 @@ class Article extends Model
                                 $replace_text =  str_replace('{price}',$car['price'],$replace_text);
         
                                 if($car['isTitle']){
-                                    $sort[$car['sort']] = $car['brand'].$car['model'];
+                                    $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
                                 }
                                 if($car['priceIsTitle']){
                                     $sort[$car['price_sort']] = $car['price'].'万';
@@ -500,7 +501,7 @@ class Article extends Model
                                     $replace_text =  str_replace('{price}',$car['price'],$replace_text);
             
                                     if($car['isTitle']){
-                                        $sort[$car['sort']] = $car['brand'].$car['model'];
+                                        $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
                                     }
                                     if($car['priceIsTitle']){
                                         $sort[$car['price_sort']] = $car['price'].'万';

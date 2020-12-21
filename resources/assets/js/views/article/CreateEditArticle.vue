@@ -257,7 +257,7 @@
                             response.data.map((item,key)=>{
                                 this.article.custom_params.push({
                                     id:item.id,
-                                    sort:3+key,
+                                    sort:6+key,
                                     isTitle:true
                                 })
                             })

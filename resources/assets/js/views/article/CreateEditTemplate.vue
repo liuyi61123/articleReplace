@@ -16,7 +16,7 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="自定义参数">
-                            <el-checkbox-group v-model="template.custom_params">
+                            <el-checkbox-group v-model="template.custom_params" :min="0" :max="4">
                                 <el-checkbox-button v-for="custom_param of custom_params" :label="custom_param.id" :key="custom_param.id">{{custom_param.title}}-{{custom_param.identifier}}</el-checkbox-button>
                             </el-checkbox-group>
                         </el-form-item>

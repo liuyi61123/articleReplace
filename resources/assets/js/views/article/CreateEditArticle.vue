@@ -328,8 +328,6 @@
                 })
                 .then((response)=> {
                         this.fullScreen(false)
-                        console.log(response);
-                        return;
                         let message = {};
                         if(response.data.status == 200){
                             this.$message({

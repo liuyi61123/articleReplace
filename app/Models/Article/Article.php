@@ -63,7 +63,6 @@ class Article extends Model
            unset($list['list'][0]);
            $fixed_paragraphs_files = $list['list'];
          }
-        // return $fixed_paragraphs_files;
          $template_tmp_paragraphs = $template->custom_paragraphs;
          $template_custom_paragraphs = array();
          foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){
@@ -203,7 +202,6 @@ class Article extends Model
 
     protected function customParams($article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files)
     {
-        // return $car;
         $directory = 'public/articles/'.$this->id;
         $oss = new OssUploadImageHandler();
         $count_fixed_paragraphs = count($fixed_paragraphs_files);

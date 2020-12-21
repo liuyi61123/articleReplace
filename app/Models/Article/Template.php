@@ -20,7 +20,9 @@ class Template extends Model
      */
     protected $casts = [
         'images' => 'array',
-        'paragraphs' => 'array',
+        'custom_paragraphs' => 'array',
+        'fixed_params' => 'array',
+        'custom_params' => 'array',
     ];
 
     /**

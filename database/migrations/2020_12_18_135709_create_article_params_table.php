@@ -17,6 +17,7 @@ class CreateArticleParamsTable extends Migration
             $table->increments('id');
             $table->string('title')->comment('参数名称');
             $table->string('category')->comment('类别');
+            $table->string('identifier')->comment('标识符');
             $table->text('content')->comment('内容');
             $table->timestamps();
         });

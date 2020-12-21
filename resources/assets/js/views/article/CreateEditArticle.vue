@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="20">
         <el-form label-width="80px">
-            <el-col :span="16">
+            <el-col :span="24">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>{{title}}</span>
@@ -18,8 +18,8 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="模板">
-                            <el-col :span="8">
-                                <el-select filterable style="width:100%" v-model="article.template_id" placeholder="请选择">
+                            <el-col :span="24">
+                                <el-select filterable style="width:100%" v-model="article.template_id" placeholder="请选择模版" @change="changeTemplate">
                                     <el-option  v-for="template in templates"
                                       :key="template.id"
                                       :label="template.name"
@@ -28,72 +28,82 @@
                                 </el-select>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="省">
+                        <el-form-item v-if="article.fixed_params.cityShow" label="省">
                             <el-col :span="8">
-                                <el-select v-model="article.province.data" placeholder="请选择" @change="changeProvince">
+                                <el-select v-model="article.fixed_params.province.data" placeholder="请选择" @change="changeProvince">
                                     <el-option v-for="province in provinces"
-                                      :key="province.id"
-                                      :label="province.name"
-                                      :value="province.id">
+                                    :key="province.id"
+                                    :label="province.name"
+                                    :value="province.id">
                                     </el-option>
-                                  </el-select>
-                            </el-col>
-                            <!-- <el-col :span="3"> -->
-                              <!-- <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number> -->
-                            <!-- </el-col> -->
-                        </el-form-item>
-                        <el-form-item label="市">
-                            <el-col :span="8">
-                                <el-select v-model="article.city.data" placeholder="请选择" @change="changeCity">
-                                    <el-option  v-for="city in citys"
-                                      :key="city.id"
-                                      :label="city.name"
-                                      :value="city.id">
-                                    </el-option>
-                                  </el-select>
+                                </el-select>
                             </el-col>
                             <el-col :span="3">
-                              <el-input-number v-model="article.city.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                                <el-input-number v-model="article.fixed_params.province.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-switch
+                                    v-model="article.fixed_params.province.isTitle"
+                                    active-text="在title中显示"
+                                    inactive-text="不在title中显示">
+                                </el-switch>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="区">
+                        <el-form-item v-if="article.fixed_params.cityShow" label="市">
+                            <el-col :span="8">
+                                <el-select v-model="article.fixed_params.city.data" placeholder="请选择" @change="changeCity">
+                                    <el-option  v-for="city in citys"
+                                    :key="city.id"
+                                    :label="city.name"
+                                    :value="city.id">
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-input-number v-model="article.fixed_params.city.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-switch
+                                    v-model="article.fixed_params.city.isTitle"
+                                    active-text="在title中显示"
+                                    inactive-text="不在title中显示">
+                                </el-switch>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item v-if="article.fixed_params.cityShow" label="区">
                             <el-col :span="24">
                                 <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                                <el-checkbox-group :min="1" v-model="article.countys.data">
-                                      <el-checkbox v-for="county of countys" :label="county.name" :key="county.id" @change="handleCheckedCitiesChange"></el-checkbox>
+                                <el-checkbox-group :min="1" v-model="article.fixed_params.countys.data">
+                                    <el-checkbox v-for="county of countys" :label="county.name" :key="county.id" @change="handleCheckedCitiesChange"></el-checkbox>
                                 </el-checkbox-group>
                             </el-col>
                             <el-col :span="3">
-                              <el-input-number v-model="article.countys.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            <el-input-number v-model="article.fixed_params.countys.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
+                            <el-col :span="24">
+                            <el-switch
+                                v-model="article.fixed_params.countys.isTitle"
+                                active-text="在title中显示"
+                                inactive-text="不在title中显示">
+                            </el-switch>
                             </el-col>
                         </el-form-item>
-                        <!-- <el-form-item label="类型">
+                        <el-form-item v-if="article.fixed_params.carShow" label="汽车">
+                        <div v-for="(param,index) in article.fixed_params.cars.data" :key="index"> 
                             <el-col :span="4">
-                                <el-select v-model="article.type" placeholder="请选择">
-                                    <el-option  v-for="type in types"
-                                      :key="type.id"
-                                      :label="type.name"
-                                      :value="type.id">
-                                  </el-option>
-                                </el-select>
-                            </el-col>
-                        </el-form-item> -->
-                        <el-form-item label="品牌">
-                          <div v-for="(param,index) in article.cars.data">
-                            <el-col :span="4">
-                              <el-select v-model="param.brand" filterable placeholder="请选择" @change="changeCar(param.brand,index)">
+                            <el-select v-model="param.brand" filterable placeholder="请选择" @change="changeCar(param.brand,index)">
                                 <el-option
-                                  v-for="car in cars"
-                                  :key="car.brand.id"
-                                  :label="car.brand.name"
-                                  :value="car.brand.id">
+                                v-for="car in cars"
+                                :key="car.brand.id"
+                                :label="car.brand.name"
+                                :value="car.brand.id">
                                 </el-option>
-                              </el-select>
+                            </el-select>
                             </el-col>
 
                             <el-col :span="18">
                                 <template v-if="param.brand > 0">
-                                    <div class="line" v-for="(model,key) in cars[param.brand].models">
+                                    <div class="line" v-for="(model,key) in cars[param.brand].models" :key="key">
                                         <el-checkbox v-model="param.models[key].name" :true-label="model.name">{{model.name}}</el-checkbox>
                                         <el-input v-model="param.models[key].min" style="width:20%" min="1" placeholder="最小值" type="number">
                                             <template slot="append">万</template>
@@ -111,51 +121,41 @@
                             </el-col>
                             </div>
                             <el-col :span="24">
-                                <el-input-number v-model="article.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                                <el-input-number v-model="article.fixed_params.cars.sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-switch
+                                    v-model="article.fixed_params.cars.isTitle"
+                                    active-text="在title中显示"
+                                    inactive-text="不在title中显示">
+                                </el-switch>
+                            </el-col>
+                            </el-form-item>
+                        <el-form-item v-if="article.fixed_params.carShow" label="价格排序">
+                            <el-input-number v-model="article.fixed_params.cars.price_sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            <el-col :span="24">
+                            <el-switch
+                                v-model="article.fixed_params.cars.priceIsTitle"
+                                active-text="在title中显示"
+                                inactive-text="不在title中显示">
+                            </el-switch>
                             </el-col>
                         </el-form-item>
 
-                        <el-form-item label="价格排序">
-                            <el-input-number v-model="article.cars.price_sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                        <el-form-item v-for="(custom_param,i) of custom_params" :key="custom_param.id" :label="custom_param.title">
+                             <el-input-number v-model="article.custom_params[i].sort" controls-position="right" :min="1" :max="10"></el-input-number>
+                            <el-col :span="24">
+                            <el-switch
+                                v-model="article.custom_params[i].isTitle"
+                                active-text="在title中显示"
+                                inactive-text="不在title中显示">
+                            </el-switch>
+                            </el-col>
                         </el-form-item>
 
                         <el-form-item>
                             <el-button type="primary" @click="submitFrom()">保存</el-button>
                         </el-form-item>
-                    </div>
-                </el-card>
-            </el-col>
-            <el-col :span="8">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>额外参数</span>
-                        <el-button type="success" size="small" style="float: right;" @click="addParam()">添加参数</el-button>
-                    </div>
-
-                    <div class="text item">
-                        <div v-for="(param,index) in article.params">
-                            <el-form-item label="参数名称">
-                                <el-col :span="12">
-                                    <el-input v-model="param.name" placeholder="{$param}"></el-input>
-                                </el-col>
-                                <el-col :span="4">
-                                    <el-input-number v-model="param.sort" controls-position="right" :min="1" :max="10"></el-input-number>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="参数内容">
-                                <el-col :span="24">
-                                    <el-input
-                                      v-model="param.content"
-                                      type="textarea"
-                                      :rows="5"
-                                      placeholder="一行一个">
-                                    </el-input>
-                                 </el-col>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button style="float: right;" size="small" type="danger" icon="el-icon-delete" @click="deleteParam(index)"></el-button>
-                            </el-form-item>
-                        </div>
                     </div>
                 </el-card>
             </el-col>
@@ -169,18 +169,11 @@
         props:['id'],
         data () {
             return {
+                custom_params:[],
                 checkAll: false,
                 isIndeterminate: true,
-                templates:[],
-                types:[
-                    {
-                        id:1,
-                        name:'车贷'
-                    },
-                    {
-                        id:2,
-                        name:'房贷'
-                    }
+                templates:[
+                    
                 ],
                 provinces:[],
                 citys:[],
@@ -190,51 +183,101 @@
                     name:'',
                     desc:'',
                     template_id:1,
-                    province:{
-                        sort:0,
-                        data:1
-                    },
-                    city:{
-                        sort:1,
-                        data:''
-                    },
-                    countys:{
-                        sort:2,
-                        data:[]
-                    },
-                    cars:{
-                        sort:3,
-                        price_sort:4,
-                        data:[
-                          {
-                            brand:'',
-                            models:[
+                    custom_params:[],
+                    fixed_params:
+                    {
+                        cityShow:false,
+                        carShow:false,
+                        province:{
+                            sort:1,
+                            data:1,
+                            isTitle:true,
+                        },
+                        city:{
+                            sort:2,
+                            data:'',
+                            isTitle:true,
+                        },
+                        countys:{
+                            isTitle:true,
+                            sort:3,
+                            data:[]
+                        },
+                        cars:{
+                            isTitle:true,
+                            priceIsTitle:true,
+                            sort:4,
+                            price_sort:5,
+                            data:[
+                                {
+                                    brand:'',
+                                    models:[
+                                    ]
+                                }
                             ]
-                          }
-                        ]
-                    },
-                    params:
-                    [
-                        {
-                            sort:5,
-                            name:'',
-                            content:''
                         }
-                    ],
+                    }
                 },
-                paramsIndex:0,
                 title:'',
                 loading:''
             }
         },
         methods: {
+            changeTemplate(e){
+                this.fixedCustomParams(e);
+            },
+            fixedCustomParams(id){
+                axios.get('/article/templates/'+id)
+                .then((response)=> {
+                    //根据模板id判断显示的参数情况
+                    var fixed_params = response.data.fixed_params
+                    var custom_params = response.data.custom_params
+
+                    if(fixed_params.indexOf('city')>-1){
+                        this.article.fixed_params.cityShow = true;
+                    }else{
+                        this.article.fixed_params.cityShow = false;
+                    }
+                    if(fixed_params.indexOf('car')>-1){
+                        this.article.fixed_params.carShow = true;
+                    }else{
+                        this.article.fixed_params.carShow = false;
+                    }
+
+                    //显示自定义参数
+                    console.log(custom_params);
+                    if(custom_params){
+                        axios.post('/article/api/paramids',
+                        {
+                            ids:custom_params
+                        })
+                        .then((response)=> {
+                            console.log(response)
+                            this.custom_params = response.data
+                            response.data.map((item,key)=>{
+                                this.article.custom_params.push({
+                                    id:item.id,
+                                    sort:3+key,
+                                    isTitle:true
+                                })
+                            })
+                        })
+                        .catch((error)=>{
+                            console.log(error);
+                        });
+                    }
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            },
             changeProvince(e){
                 this.countys = []
-                this.article.countys.data = []
+                this.article.fixed_params.countys.data = []
                 this.getCitys(e)
             },
             changeCity(e){
-                this.article.countys.data = []
+                this.article.fixed_params.countys.data = []
                 this.getCountys(e)
             },
             handleCheckAllChange(val) {
@@ -242,7 +285,7 @@
                 this.countys.map((value,key)=>{
                     countys[key] = value.name
                 })
-                this.article.countys.data = val ? countys : [];
+                this.article.fixed_params.countys.data = val ? countys : [];
                 this.isIndeterminate = false;
             },
             handleCheckedCitiesChange(value) {
@@ -251,7 +294,7 @@
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.countys.length;
             },
             changeCar(e,index){
-                this.article.cars.data[index].models = []
+                this.article.fixed_params.cars.data[index].models = []
 
                 this.cars[e].models.map((value,key)=>{
                     let model = {
@@ -259,19 +302,19 @@
                         min:1,
                         max:10
                     }
-                    this.article.cars.data[index].models.push(model)
+                    this.article.fixed_params.cars.data[index].models.push(model)
                 })
             },
             addCar(){
                 //添加汽车信息参数
-                this.article.cars.data.push({
+                this.fixed_params.article.cars.data.push({
                     brand:'',
                     models:[]
                 });
             },
             deleteCar(index){
                 //删除汽车参数
-                this.article.cars.data.splice(index, 1)
+                this.article.fixed_params.cars.data.splice(index, 1)
             },
             submitFrom(){
                 this.fullScreen(true)
@@ -285,6 +328,8 @@
                 })
                 .then((response)=> {
                         this.fullScreen(false)
+                        console.log(response);
+                        return;
                         let message = {};
                         if(response.data.status == 200){
                             this.$message({
@@ -321,25 +366,13 @@
                        this.$message.error(message)
                    });
             },
-            addParam(){
-                //添加参数
-                if(this.paramsIndex >= 2){
-                    this.$message.error('不能超过3个参数')
-                }else{
-                    this.paramsIndex++
-                    Vue.set(this.article.params, this.article.params.length, {sort:this.paramsIndex+5,name:'',content:''})
-                }
-            },
-            deleteParam(index){
-                //删除参数
-                this.article.params.splice(index, 1)
-                this.paramsIndex--
-            },
             //获取模板列表
             getTemplates(){
                 axios.get('/article/templates?type=all')
                 .then((response)=> {
                     this.templates = response.data
+
+                    // this.fixedCustomParams(response.data[0].id);
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -347,7 +380,7 @@
             },
             //获取省区信息
             getProvinces(pid){
-                axios.get('/article/articles/citys/'+pid)
+                axios.get('/article/api/citys/'+pid)
                 .then((response)=> {
                     this.provinces = response.data
                 })
@@ -357,11 +390,11 @@
             },
             //获取市区信息
             getCitys(pid){
-                axios.get('/articles/citys/'+pid)
+                axios.get('/article/api/citys/'+pid)
                 .then((response)=> {
                     this.citys = response.data
-                    this.article.city.data = response.data[0].id
-                    this.getCountys(this.article.city.data)
+                    this.article.fixed_params.city.data = response.data[0].id
+                    this.getCountys(this.article.fixed_params.city.data)
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -369,12 +402,12 @@
             },
             //获取市区信息
             getCountys(pid){
-                axios.get('/article/articles/citys/'+pid)
+                axios.get('/article/api/citys/'+pid)
                 .then((response)=> {
                     this.countys = response.data
                     if(!this.id){
                         response.data.map((value,index)=>{
-                            this.article.countys.data.push(value.name)
+                            this.article.fixed_params.countys.data.push(value.name)
                         })
                     }
                 })
@@ -384,7 +417,7 @@
             },
             //获取品牌信息
             getCars(){
-                axios.get('/article/articles/cars')
+                axios.get('/article/api/cars')
                 .then((response)=> {
                     this.cars = response.data
                 })
@@ -421,9 +454,9 @@
                     this.article.name = response.data.name
                     this.article.desc = response.data.desc
                     //获取城市
-                    this.getCitys(response.data.config.province.data)
+                    this.getCitys(response.data.config.fixed_params.province.data)
                     //获取区
-                    this.getCountys(response.data.config.city.data)
+                    this.getCountys(response.data.config.fixed_params.city.data)
                 })
                 .catch((error)=>{
                     console.log(error)

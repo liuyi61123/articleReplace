@@ -7,8 +7,11 @@
                         <span>{{title}}</span>
                     </div>
                     <div class="text item">
-                        <el-form-item label="名称" prop="label">
+                        <el-form-item label="名称" prop="title">
                             <el-input v-model="param.title" placeholder="名称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="标识符" prop="identifier">
+                            <el-input v-model="param.identifier" placeholder="标识符"></el-input>
                         </el-form-item>
                         <el-form-item label="分类" prop="category">
                             <el-select v-model="param.category" placeholder="请选择">
@@ -20,7 +23,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                         <el-form-item label="参数内容">
+                         <el-form-item label="参数内容" prop="content">
                                 <el-input
                                     v-model="param.content"
                                     type="textarea"
@@ -57,6 +60,10 @@
                 rules: {
                     title: [
                         { required: true, message: '请输入名称', trigger: 'blur' },
+                        { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+                    ],
+                    identifier: [
+                        { required: true, message: '请输入标识符', trigger: 'blur' },
                         { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
                     ],
                     category: [

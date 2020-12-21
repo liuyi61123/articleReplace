@@ -19,8 +19,11 @@ class TemplateRequest extends Request
             {
                 return [
                     'name' => 'required',
-                    'paragraphs' => 'required|array',
-                    'images' => 'required|array',
+                    'fixed_paragraphs' => 'nullable',
+                    'custom_paragraphs' => 'nullable|array',
+                    'custom_params' => 'nullable|array',
+                    'fixed_params' => 'nullable|array',
+                    'images' => 'nullable|array',
                     'content' => 'required',
                 ];
             }
@@ -30,8 +33,11 @@ class TemplateRequest extends Request
             {
                 return [
                     'name' => 'required',
-                    'paragraphs' => 'required|array',
-                    'images' => 'required|array',
+                    'fixed_paragraphs' => 'nullable',
+                    'custom_paragraphs' => 'nullable|array',
+                    'custom_params' => 'nullable|array',
+                    'fixed_params' => 'nullable|array',
+                    'images' => 'nullable|array',
                     'content' => 'required',
                 ];
             }

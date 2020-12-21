@@ -92,6 +92,14 @@ class OssUploadImageHandler
    }
 
    /**
+    * 获取oss文件列表(数组)
+    */
+    public function getObject($object, $options = NULL){
+        $result = OSS::getObject(config('oss.bucket'),$object,$options);
+        return $result;
+    }
+
+   /**
     * 删除文件
     */
     public function delete($url,$bucket=''){

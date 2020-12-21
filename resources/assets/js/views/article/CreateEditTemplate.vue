@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="20">
-        <el-form label-width="80px"  v-loading="loading">
+        <el-form label-width="100px"  v-loading="loading">
             <el-col :span="14">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -9,6 +9,16 @@
                     <div class="text item">
                         <el-form-item label="名称">
                             <el-input v-model="template.name" placeholder="模板名称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="固定参数">
+                            <el-checkbox-group v-model="template.fixed_params">
+                                <el-checkbox-button v-for="fixed_param of fixed_params" :label="fixed_param.id" :key="fixed_param.id">{{fixed_param.title}}-{{fixed_param.id}}</el-checkbox-button>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="自定义参数">
+                            <el-checkbox-group v-model="template.custom_params">
+                                <el-checkbox-button v-for="custom_param of custom_params" :label="custom_param.id" :key="custom_param.id">{{custom_param.title}}-{{custom_param.identifier}}</el-checkbox-button>
+                            </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="内容">
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.content" placeholder="模板内容"></el-input>
@@ -32,9 +42,9 @@
                         <el-dialog :visible.sync="dialogVisible">
                           <img width="100%" :src="dialogImageUrl" alt="">
                         </el-dialog>
-                        <!-- <el-form-item label="段落">
-                            <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.paragraphs" placeholder="段落"></el-input>
-                        </el-form-item> -->
+                        <el-form-item label="固定段落目录">
+                            <el-input v-model="template.fixed_paragraphs" placeholder="固定段落目录前缀"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submitFrom()">保存</el-button>
                         </el-form-item>
@@ -50,8 +60,8 @@
                     </div>
 
                     <div class="text item">
-                        <div v-for="(paragraph,index) in template.paragraphs">
-                            <el-form-item label="段落名称">
+                        <div v-for="(paragraph,index) in template.custom_paragraphs">
+                            <el-form-item label="段落标示">
                                 <el-input v-model="paragraph.name" placeholder="段落名称（便于区分）"></el-input>
                             </el-form-item>
                             <el-form-item label="段落内容">
@@ -88,7 +98,10 @@
                 template:{
                     name:'',
                     content:'',
-                    paragraphs:[
+                    fixed_params:[],
+                    fixed_paragraphs:'',
+                    custom_params:[],
+                    custom_paragraphs:[
                         {
                             name:'',
                             content:''
@@ -96,6 +109,18 @@
                     ],
                     images:[]
                 },
+                fixed_params:[
+                    {
+                        id:'city',
+                        title:'城市'
+                    },
+                    {
+                        id:'car',
+                        title:'汽车'
+                    }
+                ],
+                custom_params:[
+                ],
                 paragraphIndex:0,
                 title:'',
                 loading:false,
@@ -141,6 +166,14 @@
                        this.loading = false
                        this.$message.error(message)
                    });
+            },
+            fixedParamsChange(val){
+                console.log(val)
+                console.log(this.template.fixed_params)
+            },
+            customParamsChange(val){
+                console.log(val)
+                console.log(this.template.custom_params)
             },
             removeImage(file, fileList) {
                 // axios({
@@ -201,18 +234,30 @@
                    this.$message.error('不能超过100个参数')
                }else{
                    this.paragraphIndex++
-                   Vue.set(this.template.paragraphs, this.template.paragraphs.length, {name:'',content:''})
+                   Vue.set(this.template.custom_paragraphs, this.template.custom_paragraphs.length, {name:'',content:''})
                }
            },
            deleteParagraph(index){
                //删除参数
-               this.template.paragraphs.splice(index, 1)
+               this.template.custom_paragraphs.splice(index, 1)
                this.paragraphIndex--
                console.log(this.paragraphIndex)
 
+           },
+           getCustomParams(){
+                axios.post('/article/api/params')
+                .then((response)=> {
+                    console.log(response)
+                    this.custom_params = response.data
+                })
+                .catch((error)=>{
+                    console.log(error);
+
+                });
            }
         },
         created(){
+            this.getCustomParams();
             if(this.id){
                  this.title = '编辑模板';
                 //读取要编辑的文章数据
@@ -220,7 +265,7 @@
                 .then((response)=> {
                     this.template = response.data
                     this.template.images = response.data.images ||[]
-                    this.template.paragraphs = response.data.paragraphs ||[{name:'',content:''}]
+                    this.template.custom_paragraphs = response.data.custom_paragraphs ||[{name:'',content:''}]
                 })
                 .catch((error)=>{
                     console.log(error);

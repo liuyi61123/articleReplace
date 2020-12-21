@@ -113,7 +113,7 @@
             },
             //删除
             deleteArticle(index, row){
-                axios.delete('/articles/'+row.id)
+                axios.delete('/article/articles/'+row.id)
                .then((response)=> {
                     console.log(response);
                     let message = {};

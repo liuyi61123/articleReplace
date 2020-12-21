@@ -48,7 +48,7 @@
                this.dialogVisible = true;
            },
            loadMore(){
-               axios.get('/images?last='+this.last)
+               axios.get('/article/images?last='+this.last)
                .then((response)=>{
                    console.log(response)
                    //判断是不是最后一页了
@@ -84,7 +84,7 @@
                 if(this.dialogListVisible){
                     //获取图片列表
                     console.log('获取图片列表')
-                    axios.get('/images')
+                    axios.get('/article/images')
                     .then((response)=>{
                         console.log(response)
                         if(response.data.list.length<=18){

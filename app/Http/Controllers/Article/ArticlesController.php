@@ -58,6 +58,8 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
+        // return response()->json($request->all());
+
         $article_data['template_id'] = $request->input('template_id');
         $article_data['name'] = $request->input('name');
         $article_data['desc'] = $request->input('desc');
@@ -66,9 +68,9 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        $article->generate();
+        $res = $article->generate();
         // GenerateArticle::dispatch($article);
-        return response()->json(['status'=>200]);
+        return response()->json(['status'=>200,'data'=>$res]);
     }
 
     /**
@@ -151,24 +153,4 @@ class ArticlesController extends Controller
 
         return response()->json(['status'=>200]);
     }
-
-    /**
-     * 获取所有车子品牌型号列表
-     */
-     public function cars(){
-        $brands = DB::table('car_infos')->where('pid',0)->get();
-        foreach ($brands as $key=>$brand) {
-            $return[$brand->id]['brand'] = $brand;
-            $return[$brand->id]['models'] = DB::table('car_infos')->where('pid',$brand->id)->get();
-        }
-        return response()->json($return);
-     }
-
-     /**
-      * 获取地区列表
-      */
-      public function citys($pid){
-          $citys = DB::table('citys')->where('pid',$pid)->get();
-          return response()->json($citys);
-      }
 }

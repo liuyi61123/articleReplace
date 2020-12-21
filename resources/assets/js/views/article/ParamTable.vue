@@ -26,6 +26,10 @@
                            label="名称">
                          </el-table-column>
                         <el-table-column
+                          prop="identifier"
+                          label="标识符">
+                        </el-table-column>
+                        <el-table-column
                           prop="category"
                           label="分类">
                         </el-table-column>

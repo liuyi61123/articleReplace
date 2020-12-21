@@ -245,26 +245,31 @@
                     }
 
                     //显示自定义参数
-                    console.log(custom_params);
                     if(custom_params){
-                        axios.post('/article/api/paramids',
-                        {
-                            ids:custom_params
-                        })
-                        .then((response)=> {
-                            console.log(response)
-                            this.custom_params = response.data
+                        this.getCustomParams(custom_params,true)
+                    }
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            },
+            getCustomParams(custom_params,is_clear){
+                axios.post('/article/api/paramids',
+                {
+                    ids:custom_params
+                })
+                .then((response)=> {
+                    console.log(response)
+                    this.custom_params = response.data;
+                    if(is_clear){
+                        this.article.custom_params = [];
                             response.data.map((item,key)=>{
-                                this.article.custom_params.push({
-                                    id:item.id,
-                                    sort:6+key,
-                                    isTitle:true
-                                })
+                            this.article.custom_params.push({
+                                id:item.id,
+                                sort:6+key,
+                                isTitle:true
                             })
                         })
-                        .catch((error)=>{
-                            console.log(error);
-                        });
                     }
                 })
                 .catch((error)=>{
@@ -318,9 +323,6 @@
             },
             submitFrom(){
                 this.fullScreen(true)
-                // console.log(this.article)
-                // return ;
-                // 发送 POST 请求
                 axios({
                     method: this.id?'put':'post',
                     url: this.id?'/article/articles/'+this.id:'/article/articles',
@@ -369,8 +371,6 @@
                 axios.get('/article/templates?type=all')
                 .then((response)=> {
                     this.templates = response.data
-
-                    // this.fixedCustomParams(response.data[0].id);
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -455,6 +455,12 @@
                     this.getCitys(response.data.config.fixed_params.province.data)
                     //获取区
                     this.getCountys(response.data.config.fixed_params.city.data)
+                    //获取自定义参数
+                    let custom_params = response.data.config.custom_params.map((item)=>{
+                        return item.id;
+                    })
+                    this.getCustomParams(custom_params,false)
+
                 })
                 .catch((error)=>{
                     console.log(error)

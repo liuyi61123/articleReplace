@@ -9,7 +9,6 @@
         "aliyuncs/aliyun-oss-php-sdk-laravel": "^1.2",
         "barryvdh/laravel-ide-helper": "^2.5",
         "barryvdh/laravel-snappy": "^0.4.1",
-        "chumper/zipper": "^1.0.2",
         "doctrine/dbal": "^2.8",
         "encore/redis-manager": "^0.1.2",
         "fideloper/proxy": "^4.0",

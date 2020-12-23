@@ -165,6 +165,38 @@
 </template>
 
 <script>
+    const fixedParams = {
+                            cityShow:false,
+                            carShow:false,
+                            province:{
+                                sort:1,
+                                data:1,
+                                isTitle:true,
+                            },
+                            city:{
+                                sort:2,
+                                data:'',
+                                isTitle:true,
+                            },
+                            countys:{
+                                isTitle:true,
+                                sort:3,
+                                data:[]
+                            },
+                            cars:{
+                                isTitle:true,
+                                priceIsTitle:true,
+                                sort:4,
+                                price_sort:5,
+                                data:[
+                                    {
+                                        brand:'',
+                                        models:[
+                                        ]
+                                    }
+                                ]
+                            }
+                        };
     export default {
         props:['id'],
         data () {
@@ -184,39 +216,7 @@
                     desc:'',
                     template_id:1,
                     custom_params:[],
-                    fixed_params:
-                    {
-                        cityShow:false,
-                        carShow:false,
-                        province:{
-                            sort:1,
-                            data:1,
-                            isTitle:true,
-                        },
-                        city:{
-                            sort:2,
-                            data:'',
-                            isTitle:true,
-                        },
-                        countys:{
-                            isTitle:true,
-                            sort:3,
-                            data:[]
-                        },
-                        cars:{
-                            isTitle:true,
-                            priceIsTitle:true,
-                            sort:4,
-                            price_sort:5,
-                            data:[
-                                {
-                                    brand:'',
-                                    models:[
-                                    ]
-                                }
-                            ]
-                        }
-                    }
+                    fixed_params:fixedParams
                 },
                 title:'',
                 loading:''
@@ -224,6 +224,8 @@
         },
         methods: {
             changeTemplate(e){
+                //切换模板需要清空参数信息
+                this.article.fixed_params = fixedParams;
                 this.fixedCustomParams(e);
             },
             fixedCustomParams(id){

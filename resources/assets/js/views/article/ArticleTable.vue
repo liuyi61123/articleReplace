@@ -36,8 +36,12 @@
                            label="名称">
                          </el-table-column>
                         <el-table-column
-                          prop="template.name"
-                          label="模板">
+                            label="模板"
+                        >
+                            <template slot-scope="scope">
+                                <el-link type="primary" :href="'/article/templates/'+scope.row.template_id+'/edit'" target="_blank">{{scope.row.template.name}}</el-link>
+                            </template>
+                         
                         </el-table-column>
                         <el-table-column
                           prop="template.updated_at"

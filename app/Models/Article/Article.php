@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use SnappyImage;
-use Chumper\Zipper\Zipper;
+use ZipArchive;
 use App\Handlers\OssUploadImageHandler;
 
 class Article extends Model
@@ -86,7 +86,7 @@ class Article extends Model
         $file_base_path = $directory.'/';
         //判断有那些固定参数
         if(count($template_fixed_params) == 1){
-            if(in_array('car',$fixed_params)){
+            if(in_array('car',$template_fixed_params)){
                 foreach($fixed_params['cars']['data'] as $car){
                     //查找汽车相关型号
                     $car_models = $car['models'];
@@ -111,7 +111,7 @@ class Article extends Model
                     }
                 }
             }
-            if(in_array('city',$fixed_params)){
+            if(in_array('city',$template_fixed_params)){
                 $province_name = DB::table('citys')->where('id',$fixed_params['province']['data'])->value('name');
                 $city_name = DB::table('citys')->where('id',$fixed_params['city']['data'])->value('name');
                 foreach($fixed_params['countys']['data'] as $county){
@@ -188,16 +188,17 @@ class Article extends Model
         }
 
         //压缩输出
-        $zipper = new Zipper;
+        $zip = new ZipArchive();
         $base_path = storage_path('app/public/articles/'.$this->id);
-        $files = glob($base_path.'/*.txt');
-        $zipper->make($base_path.'/articles'.$this->id.'.zip')->add($files)->close();
+        $zipfilename = $base_path.'/articles'.$this->id.'.zip';
+        $zip->open($zipfilename,ZipArchive::CREATE);  //打开压缩包
+        $zip->addGlob($base_path.'/*.txt',GLOB_BRACE, array('remove_path' =>$base_path));
+        $zip->close(); //关闭压缩包
 
         //修改文章状态
-        DB::table('articles')->where('id',$this->id)->update([
-            'status'=>1
-        ]);
-        return $files;
+        $this->status = 1;
+        $this->save();
+        return $zipfilename;
     }
 
     protected function customParams($article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files)
@@ -535,13 +536,14 @@ class Article extends Model
                     }
                 }
                 break;
-            case 4:
+            case 5:
                 $sort = array();
                 $k = 1;
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
                 $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
+                $custom_params_content4 = explode("\n",trim($article_custom_params[4]['content']));
                 foreach($custom_params_content0 as $param_content0){
                     foreach($custom_params_content1 as $param_content1){
                         foreach($custom_params_content2 as $param_content2){
@@ -549,7 +551,7 @@ class Article extends Model
                                 foreach($custom_params_content4 as $param_content4){
                                     //替换固定段落内容
                                     if($count_fixed_paragraphs >0){
-                                        if($k>= 1000){
+                                        if($k>= $count_fixed_paragraphs){
                                             $k = 1;
                                         }
                                         $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
@@ -566,21 +568,37 @@ class Article extends Model
                                     for($i=0;$i<$template_images_count;$i++){
                                         $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
                                     }
-                                    if($province['isTitle']){
-                                        $sort[$province['sort']] = $province['data'];
+                                    if($province){
+                                        $replace_text =  str_replace('{province}',$province['name'],$replace_text);
+                                        if($province['isTitle']){
+                                            $sort[$province['sort']] = $province['name'];
+                                        }
+                                    }
+                                    if($city){
+                                        $replace_text =  str_replace('{city}',$city['name'],$replace_text);
+                                        if($city['isTitle']){
+                                            $sort[$city['sort']] = $city['name'];
+                                        }
                                     } 
-                                    if($city['isTitle']){
-                                        $sort[$city['sort']] = $city['data'];
+                                    if($county){
+                                        $replace_text =  str_replace('{county}',$county['name'],$replace_text);
+                                        if($county['isTitle']){
+                                            $sort[$county['sort']] = $county['name'];
+                                        }
                                     }
-                                    if($countys['isTitle']){
-                                        $sort[$countys['sort']] = $countys['data'];
+                                    if($car){
+                                        $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
+                                        $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
+                                        $replace_text =  str_replace('{price}',$car['price'],$replace_text);
+                
+                                        if($car['isTitle']){
+                                            $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
+                                        }
+                                        if($car['priceIsTitle']){
+                                            $sort[$car['price_sort']] = $car['price'].'万';
+                                        }
                                     }
-                                    if($car['isTitle']){
-                                        $sort[$car['sort']] = $car['brand'].$car['model'];
-                                    }
-                                    if($car['priceIsTitle']){
-                                        $sort[$car['price_sort']] = $car['price'].'万';
-                                    }
+
                                     if($article_custom_params[0]['isTitle']){
                                         $sort[$article_custom_params[0]['sort']] = $param_content0;
                                     }  

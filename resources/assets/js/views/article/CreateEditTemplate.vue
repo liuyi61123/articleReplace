@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="20">
         <el-form label-width="100px"  v-loading="loading">
-            <el-col :span="14">
+            <el-col :span="15">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>{{title}}</span>
@@ -16,9 +16,17 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="自定义参数">
-                            <el-checkbox-group v-model="template.custom_params" :min="0" :max="4">
+                              <el-transfer 
+                                filterable
+                                :filter-method="customParamsfilter"
+                                filter-placeholder="请输入参数名称"
+                                :titles="['所有参数', '已选参数']"
+                                v-model="template.custom_params" 
+                                :data="custom_params">
+                              </el-transfer>
+                            <!-- <el-checkbox-group v-model="template.custom_params" :min="0" :max="4">
                                 <el-checkbox-button v-for="custom_param of custom_params" :label="custom_param.id" :key="custom_param.id">{{custom_param.title}}-{{custom_param.identifier}}</el-checkbox-button>
-                            </el-checkbox-group>
+                            </el-checkbox-group> -->
                         </el-form-item>
                         <el-form-item label="内容">
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.content" placeholder="模板内容"></el-input>
@@ -52,7 +60,7 @@
                 </el-card>
             </el-col>
 
-            <el-col :span="10">
+            <el-col :span="9">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>段落</span>
@@ -60,7 +68,7 @@
                     </div>
 
                     <div class="text item">
-                        <div v-for="(paragraph,index) in template.custom_paragraphs">
+                        <div v-for="(paragraph,index) in template.custom_paragraphs" :key="index">
                             <el-form-item label="段落标示">
                                 <el-input v-model="paragraph.name" placeholder="段落名称（便于区分）"></el-input>
                             </el-form-item>
@@ -176,23 +184,6 @@
                 console.log(this.template.custom_params)
             },
             removeImage(file, fileList) {
-                // axios({
-                //     method:'delete',
-                //     url:'/templates/delete_image',
-                //     data:{
-                //         url:file.url
-                //     }
-                // })
-                // .then((response)=> {
-                //     this.template.images.map((value,index)=>{
-                //         if(value.uid == file.uid){
-                //             this.template.images.splice(index,1);
-                //         }
-                //     })
-                // })
-                // .catch((error)=>{
-                //     console.log(error);
-                // });
                 this.template.images.map((value,index)=>{
                     if(value.uid == file.uid){
                         this.template.images.splice(index,1);
@@ -248,13 +239,23 @@
                 axios.post('/article/api/params')
                 .then((response)=> {
                     console.log(response)
-                    this.custom_params = response.data
+                    this.custom_params = response.data.map((item)=>{
+                        return {
+                            key:item.id,
+                            label:item.title+'-'+item.identifier,
+                            disabled:false,
+                            title:item.title
+                        }
+                    })
                 })
                 .catch((error)=>{
                     console.log(error);
 
                 });
            }
+        },
+        customParamsfilter(query, item){
+            return item.title.indexOf(query) > -1;
         },
         created(){
             this.getCustomParams();

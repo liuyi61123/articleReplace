@@ -4,10 +4,12 @@ namespace App\Models\Article;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use SnappyImage;
 use ZipArchive;
 use App\Handlers\OssUploadImageHandler;
+use App\Jobs\GenerateArticle;
 
 class Article extends Model
 {
@@ -45,9 +47,9 @@ class Article extends Model
          $template_content = $template->content;
          $replace_text = $template_content;
          $template_images = $template->images;
+
          //查找模板中图片和段落出现的次数
          $template_images_count = substr_count($template_content,'图片');
-
          $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
 
          //获取文件列表
@@ -87,6 +89,21 @@ class Article extends Model
         //判断有那些固定参数
         if(count($template_fixed_params) == 1){
             if(in_array('car',$template_fixed_params)){
+
+                $base_count = 0;
+                foreach($fixed_params['cars']['data'] as $car){
+                    //查找汽车相关型号
+                    $car_models = $car['models'];
+                    $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
+   
+                    foreach($car_models as $car_model){
+                        if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
+                            $base_count ++;
+                        }
+                    }
+                }
+
+                $i = 1;
                 foreach($fixed_params['cars']['data'] as $car){
                     //查找汽车相关型号
                     $car_models = $car['models'];
@@ -106,7 +123,10 @@ class Article extends Model
                                 'car_model'=>$car_model['name'],
                                 'price'=>$price,
                             ];
-                            $this->customParams($custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+                            
+                            $is_last = $i==$base_count?true:false;
+                            $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+                            $i++;
                         }
                     }
                 }
@@ -114,6 +134,9 @@ class Article extends Model
             if(in_array('city',$template_fixed_params)){
                 $province_name = DB::table('citys')->where('id',$fixed_params['province']['data'])->value('name');
                 $city_name = DB::table('citys')->where('id',$fixed_params['city']['data'])->value('name');
+                
+                $base_count = count($fixed_params['countys']['data']);
+                $i = 1;
                 foreach($fixed_params['countys']['data'] as $county){
                     $county_arr = [
                         'sort'=>$fixed_params['countys']['sort'],
@@ -133,7 +156,9 @@ class Article extends Model
                         'name'=>$city_name,
                     ];
 
-                    $this->customParams($custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+                    $is_last = $i==$base_count?true:false;
+                    $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+                    $i++;
                 }
             }
         }elseif(count($template_fixed_params) == 2){
@@ -141,6 +166,23 @@ class Article extends Model
             $province_name = DB::table('citys')->where('id',$fixed_params['province']['data'])->value('name');
             $city_name = DB::table('citys')->where('id',$fixed_params['city']['data'])->value('name');
             
+            $car_count = 0;
+            foreach($fixed_params['cars']['data'] as $car){
+                //查找汽车相关型号
+                $car_models = $car['models'];
+                $car_brand = DB::table('car_infos')->where('id',$car['brand'])->value('name');
+
+                foreach($car_models as $car_model){
+                    if((isset($car_model['name']))&&($car_model_name = $car_model['name'])){
+                        $car_count ++;
+                    }
+                }
+            }
+
+            $city_count = count($fixed_params['countys']['data']);
+            $base_count = $city_count * $car_count;
+
+            $i = 1;
             foreach($fixed_params['countys']['data'] as $county){
                 foreach($fixed_params['cars']['data'] as $car){
                     //查找汽车相关型号
@@ -177,457 +219,209 @@ class Article extends Model
                                 'car_model'=>$car_model['name'],
                                 'price'=>$price,
                             ];
-                            $this->customParams($custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+
+                            $is_last = $i==$base_count?true:false;
+                            $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+                            $i++;
                         }
                     }
                 }
             }
         }else{
             //没有固定参数，判断自定义参数
-            $this->customParams($custom_params,$replace_text,'','','','',$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
+            $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files);
         }
-
-        //压缩输出
-        $zip = new ZipArchive();
-        $base_path = storage_path('app/public/articles/'.$this->id);
-        $zipfilename = $base_path.'/articles'.$this->id.'.zip';
-        $zip->open($zipfilename,ZipArchive::CREATE);  //打开压缩包
-        $zip->addGlob($base_path.'/*.txt',GLOB_BRACE, array('remove_path' =>$base_path));
-        $zip->close(); //关闭压缩包
-
-        //修改文章状态
-        $this->status = 1;
-        $this->save();
-        return $zipfilename;
     }
 
-    protected function customParams($article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files)
+    protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_files)
     {
+        $base_replace_text = $replace_text;
         $directory = 'public/articles/'.$this->id;
+
         $oss = new OssUploadImageHandler();
         $count_fixed_paragraphs = count($fixed_paragraphs_files);
         $file_base_path = $directory.'/';
+
+        $k = 1;
+        $i = 1;
+        $sort = array();
+        $is_last = false;
+
         switch(count($article_custom_params))
         {
             case 1:
-                $k = 1;
-                $sort = array();
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                $count_all = count($custom_params_content0);
                 foreach($custom_params_content0 as $param_content0){
-                    //替换固定段落内容
+                    $fixed_paragraphs_file = '';
+                    if($is_fixed_last&&($i == $count_all)){
+                        $is_last = true;
+                    }else{
+                        $is_last = false;
+                    }
+
                     if($count_fixed_paragraphs >0){
                         if($k>= $count_fixed_paragraphs){
                             $k = 1;
                         }
-                        $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
-                        $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
-                        $k++;
+                        $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                     }
 
-                    //随机替换模板中的段落和图片
-                    foreach($template_custom_paragraphs as $template_paragraph){
-                        for($i=0;$i<$template_paragraph['count'];$i++){
-                            $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                        }
-                    }
-
-                    for($i=0;$i<$template_images_count;$i++){
-                        $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                    }
-
-                    if($province){
-                        $replace_text =  str_replace('{province}',$province['name'],$replace_text);
-                        if($province['isTitle']){
-                            $sort[$province['sort']] = $province['name'];
-                        }
-                    }
-                    if($city){
-                        $replace_text =  str_replace('{city}',$city['name'],$replace_text);
-                        if($city['isTitle']){
-                            $sort[$city['sort']] = $city['name'];
-                        }
-                    } 
-                    if($county){
-                        $replace_text =  str_replace('{county}',$county['name'],$replace_text);
-                        if($county['isTitle']){
-                            $sort[$county['sort']] = $county['name'];
-                        }
-                    }
-                    
-                    if($car){
-                        $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
-                        $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
-                        $replace_text =  str_replace('{price}',$car['price'],$replace_text);
-
-                        if($car['isTitle']){
-                            $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
-                        }
-                        if($car['priceIsTitle']){
-                            $sort[$car['price_sort']] = $car['price'].'万';
-                        }
-                    }
-                    
-                    if($article_custom_params[0]['isTitle']){
-                        $sort[$article_custom_params[0]['sort']] = $param_content0;
-                    }
-
-                    ksort($sort);
-                    $title = implode('',$sort);
-                    //替换title
-                    $replace_text =  str_replace($article_custom_params[0]['identifier'],$param_content0,$replace_text);
-                    $replace_text =  str_replace('{title}',$title,$replace_text);
-                    //文件名规则生成
-                    $file_path = $file_base_path.'/'.$title.'.txt';
-                    //生成文件
-                    Storage::put($file_path,$replace_text);
+                    $param_contents = [
+                        $param_content0
+                    ];
+                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last);
+                    $replace_text = $base_replace_text;
+                    $k++;
+                    $i++;
                 }
                 break;
             case 2:
-                $k = 1;
-                $sort = array();
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
+                
+                $count_all = count($custom_params_content0)*count($custom_params_content1);
                 foreach($custom_params_content0 as $param_content0){
                     foreach($custom_params_content1 as $param_content1){
-                        //替换固定段落内容
+                        $fixed_paragraphs_file = '';
+                        if($is_fixed_last&&($i == $count_all)){
+                            $is_last = true;
+                        }else{
+                            $is_last = false;
+                        }
+
                         if($count_fixed_paragraphs >0){
                             if($k>= $count_fixed_paragraphs){
                                 $k = 1;
                             }
-                            $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
-                            $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
-                            $k++;
+                            $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                         }
-                        //随机替换模板中的段落和图片
-                        foreach($template_custom_paragraphs as $template_paragraph){
-                            for($i=0;$i<$template_paragraph['count'];$i++){
-                                $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                            }
-                        }
-
-                        for($i=0;$i<$template_images_count;$i++){
-                            $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                        }
-
-                        if($province){
-                            $replace_text =  str_replace('{province}',$province['name'],$replace_text);
-                            if($province['isTitle']){
-                                $sort[$province['sort']] = $province['name'];
-                            }
-                        }
-                        if($city){
-                            $replace_text =  str_replace('{city}',$city['name'],$replace_text);
-                            if($city['isTitle']){
-                                $sort[$city['sort']] = $city['name'];
-                            }
-                        } 
-                        if($county){
-                            $replace_text =  str_replace('{county}',$county['name'],$replace_text);
-                            if($county['isTitle']){
-                                $sort[$county['sort']] = $county['name'];
-                            }
-                        }
-                        
-                        if($car){
-                            $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
-                            $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
-                            $replace_text =  str_replace('{price}',$car['price'],$replace_text);
     
-                            if($car['isTitle']){
-                                $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
-                            }
-                            if($car['priceIsTitle']){
-                                $sort[$car['price_sort']] = $car['price'].'万';
-                            }
-                        }
-
-                        if($article_custom_params[0]['isTitle']){
-                            $sort[$article_custom_params[0]['sort']] = $param_content0;
-                        }  
-                        if($article_custom_params[1]['isTitle']){
-                            $sort[$article_custom_params[1]['sort']] = $param_content1;
-                        }  
-                        ksort($sort);
-                        $title = implode('',$sort);
-
-                        //替换title
-                        $replace_text =  str_replace($article_custom_params[0]['identifier'],$param_content0,$replace_text);
-                        $replace_text =  str_replace($article_custom_params[1]['identifier'],$param_content1,$replace_text);
-                        $replace_text =  str_replace('{title}',$title,$replace_text);
-                        //文件名规则生成
-                        $file_path = $file_base_path.'/'.$title.'.txt';
-                        //生成文件
-                        Storage::put($file_path,$replace_text);
+                        $param_contents = [
+                            $param_content0,
+                            $param_content1
+                        ];
+                        GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last);
+                        $replace_text = $base_replace_text;
+                        $k++;
+                        $i++;
                     }
                 }
                 break;
             case 3:
-                $sort = array();
-                $k = 1;
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
+                
+                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2);
                 foreach($custom_params_content0 as $param_content0){
                     foreach($custom_params_content1 as $param_content1){
                         foreach($custom_params_content2 as $param_content2){
-                            //替换固定段落内容
+                            $fixed_paragraphs_file = '';
+                            if($is_fixed_last&&($i == $count_all)){
+                                $is_last = true;
+                            }else{
+                                $is_last = false;
+                            }        
+
                             if($count_fixed_paragraphs >0){
                                 if($k>= $count_fixed_paragraphs){
                                     $k = 1;
                                 }
-                                $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
-                                $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
-                                $k++;
+                                $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                             }
-                            //随机替换模板中的段落和图片
-                            foreach($template_custom_paragraphs as $template_paragraph){
-                                for($i=0;$i<$template_paragraph['count'];$i++){
-                                    $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                                }
-                            }
-
-                            for($i=0;$i<$template_images_count;$i++){
-                                $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                            }
-                            if($province){
-                                $replace_text =  str_replace('{province}',$province['name'],$replace_text);
-                                if($province['isTitle']){
-                                    $sort[$province['sort']] = $province['name'];
-                                }
-                            }
-                            if($city){
-                                $replace_text =  str_replace('{city}',$city['name'],$replace_text);
-                                if($city['isTitle']){
-                                    $sort[$city['sort']] = $city['name'];
-                                }
-                            } 
-                            if($county){
-                                $replace_text =  str_replace('{county}',$county['name'],$replace_text);
-                                if($county['isTitle']){
-                                    $sort[$county['sort']] = $county['name'];
-                                }
-                            }
-                            
-                            if($car){
-                                $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
-                                $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
-                                $replace_text =  str_replace('{price}',$car['price'],$replace_text);
         
-                                if($car['isTitle']){
-                                    $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
-                                }
-                                if($car['priceIsTitle']){
-                                    $sort[$car['price_sort']] = $car['price'].'万';
-                                }
-                            }
-                            if($article_custom_params[0]['isTitle']){
-                                $sort[$article_custom_params[0]['sort']] = $param_content0;
-                            }  
-                            if($article_custom_params[1]['isTitle']){
-                                $sort[$article_custom_params[1]['sort']] = $param_content1;
-                            } 
-                            if($article_custom_params[2]['isTitle']){
-                                $sort[$article_custom_params[2]['sort']] = $param_content2;
-                            } 
-                            ksort($sort);
-                            $title = implode('',$sort);
-
-                            //替换title
-                            $replace_text =  str_replace($article_custom_params[0]['identifier'],$param_content0,$replace_text);
-                            $replace_text =  str_replace($article_custom_params[1]['identifier'],$param_content1,$replace_text);
-                            $replace_text =  str_replace($article_custom_params[2]['identifier'],$param_content2,$replace_text);
-                            $replace_text =  str_replace('{title}',$title,$replace_text);
-                            //文件名规则生成
-                            $file_path = $file_base_path.'/'.$title.'.txt';
-                            //生成文件
-                            Storage::put($file_path,$replace_text);
+                            $param_contents = [
+                                $param_content0,
+                                $param_contexnt1,
+                                $param_contexnt2
+                            ];
+                            GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last);
+                            $replace_text = $base_replace_text;
+                            $k++;
+                            $i++;
                         }
                     }
                 }
                 break;
             case 4:
-                $sort = array();
-                $k = 1;
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
                 $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
+                
+                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3);
                 foreach($custom_params_content0 as $param_content0){
                     foreach($custom_params_content1 as $param_content1){
                         foreach($custom_params_content2 as $param_content2){
                             foreach($custom_params_content3 as $param_content3){
-                                //替换固定段落内容
+                                $fixed_paragraphs_file = '';
+                                if($is_fixed_last&&($i == $count_all)){
+                                    $is_last = true;
+                                }else{
+                                    $is_last = false;
+                                }
+            
                                 if($count_fixed_paragraphs >0){
                                     if($k>= $count_fixed_paragraphs){
                                         $k = 1;
                                     }
-                                    $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
-                                    $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
-                                    $k++;
+                                    $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                                 }
-                                //随机替换模板中的段落和图片
-                                foreach($template_custom_paragraphs as $template_paragraph){
-                                    for($i=0;$i<$template_paragraph['count'];$i++){
-                                        $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                                    }
-                                }
-
-                                for($i=0;$i<$template_images_count;$i++){
-                                    $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                                }
-                                if($province){
-                                    $replace_text =  str_replace('{province}',$province['name'],$replace_text);
-                                    if($province['isTitle']){
-                                        $sort[$province['sort']] = $province['name'];
-                                    }
-                                }
-                                if($city){
-                                    $replace_text =  str_replace('{city}',$city['name'],$replace_text);
-                                    if($city['isTitle']){
-                                        $sort[$city['sort']] = $city['name'];
-                                    }
-                                } 
-                                if($county){
-                                    $replace_text =  str_replace('{county}',$county['name'],$replace_text);
-                                    if($county['isTitle']){
-                                        $sort[$county['sort']] = $county['name'];
-                                    }
-                                }
-                                
-                                if($car){
-                                    $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
-                                    $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
-                                    $replace_text =  str_replace('{price}',$car['price'],$replace_text);
             
-                                    if($car['isTitle']){
-                                        $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
-                                    }
-                                    if($car['priceIsTitle']){
-                                        $sort[$car['price_sort']] = $car['price'].'万';
-                                    }
-                                }
-                                if($article_custom_params[0]['isTitle']){
-                                    $sort[$article_custom_params[0]['sort']] = $param_content0;
-                                }  
-                                if($article_custom_params[1]['isTitle']){
-                                    $sort[$article_custom_params[1]['sort']] = $param_content1;
-                                } 
-                                if($article_custom_params[2]['isTitle']){
-                                    $sort[$article_custom_params[2]['sort']] = $param_content2;
-                                } 
-                                if($article_custom_params[3]['isTitle']){
-                                    $sort[$article_custom_params[3]['sort']] = $param_content3;
-                                } 
-                                ksort($sort);
-                                $title = implode('',$sort);
-
-                                //替换title
-                                $replace_text =  str_replace($article_custom_params[0]['identifier'],$param_content0,$replace_text);
-                                $replace_text =  str_replace($article_custom_params[1]['identifier'],$param_content1,$replace_text);
-                                $replace_text =  str_replace($article_custom_params[2]['identifier'],$param_content2,$replace_text);
-                                $replace_text =  str_replace($article_custom_params[3]['identifier'],$param_content3,$replace_text);
-                                $replace_text =  str_replace('{title}',$title,$replace_text);
-                                //文件名规则生成
-                                $file_path = $file_base_path.'/'.$title.'.txt';
-                                //生成文件
-                                Storage::put($file_path,$replace_text);
+                                $param_contents = [
+                                    $param_content0,
+                                    $param_content1,
+                                    $param_content2,
+                                    $param_content3,
+                                ];
+                                GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last);
+                                $replace_text = $base_replace_text;
+                                $k++;
+                                $i++;
                             }
                         }
                     }
                 }
                 break;
             case 5:
-                $sort = array();
-                $k = 1;
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
                 $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
                 $custom_params_content4 = explode("\n",trim($article_custom_params[4]['content']));
+                
+                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3)*count($custom_params_content4);
                 foreach($custom_params_content0 as $param_content0){
                     foreach($custom_params_content1 as $param_content1){
                         foreach($custom_params_content2 as $param_content2){
                             foreach($custom_params_content3 as $param_content3){
                                 foreach($custom_params_content4 as $param_content4){
-                                    //替换固定段落内容
+                                    $fixed_paragraphs_file = '';
+                                    if($is_fixed_last&&($i == $count_all)){
+                                        $is_last = true;
+                                    }else{
+                                        $is_last = false;
+                                    }
+                
                                     if($count_fixed_paragraphs >0){
                                         if($k>= $count_fixed_paragraphs){
                                             $k = 1;
                                         }
-                                        $fixed_paragraphs_content = $oss->getObject($fixed_paragraphs_files[$k]['uid']);
-                                        $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
-                                        $k++;
+                                        $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                                     }
-                                    //随机替换模板中的段落和图片
-                                    foreach($template_custom_paragraphs as $template_paragraph){
-                                        for($i=0;$i<$template_paragraph['count'];$i++){
-                                            $replace_text =  preg_replace('/'.$template_paragraph['name'].'/',array_random($template_paragraph['content']),$replace_text,1);
-                                        }
-                                    }
-
-                                    for($i=0;$i<$template_images_count;$i++){
-                                        $replace_text =  preg_replace('/{图片}/',array_random($template_images)['url'],$replace_text,1);
-                                    }
-                                    if($province){
-                                        $replace_text =  str_replace('{province}',$province['name'],$replace_text);
-                                        if($province['isTitle']){
-                                            $sort[$province['sort']] = $province['name'];
-                                        }
-                                    }
-                                    if($city){
-                                        $replace_text =  str_replace('{city}',$city['name'],$replace_text);
-                                        if($city['isTitle']){
-                                            $sort[$city['sort']] = $city['name'];
-                                        }
-                                    } 
-                                    if($county){
-                                        $replace_text =  str_replace('{county}',$county['name'],$replace_text);
-                                        if($county['isTitle']){
-                                            $sort[$county['sort']] = $county['name'];
-                                        }
-                                    }
-                                    if($car){
-                                        $replace_text =  str_replace('{car_brand}',$car['car_brand'],$replace_text);
-                                        $replace_text =  str_replace('{car_model}',$car['car_model'],$replace_text);
-                                        $replace_text =  str_replace('{price}',$car['price'],$replace_text);
                 
-                                        if($car['isTitle']){
-                                            $sort[$car['sort']] = $car['car_brand'].$car['car_model'];
-                                        }
-                                        if($car['priceIsTitle']){
-                                            $sort[$car['price_sort']] = $car['price'].'万';
-                                        }
-                                    }
-
-                                    if($article_custom_params[0]['isTitle']){
-                                        $sort[$article_custom_params[0]['sort']] = $param_content0;
-                                    }  
-                                    if($article_custom_params[1]['isTitle']){
-                                        $sort[$article_custom_params[1]['sort']] = $param_content1;
-                                    } 
-                                    if($article_custom_params[2]['isTitle']){
-                                        $sort[$article_custom_params[2]['sort']] = $param_content2;
-                                    } 
-                                    if($article_custom_params[3]['isTitle']){
-                                        $sort[$article_custom_params[3]['sort']] = $param_content3;
-                                    } 
-                                    if($article_custom_params[4]['isTitle']){
-                                        $sort[$article_custom_params[4]['sort']] = $param_content4;
-                                    }
-                                    ksort($sort);
-                                    $title = implode('',$sort);
-
-                                    //替换title
-                                    $replace_text =  str_replace($article_custom_params[0]['identifier'],$param_content0,$replace_text);
-                                    $replace_text =  str_replace($article_custom_params[1]['identifier'],$param_content1,$replace_text);
-                                    $replace_text =  str_replace($article_custom_params[2]['identifier'],$param_content2,$replace_text);
-                                    $replace_text =  str_replace($article_custom_params[3]['identifier'],$param_content3,$replace_text);
-                                    $replace_text =  str_replace($article_custom_params[4]['identifier'],$param_content4,$replace_text);
-                                    $replace_text =  str_replace('{title}',$title,$replace_text);
-                                    //文件名规则生成
-                                    $file_path = $file_base_path.'/'.$title.'.txt';
-                                    //生成文件
-                                    Storage::put($file_path,$replace_text);
+                                    $param_contents = [
+                                        $param_content0,
+                                        $param_content1,
+                                        $param_content2,
+                                        $param_content3,
+                                        $param_content4,
+                                    ];
+                                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last);
+                                    $replace_text = $base_replace_text;
+                                    $k++;
+                                    $i++;
                                 }
                             }
                         }

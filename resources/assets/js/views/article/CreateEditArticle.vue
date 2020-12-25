@@ -314,7 +314,7 @@
             },
             addCar(){
                 //添加汽车信息参数
-                this.fixed_params.article.cars.data.push({
+                this.article.fixed_params.cars.data.push({
                     brand:'',
                     models:[]
                 });

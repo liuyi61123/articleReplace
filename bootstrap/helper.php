@@ -32,18 +32,3 @@ function trimall($str){
     return str_replace($qian, '', $str);   
 }
 
-
-/**
- * 压缩文件中文转码
- */
-function transcoding($fileName)
-{
-    $encoding = mb_detect_encoding($fileName,['UTF-8','GBK','BIG5','CP936']);
-    if (DIRECTORY_SEPARATOR == '/'){    //linux
-        $filename = iconv($encoding,'UTF-8',$fileName);
-    }else{  //win
-        $filename = iconv($encoding,'GBK',$fileName);
-    }
-    return $filename;
-}
-

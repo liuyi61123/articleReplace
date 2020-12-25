@@ -113,7 +113,14 @@
             },
             //导出zip
             exportArticle(index, row){
-                window.location.href="/article/articles/export/"+row.id;
+                if(row.status == 1){
+                    window.location.href="/article/articles/export/"+row.id;
+                }else{
+                    this.$message({
+                        message: '文章正在生成中',
+                        type: 'warning'
+                    });
+                }
             },
             //删除
             deleteArticle(index, row){

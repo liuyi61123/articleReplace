@@ -87,6 +87,16 @@ class ArticlesController extends Controller
             $zip->close(); //关闭压缩包
         }
 
+        return response()->json(['status'=>200]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportZip($id)
+    {
         $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
         return response()->download($pathToFile);
     }

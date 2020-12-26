@@ -116,11 +116,17 @@
                 if(row.status == 1){
                      axios.post('/article/articles/export/'+row.id)
                     .then((response)=> {
-                        console.log(response);
+                        if(response.data.status == 200){
+                            window.location.href="/article/articles/export/"+row.id;
+                        }else{
+                            this.$message({
+                                message: '压缩包生成失败',
+                                type: 'error'
+                            });
+                        }
                     })
                     .catch((error)=>{
                         console.log(error);
-                        this.loading = false;
                         this.$message.error('错了哦，这是一条错误消息');
                     });
                 }else{
@@ -152,7 +158,6 @@
                })
                .catch((error)=>{
                    console.log(error);
-                   this.loading = false;
                    this.$message.error('错了哦，这是一条错误消息');
                });
            },

@@ -18,7 +18,8 @@ Route::group([
     Route::post('/api/params', 'ApiController@params')->name('article.api.params');
     Route::post('/api/paramids', 'ApiController@paramids')->name('article.api.paramids');
 
-    Route::get('/articles/export/{id}', 'ArticlesController@export')->name('article.articles.export');
+    Route::get('/articles/export/{id}', 'ArticlesController@exportZip')->name('article.articles.exportzip');
+    Route::post('/articles/export/{id}', 'ArticlesController@export')->name('article.articles.export');
     Route::post('templates/upload_image', 'TemplatesController@upload_image')->name('article.template.upload_image');//上传图片
     Route::delete('templates/delete_image', 'TemplatesController@delete_image')->name('article.template.delete_image');//删除图片
     Route::resource('articles', 'ArticlesController');//文章

@@ -114,7 +114,15 @@
             //导出zip
             exportArticle(index, row){
                 if(row.status == 1){
-                    window.location.href="/article/articles/export/"+row.id;
+                     axios.post('/article/articles/export/'+row.id)
+                    .then((response)=> {
+                        console.log(response);
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                        this.loading = false;
+                        this.$message.error('错了哦，这是一条错误消息');
+                    });
                 }else{
                     this.$message({
                         message: '文章正在生成中',

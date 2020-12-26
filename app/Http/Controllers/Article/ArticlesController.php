@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\GenerateArticle;
+use ZipArchive;
 
 class ArticlesController extends Controller
 {
@@ -58,8 +58,6 @@ class ArticlesController extends Controller
      */
     public function store(ArticleRequest $request,Article $article)
     {
-        // return response()->json($request->all());
-
         $article_data['template_id'] = $request->input('template_id');
         $article_data['name'] = $request->input('name');
         $article_data['desc'] = $request->input('desc');
@@ -69,7 +67,6 @@ class ArticlesController extends Controller
 
         //计算参数
         $res = $article->generate();
-        // GenerateArticle::dispatch($article);
         return response()->json(['status'=>200,'data'=>$res]);
     }
 
@@ -80,7 +77,18 @@ class ArticlesController extends Controller
      */
     public function export($id)
     {
-        $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
+        $exists = Storage::disk('local')->exists('public/articles/'.$id.'/articles'.$id.'.zip');
+        if($exists){
+            $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
+        }else{
+            $zip = new ZipArchive();
+            $base_path = storage_path('app/public/articles/'.$id);
+            $zipfilename = $base_path.'/articles'.$id.'.zip';
+            $zip->open($zipfilename,ZipArchive::CREATE);  //打开压缩包
+            $zip->addGlob($base_path.'/*.txt',GLOB_BRACE, array('remove_path' =>$base_path));
+            $zip->close(); //关闭压缩包
+        }
+
         return response()->download($pathToFile);
     }
 
@@ -131,7 +139,6 @@ class ArticlesController extends Controller
 
         //计算参数
         $article->generate();
-        // GenerateArticle::dispatch($article);
         return response()->json(['status'=>200]);
     }
 

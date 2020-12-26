@@ -10,7 +10,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Article\Article;
 use App\Handlers\OssUploadImageHandler;
 use Illuminate\Support\Facades\Storage;
-use ZipArchive;
 
 class GenerateArticle implements ShouldQueue
 {
@@ -83,10 +82,6 @@ class GenerateArticle implements ShouldQueue
         $fixed_paragraphs_file = $this->fixed_paragraphs_file;
         $is_last = $this->is_last;
 
-        if($is_last){
-            \Log::info($is_last);
-        }
-
         $directory = 'public/articles/'.$id;
         
         $oss = new OssUploadImageHandler();
@@ -158,14 +153,6 @@ class GenerateArticle implements ShouldQueue
         Storage::put($file_path,$replace_text);
 
         if($is_last){
-            //压缩输出
-            $zip = new ZipArchive();
-            $base_path = storage_path('app/public/articles/'.$id);
-            $zipfilename = $base_path.'/articles'.$id.'.zip';
-            $zip->open($zipfilename,ZipArchive::CREATE);  //打开压缩包
-            $zip->addGlob($base_path.'/*.txt',GLOB_BRACE, array('remove_path' =>$base_path));
-            $zip->close(); //关闭压缩包
-
             Article::where('id',$id)->update([
                 'status'=>1
             ]);

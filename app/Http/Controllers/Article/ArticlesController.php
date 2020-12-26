@@ -79,8 +79,6 @@ class ArticlesController extends Controller
     {
         $exists = Storage::disk('local')->exists('public/articles/'.$id.'/articles'.$id.'.zip');
         if($exists){
-            $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
-        }else{
             $zip = new ZipArchive();
             $base_path = storage_path('app/public/articles/'.$id);
             $zipfilename = $base_path.'/articles'.$id.'.zip';
@@ -89,6 +87,7 @@ class ArticlesController extends Controller
             $zip->close(); //关闭压缩包
         }
 
+        $pathToFile = storage_path('app/public/articles/'.$id.'/articles'.$id.'.zip');
         return response()->download($pathToFile);
     }
 

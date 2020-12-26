@@ -58,27 +58,7 @@ class APiController extends Controller
 
     public function test()
     {
-        // $oss = new \App\Handlers\OssUploadImageHandler();
-        // $oss_files = $oss->listArrays('',[
-        //     'max-keys'=>1000,
-        //     'prefix'=>'uploads/paragraphs/11',
-        //     'delimiter'=>'',
-        //     'marker'=>'',
-        // ]);
-        $base_path = storage_path('app/public/articles/12');
-
-
-            $fileList = glob($base_path.'/*.txt');
-          $filename = $base_path.'/articles12.zip';
-          $zip = new ZipArchive();
-          $zip->open($filename,ZipArchive::CREATE);  //打开压缩包
-          $options = array('remove_path' =>$base_path);
-          $zip->addGlob($base_path.'/*.txt',GLOB_BRACE, $options);
-        //   foreach($fileList as $file){
-        //     $zip->addFile($file,transcoding(basename($file)));  //向压缩包中添加文件
-        //   }
-          $zip->close(); //关闭压缩包
-        // $content = $oss->getObject($oss_files['list'][1]['uid'],'');
-        // dd($content);
+        $exists = \Storage::disk('local')->exists('public/articles/14/articles14.zip');
+        dd($exists);
     }
 }

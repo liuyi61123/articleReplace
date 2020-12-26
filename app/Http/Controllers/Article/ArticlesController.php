@@ -78,7 +78,7 @@ class ArticlesController extends Controller
     public function export($id)
     {
         $exists = Storage::disk('local')->exists('public/articles/'.$id.'/articles'.$id.'.zip');
-        if($exists){
+        if(!$exists){
             $zip = new ZipArchive();
             $base_path = storage_path('app/public/articles/'.$id);
             $zipfilename = $base_path.'/articles'.$id.'.zip';

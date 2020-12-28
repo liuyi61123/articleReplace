@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\DB;
 use ZipArchive;
+use App\Jobs\ExecArtice;
 
 class ArticlesController extends Controller
 {
@@ -66,8 +67,9 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        $res = $article->generate();
-        return response()->json(['status'=>200,'data'=>$res]);
+        ExecArtice::dispatch($article);
+        //$article->generate();
+        return response()->json(['status'=>200]);
     }
 
     /**
@@ -147,7 +149,8 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        $article->generate();
+        ExecArtice::dispatch($article);
+        // $article->generate();
         return response()->json(['status'=>200]);
     }
 

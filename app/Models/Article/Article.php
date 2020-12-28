@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use SnappyImage;
-use ZipArchive;
 use App\Handlers\OssUploadImageHandler;
 use App\Jobs\GenerateArticle;
 
@@ -37,8 +35,8 @@ class Article extends Model
         return $this->belongsTo(Template::class);
     }
 
-      public function generate(){
-          //删除原文件后，重新生成
+    public function generate(){
+        //删除原文件后，重新生成
         $directory = 'public/articles/'.$this->id;
         Storage::deleteDirectory($directory);
          

@@ -44,7 +44,7 @@ class ExecArtice implements ShouldQueue
           $template = Template::find($this->article->template_id);
           $template_content = $template->content;
           $replace_text = $template_content;
-          $template_images = $template->images;
+          $template_images = array_column($template->images,'url');
           $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
  
           //获取文件列表

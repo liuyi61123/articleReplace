@@ -96,8 +96,7 @@ class GenerateArticle implements ShouldQueue
             }
         }
 
-        $replace_text =  str_replace('{图片}',array_random($template_images)['url'],$replace_text);
-
+        $replace_text =  str_replace('{图片}',array_random($template_images),$replace_text);
         if($province){
             $replace_text =  str_replace('{province}',$province['name'],$replace_text);
             if($province['isTitle']){

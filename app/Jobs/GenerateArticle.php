@@ -25,7 +25,6 @@ class GenerateArticle implements ShouldQueue
     protected $car;
     protected $template_custom_paragraphs;
     protected $template_images;
-    protected $template_images_count;
     protected $fixed_paragraphs_file;
     protected $is_last;
 
@@ -34,7 +33,7 @@ class GenerateArticle implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$template_images_count,$fixed_paragraphs_file,$is_last)
+    public function __construct($id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last)
     {
         $this->id = $id;
         $this->param_contents = $param_contents;
@@ -46,7 +45,6 @@ class GenerateArticle implements ShouldQueue
         $this->car = $car;
         $this->template_custom_paragraphs = $template_custom_paragraphs;
         $this->template_images = $template_images;
-        $this->template_images_count = $template_images_count;
         $this->fixed_paragraphs_file = $fixed_paragraphs_file;
         $this->is_last = $is_last;
     }
@@ -78,7 +76,6 @@ class GenerateArticle implements ShouldQueue
         $car = $this->car;
         $template_custom_paragraphs = $this->template_custom_paragraphs;
         $template_images = $this->template_images;
-        $template_images_count = $this->template_images_count;
         $fixed_paragraphs_file = $this->fixed_paragraphs_file;
         $is_last = $this->is_last;
 
@@ -99,9 +96,7 @@ class GenerateArticle implements ShouldQueue
             }
         }
 
-        for($i=0;$i<$template_images_count;$i++){
-            $replace_text =  str_replace('{图片}',array_random($template_images)['url'],$replace_text);
-        }
+        $replace_text =  str_replace('{图片}',array_random($template_images)['url'],$replace_text);
 
         if($province){
             $replace_text =  str_replace('{province}',$province['name'],$replace_text);

@@ -328,8 +328,8 @@ class ExecArtice implements ShouldQueue
          
                              $param_contents = [
                                  $param_content0,
-                                 $param_contexnt1,
-                                 $param_contexnt2
+                                 $param_content1,
+                                 $param_content2
                              ];
                              GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
                              $replace_text = $base_replace_text;

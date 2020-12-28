@@ -49,7 +49,7 @@ class Article extends Model
          $template_images = $template->images;
 
          //查找模板中图片和段落出现的次数
-         $template_images_count = substr_count($template_content,'图片');
+         $template_images_count = substr_count($template_content,'{图片}');
          $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
 
          //获取文件列表

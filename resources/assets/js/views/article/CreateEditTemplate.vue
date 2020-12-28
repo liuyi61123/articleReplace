@@ -35,7 +35,7 @@
                             <el-button type="primary" @click="imageListAction">从图片库选择</el-button>
                             <ImageList :dialogListVisible="imageList" @closeImageList="closeImageList" @selectImages="selectImages"></ImageList>
                             <el-upload
-                              action="/templates/upload_image"
+                              action="/article/templates/upload_image"
                               accept="image/*"
                               list-type="picture-card"
                               name="image"
@@ -138,6 +138,9 @@
             }
         },
         methods: {
+            customParamsfilter(query, item){
+                return item.title.indexOf(query) > -1;
+            },
             submitFrom(){
                 this.loading = true;
                 // 发送 POST 请求
@@ -253,9 +256,6 @@
 
                 });
            }
-        },
-        customParamsfilter(query, item){
-            return item.title.indexOf(query) > -1;
         },
         created(){
             this.getCustomParams();

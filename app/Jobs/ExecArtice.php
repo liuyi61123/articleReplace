@@ -120,7 +120,7 @@ class ExecArtice implements ShouldQueue
                              ];
                              
                              $is_last = $i==$base_count?true:false;
-                             $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
+                             $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
                              $i++;
                          }
                      }
@@ -152,7 +152,7 @@ class ExecArtice implements ShouldQueue
                      ];
  
                      $is_last = $i==$base_count?true:false;
-                     $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
+                     $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
                      $i++;
                  }
              }
@@ -216,7 +216,7 @@ class ExecArtice implements ShouldQueue
                              ];
  
                              $is_last = $i==$base_count?true:false;
-                             $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
+                             $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
                              $i++;
                          }
                      }
@@ -224,11 +224,11 @@ class ExecArtice implements ShouldQueue
              }
          }else{
              //没有固定参数，判断自定义参数
-             $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
+             $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
          }
      }
  
-     protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files)
+     protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_files)
      {
          $base_replace_text = $replace_text;
          $directory = 'public/articles/'.$this->article->id;
@@ -265,7 +265,7 @@ class ExecArtice implements ShouldQueue
                      $param_contents = [
                          $param_content0
                      ];
-                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
+                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
                      $replace_text = $base_replace_text;
                      $k++;
                      $i++;
@@ -296,7 +296,7 @@ class ExecArtice implements ShouldQueue
                              $param_content0,
                              $param_content1
                          ];
-                         GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
+                         GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
                          $replace_text = $base_replace_text;
                          $k++;
                          $i++;
@@ -331,7 +331,7 @@ class ExecArtice implements ShouldQueue
                                  $param_content1,
                                  $param_content2
                              ];
-                             GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
+                             GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
                              $replace_text = $base_replace_text;
                              $k++;
                              $i++;
@@ -370,7 +370,7 @@ class ExecArtice implements ShouldQueue
                                      $param_content2,
                                      $param_content3,
                                  ];
-                                 GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
+                                 GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
                                  $replace_text = $base_replace_text;
                                  $k++;
                                  $i++;
@@ -413,7 +413,7 @@ class ExecArtice implements ShouldQueue
                                          $param_content3,
                                          $param_content4,
                                      ];
-                                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_file,$is_last);
+                                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
                                      $replace_text = $base_replace_text;
                                      $k++;
                                      $i++;

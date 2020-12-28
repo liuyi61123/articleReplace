@@ -44,10 +44,7 @@ class Article extends Model
          $template = Template::find($this->template_id);
          $template_content = $template->content;
          $replace_text = $template_content;
-         $template_images = $template->images;
-
-         //查找模板中图片和段落出现的次数
-         $template_images_count = substr_count($template_content,'{图片}');
+         $template_images = array_column($template->images,'url');
          $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
 
          //获取文件列表

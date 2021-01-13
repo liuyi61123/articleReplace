@@ -1,13 +1,13 @@
 <template>
     <el-row :gutter="20">
-        <el-form label-width="100px"  v-loading="loading">
+        <el-form label-width="100px" :model="template" :rules="rules" ref="template" v-loading="loading">
             <el-col :span="15">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>{{title}}</span>
                     </div>
                     <div class="text item">
-                        <el-form-item label="名称">
+                        <el-form-item label="名称" prop="name">
                             <el-input v-model="template.name" placeholder="模板名称"></el-input>
                         </el-form-item>
                         <el-form-item label="固定参数">
@@ -28,10 +28,10 @@
                                 <el-checkbox-button v-for="custom_param of custom_params" :label="custom_param.id" :key="custom_param.id">{{custom_param.title}}-{{custom_param.identifier}}</el-checkbox-button>
                             </el-checkbox-group> -->
                         </el-form-item>
-                        <el-form-item label="内容">
+                        <el-form-item label="内容" prop="content">
                             <el-input type="textarea" :autosize="{ minRows: 20}" v-model="template.content" placeholder="模板内容"></el-input>
                         </el-form-item>
-                        <el-form-item label="图片">
+                        <!-- <el-form-item label="图片">
                             <el-button type="primary" @click="imageListAction">从图片库选择</el-button>
                             <ImageList :dialogListVisible="imageList" @closeImageList="closeImageList" @selectImages="selectImages"></ImageList>
                             <el-upload
@@ -46,15 +46,18 @@
                               :on-remove="removeImage">
                               <i class="el-icon-plus"></i>
                             </el-upload>
-                        </el-form-item>
-                        <el-dialog :visible.sync="dialogVisible">
+                        </el-form-item> -->
+                        <!-- <el-dialog :visible.sync="dialogVisible">
                           <img width="100%" :src="dialogImageUrl" alt="">
-                        </el-dialog>
+                        </el-dialog> -->
+                        <el-form-item label="图片目录" prop="images">
+                            <el-input v-model="template.images" placeholder="图片目录"></el-input>
+                        </el-form-item>
                         <el-form-item label="固定段落目录">
                             <el-input v-model="template.fixed_paragraphs" placeholder="固定段落目录前缀"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="submitFrom()">保存</el-button>
+                            <el-button type="primary" @click="submitFrom('template')">保存</el-button>
                         </el-form-item>
                     </div>
                 </el-card>
@@ -95,11 +98,11 @@
 </template>
 
 <script>
-    import ImageList from '../../components/ImageList'
+    // import ImageList from '../../components/ImageList'
     export default {
-        components:{
-            ImageList
-        },
+        // components:{
+        //     ImageList
+        // },
         props:['id'],
         data () {
             return {
@@ -115,7 +118,7 @@
                             content:''
                         }
                     ],
-                    images:[]
+                    images:''
                 },
                 fixed_params:[
                     {
@@ -132,51 +135,67 @@
                 paragraphIndex:0,
                 title:'',
                 loading:false,
-                dialogImageUrl: '',
-                dialogVisible: false,
-                imageList:false
+                // dialogImageUrl: '',
+                // dialogVisible: false,
+                // imageList:false
+                rules: {
+                    name: [
+                        { required: true, message: '请输入名称', trigger: 'blur' },
+                        { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+                    ],
+                    content: [
+                        { required: true, message: '请输入内容', trigger: 'blur' },
+                    ],
+                    images: [
+                        { required: true, message: '请输入分类名称', trigger: 'blur' },
+                    ]
+                }
             }
         },
         methods: {
             customParamsfilter(query, item){
                 return item.title.indexOf(query) > -1;
             },
-            submitFrom(){
-                this.loading = true;
-                // 发送 POST 请求
-                axios({
-                    method: this.id?'put':'post',
-                    url: this.id?'/article/templates/'+this.id:'/article/templates',
-                    data:this.template,
-                })
-                .then((response)=> {
-                        this.loading = false;
-                        let message = {};
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                        window.location.href="/article/templates";
-                   })
-                   .catch((error)=>{
-                       console.log(error.response)
-                       let message = ''
-                       let status = error.response.status
-                       if (status == 422) {
-                           message = error.response.data.message
+            submitFrom(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.loading = true
+                        // 发送 POST 请求
+                        axios({
+                            method: this.id?'put':'post',
+                            url: this.id?'/article/templates/'+this.id:'/article/templates',
+                            data:this.template,
+                        })
+                        .then((response)=> {
+                            this.loading = false;
+                            let message = {};
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            window.location.href="/article/templates";
+                    })
+                    .catch((error)=>{
+                        console.log(error.response)
+                        let message = ''
+                        let status = error.response.status
+                        if (status == 422) {
+                            message = error.response.data.message
 
-                       } else if (status == 403) {
-                           message = '权限不足'
-                       }
-                       else if (status == 419) {
-                           message = '非法请求'
-                       }
-                       else {
-                           message = '系统错误:' + errors.status
-                       }
-                       this.loading = false
-                       this.$message.error(message)
-                   });
+                        } else if (status == 403) {
+                            message = '权限不足'
+                        }
+                        else if (status == 419) {
+                            message = '非法请求'
+                        }
+                        else {
+                            message = '系统错误:' + errors.status
+                        }
+                        this.loading = false
+                        this.$message.error(message)
+                    });
+                    }
+                });
             },
             fixedParamsChange(val){
                 console.log(val)

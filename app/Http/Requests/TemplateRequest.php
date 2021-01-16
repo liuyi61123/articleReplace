@@ -23,7 +23,7 @@ class TemplateRequest extends Request
                     'custom_paragraphs' => 'nullable|array',
                     'custom_params' => 'nullable|array',
                     'fixed_params' => 'nullable|array',
-                    'images' => 'nullable|array',
+                    'images' => 'required',
                     'content' => 'required',
                 ];
             }
@@ -37,7 +37,7 @@ class TemplateRequest extends Request
                     'custom_paragraphs' => 'nullable|array',
                     'custom_params' => 'nullable|array',
                     'fixed_params' => 'nullable|array',
-                    'images' => 'nullable|array',
+                    'images' => 'required',
                     'content' => 'required',
                 ];
             }

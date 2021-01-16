@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\City;
 use App\Models\Article\Param;
 use ZipArchive;
+use App\Handlers\OssUploadImageHandler;
 
 class APiController extends Controller
 {
@@ -58,7 +59,13 @@ class APiController extends Controller
 
     public function test()
     {
-        $exists = \Storage::disk('local')->exists('public/articles/14/articles14.zip');
-        dd($exists);
+        $oss = new OssUploadImageHandler();
+        $list = $oss->allList('',[
+            // 'max-keys'=>2,
+            'prefix'=>'uploads/templates/202011',
+            // 'delimiter'=>'',
+            // 'marker'=>'',
+        ]);
+        dd($list);
     }
 }

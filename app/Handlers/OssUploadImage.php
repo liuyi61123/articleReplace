@@ -97,6 +97,31 @@ class OssUploadImageHandler
    /**
     * 获取oss文件列表(数组)
     */
+    public function allList($bucket='',$option=[],$max=20000){
+        $max_keys = isset($option['max-keys'])?$option['max-keys']:1000;
+        $max = $max<1000?1000:$max;
+        $count = ceil($max/$max_keys);
+
+        $result = [];
+        $option['delimiter'] = isset($option['delimiter'])?$option['delimiter']:'';
+        $option['marker'] = '';
+        for($i=0;$i<$count;$i++)
+        {
+            $list = $this->listArrays($bucket,$option);
+            $result = array_merge($result,$list['list']);
+            if(!$list['last']){
+                break;
+            }else{
+                $option['marker'] = $list['last'];
+            }
+        }
+        unset($result[0]);
+        return $result;
+   }
+
+   /**
+    * 获取oss文件列表(数组)
+    */
     public function getObject($object, $options = NULL){
         $result = OSS::getObject(config('oss.bucket'),$object,$options);
         return $result;

@@ -44,22 +44,29 @@ class ExecArtice implements ShouldQueue
           $template = Template::find($this->article->template_id);
           $template_content = $template->content;
           $replace_text = $template_content;
-          $template_images = array_column($template->images,'url');
           $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
  
           //获取文件列表
           $fixed_paragraphs_files = [];
           if($template_fixed_paragraphs){
              $oss = new OssUploadImageHandler();
-             $list = $oss->listArrays('',[
-                'max-keys'=>1000,
+             $fixed_paragraphs_files = $oss->allList('',[
                 'prefix'=>'uploads/paragraphs/'.$template_fixed_paragraphs,
-                'delimiter'=>'',
-                'marker'=>'',
             ]);
-            unset($list['list'][0]);
-            $fixed_paragraphs_files = $list['list'];
           }
+
+          //获取图片列表
+          $template_images = [];
+          if($template->images){
+            $oss = new OssUploadImageHandler();
+            $template_images = $oss->allList('',[
+               'prefix'=>'uploads/templates/'.$template->images,
+            ]);
+            if($template_images){
+              $template_images = array_column($template_images,'url');
+            }
+         }
+
           $template_tmp_paragraphs = $template->custom_paragraphs;
           $template_custom_paragraphs = array();
           foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){

@@ -151,7 +151,7 @@
                         { required: true, message: '请输入内容', trigger: 'blur' },
                     ],
                     images: [
-                        { required: true, message: '请输入分类名称', trigger: 'blur' },
+                        { required: true, message: '请输入图片目录', trigger: 'blur' },
                     ]
                 }
             }

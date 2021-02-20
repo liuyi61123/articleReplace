@@ -57,5 +57,12 @@
             </a>
         </el-menu-item-group>
       </el-submenu>
+      <a href="/logs" target="_blank">
+        <el-menu-item index="6">
+            <i class="el-icon-edit-outline"></i>
+            <span slot="title">日志</span>
+        </el-menu-item>
+      </a>
     </el-menu>
+    
 </div>

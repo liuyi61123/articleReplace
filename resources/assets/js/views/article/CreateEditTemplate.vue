@@ -51,10 +51,14 @@
                           <img width="100%" :src="dialogImageUrl" alt="">
                         </el-dialog> -->
                         <el-form-item label="图片目录" prop="images">
-                            <el-input v-model="template.images" placeholder="图片目录"></el-input>
+                            <el-input v-model="template.images" placeholder="图片目录">
+                                <template slot="prepend">uploads/templates/</template>
+                            </el-input>
                         </el-form-item>
                         <el-form-item label="固定段落目录">
-                            <el-input v-model="template.fixed_paragraphs" placeholder="固定段落目录前缀"></el-input>
+                            <el-input v-model="template.fixed_paragraphs" placeholder="固定段落目录前缀">
+                                <template slot="prepend">uploads/paragraphs/</template>
+                            </el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submitFrom('template')">保存</el-button>

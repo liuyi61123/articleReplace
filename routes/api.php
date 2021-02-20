@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+//测试接口
+Route::post('/user/login', 'TestController@login');
+Route::post('/user/logout', 'TestController@logout');
+Route::get('/user/info', 'TestController@info');

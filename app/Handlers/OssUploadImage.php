@@ -97,7 +97,7 @@ class OssUploadImageHandler
    /**
     * 获取oss文件列表(数组)
     */
-    public function allList($bucket='',$option=[],$max=20000){
+    public function allList($bucket='',$option=[],$max=50000){
         $max_keys = isset($option['max-keys'])?$option['max-keys']:1000;
         $max = $max<1000?1000:$max;
         $count = ceil($max/$max_keys);

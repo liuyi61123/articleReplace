@@ -89,13 +89,14 @@ class GenerateArticle implements ShouldQueue
             $replace_text =  str_replace('{fixed_paragraph}',$fixed_paragraphs_content,$replace_text);
         }
 
-        //随机替换模板中的段落和图片
+        //随机替换模板中的段落
         foreach($template_custom_paragraphs as $template_paragraph){
             for($i=0;$i<$template_paragraph['count'];$i++){
-                $replace_text =  str_replace($template_paragraph['name'],array_random($template_paragraph['content']),$replace_text);
+                $replace_text = str_replace($template_paragraph['name'],array_random($template_paragraph['content']),$replace_text);
             }
         }
 
+        //替换模板中的图片
         $replace_text =  str_replace('{图片}',$template_image,$replace_text);
         if($province){
             $replace_text =  str_replace('{province}',$province['name'],$replace_text);

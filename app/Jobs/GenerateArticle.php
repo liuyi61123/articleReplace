@@ -23,7 +23,7 @@ class GenerateArticle implements ShouldQueue
     protected $city;
     protected $county;
     protected $car;
-    protected $template_custom_paragraphs;
+    protected $template_custom_paragraph;
     protected $template_image;
     protected $fixed_paragraphs_file;
     protected $is_last;
@@ -33,7 +33,7 @@ class GenerateArticle implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last)
+    public function __construct($id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last)
     {
         $this->id = $id;
         $this->param_contents = $param_contents;
@@ -43,7 +43,7 @@ class GenerateArticle implements ShouldQueue
         $this->city = $city;
         $this->county = $county;
         $this->car = $car;
-        $this->template_custom_paragraphs = $template_custom_paragraphs;
+        $this->template_custom_paragraph = $template_custom_paragraph;
         $this->template_image = $template_image;
         $this->fixed_paragraphs_file = $fixed_paragraphs_file;
         $this->is_last = $is_last;
@@ -74,7 +74,7 @@ class GenerateArticle implements ShouldQueue
         $city = $this->city;
         $county = $this->county;
         $car = $this->car;
-        $template_custom_paragraphs = $this->template_custom_paragraphs;
+        $template_custom_paragraph = $this->template_custom_paragraph;
         $template_image = $this->template_image;
         $fixed_paragraphs_file = $this->fixed_paragraphs_file;
         $is_last = $this->is_last;
@@ -90,8 +90,8 @@ class GenerateArticle implements ShouldQueue
         }
 
         //随机替换模板中的段落
-        foreach($template_custom_paragraphs as $template_paragraph){
-            $replace_text = str_replace($template_paragraph['identifier'],array_random($template_paragraph['content']),$replace_text);
+        foreach($template_custom_paragraph as $template_paragraph){
+            $replace_text = str_replace($template_paragraph['identifier'],$template_paragraph['content'],$replace_text);
         }
 
         //替换模板中的图片

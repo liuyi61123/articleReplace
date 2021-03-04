@@ -68,16 +68,8 @@ class ExecArtice implements ShouldQueue
             }
          }
 
-          $template_custom_paragraphs = array();
-          foreach($template->custom_paragraphs as $template_custom_paragraph){
-            $paragraph_tmp = Paragraph::find($template_custom_paragraph);
-
-            $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
-            $template_custom_paragraphs[] = [
-                'identifier'=>$paragraph_tmp->identifier,
-                'content'=>$paragraph_tmp_content,
-            ];
-         }
+        $template_custom_paragraphs = $template->custom_paragraphs;
+        
  
          //获取自定义参数
          $custom_params = [];
@@ -129,7 +121,7 @@ class ExecArtice implements ShouldQueue
                              ];
                              
                              $is_last = $i==$base_count?true:false;
-                             $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                             $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                              $i++;
                          }
                      }
@@ -161,7 +153,7 @@ class ExecArtice implements ShouldQueue
                      ];
  
                      $is_last = $i==$base_count?true:false;
-                     $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                     $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                      $i++;
                  }
              }
@@ -225,7 +217,7 @@ class ExecArtice implements ShouldQueue
                              ];
  
                              $is_last = $i==$base_count?true:false;
-                             $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                             $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                              $i++;
                          }
                      }
@@ -233,11 +225,11 @@ class ExecArtice implements ShouldQueue
              }
          }else{
              //没有固定参数，判断自定义参数
-             $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+             $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
          }
      }
  
-     protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_files)
+     protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files)
      {
          $base_replace_text = $replace_text;
          $directory = 'public/articles/'.$this->article->id;
@@ -254,15 +246,15 @@ class ExecArtice implements ShouldQueue
          switch(count($article_custom_params))
          {
              case 1:
-                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
-                 $count_all = count($custom_params_content0);
-                 foreach($custom_params_content0 as $param_content0){
-                     $fixed_paragraphs_file = '';
-                     if($is_fixed_last&&($i == $count_all)){
-                         $is_last = true;
-                     }else{
-                         $is_last = false;
-                     }
+                $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                $count_all = count($custom_params_content0);
+                foreach($custom_params_content0 as $param_content0){
+                    $fixed_paragraphs_file = '';
+                    if($is_fixed_last&&($i == $count_all)){
+                        $is_last = true;
+                    }else{
+                        $is_last = false;
+                    }
  
                      if($count_fixed_paragraphs >0){
                          if($k>= $count_fixed_paragraphs){
@@ -274,11 +266,25 @@ class ExecArtice implements ShouldQueue
                      $param_contents = [
                          $param_content0
                      ];
-                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
-                     $replace_text = $base_replace_text;
-                     $k++;
-                     $i++;
-                 }
+
+                    //随机图片和段落
+                    $template_custom_paragraph = [];
+                    foreach($template_custom_paragraphs as $custom_paragraph){
+                        $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                        $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                        $template_custom_paragraph[] = [
+                            'identifier'=>$paragraph_tmp->identifier,
+                            'content'=>array_random($paragraph_tmp_content),
+                        ];
+                    }
+                    $template_image = array_random($template_images);
+
+                    GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
+                    $replace_text = $base_replace_text;
+                    $k++;
+                    $i++;
+                }
                  break;
              case 2:
                  $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
@@ -305,10 +311,24 @@ class ExecArtice implements ShouldQueue
                              $param_content0,
                              $param_content1
                          ];
-                         GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
-                         $replace_text = $base_replace_text;
-                         $k++;
-                         $i++;
+
+                        //随机图片和段落
+                        $template_custom_paragraph = [];
+                        foreach($template_custom_paragraphs as $custom_paragraph){
+                            $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                            $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                            $template_custom_paragraph[] = [
+                                'identifier'=>$paragraph_tmp->identifier,
+                                'content'=>array_random($paragraph_tmp_content),
+                            ];
+                        }
+                        $template_image = array_random($template_images);
+
+                        GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
+                        $replace_text = $base_replace_text;
+                        $k++;
+                        $i++;
                      }
                  }
                  break;
@@ -340,10 +360,24 @@ class ExecArtice implements ShouldQueue
                                  $param_content1,
                                  $param_content2
                              ];
-                             GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
-                             $replace_text = $base_replace_text;
-                             $k++;
-                             $i++;
+
+                             //随机图片和段落
+                            $template_custom_paragraph = [];
+                            foreach($template_custom_paragraphs as $custom_paragraph){
+                                $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                $template_custom_paragraph[] = [
+                                    'identifier'=>$paragraph_tmp->identifier,
+                                    'content'=>array_random($paragraph_tmp_content),
+                                ];
+                            }
+                            $template_image = array_random($template_images);
+
+                            GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
+                            $replace_text = $base_replace_text;
+                            $k++;
+                            $i++;
                          }
                      }
                  }
@@ -379,10 +413,24 @@ class ExecArtice implements ShouldQueue
                                      $param_content2,
                                      $param_content3,
                                  ];
-                                 GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
-                                 $replace_text = $base_replace_text;
-                                 $k++;
-                                 $i++;
+
+                                //随机图片和段落
+                                $template_custom_paragraph = [];
+                                foreach($template_custom_paragraphs as $custom_paragraph){
+                                    $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                    $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                    $template_custom_paragraph[] = [
+                                        'identifier'=>$paragraph_tmp->identifier,
+                                        'content'=>array_random($paragraph_tmp_content),
+                                    ];
+                                }
+                                $template_image = array_random($template_images);
+
+                                GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
+                                $replace_text = $base_replace_text;
+                                $k++;
+                                $i++;
                              }
                          }
                      }
@@ -415,17 +463,31 @@ class ExecArtice implements ShouldQueue
                                          $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
                                      }
                  
-                                     $param_contents = [
+                                    $param_contents = [
                                          $param_content0,
                                          $param_content1,
                                          $param_content2,
                                          $param_content3,
                                          $param_content4,
-                                     ];
-                                     GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
-                                     $replace_text = $base_replace_text;
-                                     $k++;
-                                     $i++;
+                                    ];
+
+                                     //随机图片和段落
+                                    $template_custom_paragraph = [];
+                                    foreach($template_custom_paragraphs as $custom_paragraph){
+                                        $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                        $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                        $template_custom_paragraph[] = [
+                                            'identifier'=>$paragraph_tmp->identifier,
+                                            'content'=>array_random($paragraph_tmp_content),
+                                        ];
+                                    }
+                                    $template_image = array_random($template_images);
+
+                                    GenerateArticle::dispatch($this->article->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
+                                    $replace_text = $base_replace_text;
+                                    $k++;
+                                    $i++;
                                  }
                              }
                          }

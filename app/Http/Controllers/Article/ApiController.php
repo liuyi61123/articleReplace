@@ -38,7 +38,7 @@ class APiController extends Controller
      */
     public function params(Request $request)
     {
-        $output = Param::all();
+        $output = Param::get(['id','title','identifier']);
         return response()->json($output);
     }
 
@@ -65,7 +65,7 @@ class APiController extends Controller
      */
     public function paragraphs(Request $request)
     {
-        $output = Paragraph::all();
+        $output = Paragraph::get(['id','title','identifier']);
         return response()->json($output);
     }
 

@@ -13,6 +13,8 @@ Vue.component('article-article-table', require('./views/article/ArticleTable.vue
 Vue.component('article-create-edit-article', require('./views/article/CreateEditArticle.vue'));//编辑和新建文章
 Vue.component('article-template-table', require('./views/article/TemplateTable.vue'));//模板列表
 Vue.component('article-create-edit-template', require('./views/article/CreateEditTemplate.vue'));//编辑和新建模板
+Vue.component('article-create-edit-paragraph', require('./views/article/CreateEditParagraph.vue'));//编辑和新建段落
+Vue.component('article-paragraph-table', require('./views/article/ParagraphTable.vue'));//段落列表
 
 Vue.component('pseudo-original', require('./views/PseudoOriginal.vue'));//编辑和新建模板
 Vue.component('baidu-url-create', require('./views/BaiduUrlCreate.vue'));//新建baidu_url

@@ -20,8 +20,11 @@
             <a href="{{ route('templates.index') }}">
                 <el-menu-item index="1-2">模板列表</el-menu-item>
             </a>
+            <a href="{{ route('paragraphs.index') }}">
+                <el-menu-item index="1-3">段落列表</el-menu-item>
+            </a>
             <a href="{{ route('params.index') }}">
-                <el-menu-item index="1-3">自定义参数</el-menu-item>
+                <el-menu-item index="1-4">自定义参数</el-menu-item>
             </a>
         </el-menu-item-group>
       </el-submenu>

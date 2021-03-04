@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\City;
 use App\Models\Article\Param;
+use App\Models\Article\Paragraph;
 use ZipArchive;
 use App\Handlers\OssUploadImageHandler;
 
@@ -54,6 +55,17 @@ class APiController extends Controller
                 $output = Param::whereIn('id',$ids)->get();
             }
         }
+        return response()->json($output);
+    }
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function paragraphs(Request $request)
+    {
+        $output = Paragraph::all();
         return response()->json($output);
     }
 

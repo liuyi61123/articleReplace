@@ -17,6 +17,7 @@ Route::group([
     Route::get('/api/cars', 'ApiController@cars')->name('article.api.cars');
     Route::post('/api/params', 'ApiController@params')->name('article.api.params');
     Route::post('/api/paramids', 'ApiController@paramids')->name('article.api.paramids');
+    Route::post('/api/paragraphs', 'ApiController@paragraphs')->name('article.api.paragraphs');
 
     Route::get('/articles/export/{id}', 'ArticlesController@exportZip')->name('article.articles.exportzip');
     Route::post('/articles/export/{id}', 'ArticlesController@export')->name('article.articles.export');
@@ -26,6 +27,7 @@ Route::group([
     Route::resource('templates', 'TemplatesController');//模板
     Route::resource('images', 'ImagesController');//图片
     Route::resource('params', 'ParamsController');//自定义参数
+    Route::resource('paragraphs', 'ParagraphsController');//段落
 });
 
 

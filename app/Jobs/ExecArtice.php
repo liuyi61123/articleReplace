@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Article\Article;
 use App\Models\Article\Template;
 use App\Models\Article\Param;
+use App\Models\Article\Paragraph;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Handlers\OssUploadImageHandler;
@@ -67,14 +68,15 @@ class ExecArtice implements ShouldQueue
             }
          }
 
-          $template_tmp_paragraphs = $template->custom_paragraphs;
           $template_custom_paragraphs = array();
-          foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){
-             if($template_tmp_paragraph['name']){
-                 $template_custom_paragraphs[$key]['content'] = explode("\n",trim($template_tmp_paragraph['content']));
-                 $template_custom_paragraphs[$key]['name'] = $template_tmp_paragraph['name'];
-                 $template_custom_paragraphs[$key]['count'] = substr_count($template_content,$template_tmp_paragraph['name']);
-             }
+          foreach($template->custom_paragraphs as $template_custom_paragraph){
+            $paragraph_tmp = Paragraph::find($template_custom_paragraph);
+
+            $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+            $template_custom_paragraphs[] = [
+                'identifier'=>$paragraph_tmp->identifier,
+                'content'=>$paragraph_tmp_content,
+            ];
          }
  
          //获取自定义参数

@@ -88,7 +88,7 @@
                         let param = this.param
                         axios({
                             method: this.id?'put':'post',
-                            url: this.id?'/article/params/'+this.id:'/article/params',
+                            url: this.id?'/article/paragraphs/'+this.id:'/article/paragraphs',
                             data:param,
                         })
                         .then((response)=> {
@@ -98,7 +98,7 @@
                                 message: response.data.msg,
                                 type: 'success'
                             });
-                            window.location.href="/article/params";
+                            window.location.href="/article/paragraphs";
                         })
                         .catch((error)=>{
                             console.log(error.response)
@@ -128,9 +128,9 @@
         },
         created(){
             if(this.id){
-                 this.title = '编辑参数';
+                 this.title = '编辑段落';
                 //读取要编辑的文章数据
-                axios.get('/article/params/'+this.id)
+                axios.get('/article/paragraphs/'+this.id)
                 .then((response)=> {
                     this.param = response.data
                 })
@@ -139,7 +139,7 @@
 
                 });
             }else{
-                this.title = '新建参数';
+                this.title = '新建段落';
             }
         }
     }

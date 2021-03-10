@@ -67,8 +67,8 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        ExecArtice::dispatch($article);
-        //$article->generate();
+        // ExecArtice::dispatch($article);
+        $article->generate();
         return response()->json(['status'=>200]);
     }
 
@@ -149,8 +149,8 @@ class ArticlesController extends Controller
         $article->save();
 
         //计算参数
-        ExecArtice::dispatch($article);
-        // $article->generate();
+        // ExecArtice::dispatch($article);
+        $article->generate();
         return response()->json(['status'=>200]);
     }
 

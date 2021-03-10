@@ -70,7 +70,6 @@ class ExecArtice implements ShouldQueue
 
         $template_custom_paragraphs = $template->custom_paragraphs;
         
- 
          //获取自定义参数
          $custom_params = [];
          foreach($this->article->config['custom_params'] as $custom_param){
@@ -81,7 +80,6 @@ class ExecArtice implements ShouldQueue
          $template_fixed_params = $template->fixed_params;
          $fixed_params = $this->article->config['fixed_params'];
  
-         $file_base_path = $directory.'/';
          //判断有那些固定参数
          if(count($template_fixed_params) == 1){
              if(in_array('car',$template_fixed_params)){
@@ -232,11 +230,9 @@ class ExecArtice implements ShouldQueue
      protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files)
      {
          $base_replace_text = $replace_text;
-         $directory = 'public/articles/'.$this->article->id;
  
          $oss = new OssUploadImageHandler();
          $count_fixed_paragraphs = count($fixed_paragraphs_files);
-         $file_base_path = $directory.'/';
  
          $k = 1;
          $i = 1;

@@ -40,49 +40,47 @@ class Article extends Model
         $directory = 'public/articles/'.$this->id;
         Storage::deleteDirectory($directory);
          
-         //查找模板信息
-         $template = Template::find($this->template_id);
-         $template_content = $template->content;
-         $replace_text = $template_content;
-         $template_images = array_column($template->images,'url');
-         $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
+        //查找模板信息
+        $template = Template::find($this->template_id);
+        $template_content = $template->content;
+        $replace_text = $template_content;
+        $template_fixed_paragraphs = $template->fixed_paragraphs;//固定段落前缀
 
-         //获取文件列表
-         $fixed_paragraphs_files = [];
-         if($template_fixed_paragraphs){
-            $oss = new OssUploadImageHandler();
-            $list = $oss->listArrays('',[
-               'max-keys'=>1000,
-               'prefix'=>'uploads/paragraphs/'.$template_fixed_paragraphs,
-               'delimiter'=>'',
-               'marker'=>'',
-           ]);
-           unset($list['list'][0]);
-           $fixed_paragraphs_files = $list['list'];
-         }
-         $template_tmp_paragraphs = $template->custom_paragraphs;
-         $template_custom_paragraphs = array();
-         foreach($template_tmp_paragraphs as $key=>$template_tmp_paragraph){
-            if($template_tmp_paragraph['name']){
-                $template_custom_paragraphs[$key]['content'] = explode("\n",trim($template_tmp_paragraph['content']));
-                $template_custom_paragraphs[$key]['name'] = $template_tmp_paragraph['name'];
-                $template_custom_paragraphs[$key]['count'] = substr_count($template_content,$template_tmp_paragraph['name']);
-            }
+        //获取文件列表
+        $fixed_paragraphs_files = [];
+        if($template_fixed_paragraphs){
+           $oss = new OssUploadImageHandler();
+           $fixed_paragraphs_files = $oss->allList('',[
+              'prefix'=>'uploads/paragraphs/'.$template_fixed_paragraphs,
+          ]);
         }
+
+        //获取图片列表
+        $template_images = [];
+        if($template->images){
+          $oss = new OssUploadImageHandler();
+          $template_images = $oss->allList('',[
+             'prefix'=>'uploads/templates/'.$template->images,
+          ]);
+          if($template_images){
+            $template_images = array_column($template_images,'url');
+          }
+        }
+
+       $template_custom_paragraphs = $template->custom_paragraphs;
 
         //获取自定义参数
         $custom_params = [];
         foreach($this->config['custom_params'] as $custom_param){
-            $article_custom_param = Param::find($custom_param['id']);
-            $custom_params[] = array_merge($custom_param,$article_custom_param->toArray());
+           $article_custom_param = Param::find($custom_param['id']);
+           $custom_params[] = array_merge($custom_param,$article_custom_param->toArray());
         }
 
         $template_fixed_params = $template->fixed_params;
         $fixed_params = $this->config['fixed_params'];
 
-        $file_base_path = $directory.'/';
-        //判断有那些固定参数
-        if(count($template_fixed_params) == 1){
+         //判断有那些固定参数
+         if(count($template_fixed_params) == 1){
             if(in_array('car',$template_fixed_params)){
 
                 $base_count = 0;
@@ -120,7 +118,7 @@ class Article extends Model
                             ];
                             
                             $is_last = $i==$base_count?true:false;
-                            $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                            $this->customParams($is_last,$custom_params,$replace_text,'','','',$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                             $i++;
                         }
                     }
@@ -152,7 +150,7 @@ class Article extends Model
                     ];
 
                     $is_last = $i==$base_count?true:false;
-                    $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                    $this->customParams($is_last,$custom_params,$replace_text,$province_arr ,$city_arr,$county_arr,'',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                     $i++;
                 }
             }
@@ -216,7 +214,7 @@ class Article extends Model
                             ];
 
                             $is_last = $i==$base_count?true:false;
-                            $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+                            $this->customParams($is_last,$custom_params,$replace_text,$province_arr,$city_arr,$county_arr,$car_arr,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
                             $i++;
                         }
                     }
@@ -224,27 +222,24 @@ class Article extends Model
             }
         }else{
             //没有固定参数，判断自定义参数
-            $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,array_random($template_images),$fixed_paragraphs_files);
+            $this->customParams(true,$custom_params,$replace_text,'','','','',$template_custom_paragraphs,$template_images,$fixed_paragraphs_files);
         }
     }
 
-    protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_files)
+    protected function customParams($is_fixed_last,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_images,$fixed_paragraphs_files)
     {
-        $base_replace_text = $replace_text;
-        $directory = 'public/articles/'.$this->id;
-
-        $oss = new OssUploadImageHandler();
-        $count_fixed_paragraphs = count($fixed_paragraphs_files);
-        $file_base_path = $directory.'/';
-
-        $k = 1;
-        $i = 1;
-        $sort = array();
-        $is_last = false;
-
-        switch(count($article_custom_params))
-        {
-            case 1:
+         $base_replace_text = $replace_text;
+         $oss = new OssUploadImageHandler();
+         $count_fixed_paragraphs = count($fixed_paragraphs_files);
+ 
+         $k = 1;
+         $i = 1;
+         $sort = array();
+         $is_last = false;
+ 
+         switch(count($article_custom_params))
+         {
+             case 1:
                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
                 $count_all = count($custom_params_content0);
                 foreach($custom_params_content0 as $param_content0){
@@ -254,178 +249,248 @@ class Article extends Model
                     }else{
                         $is_last = false;
                     }
+ 
+                     if($count_fixed_paragraphs >0){
+                         if($k>= $count_fixed_paragraphs){
+                             $k = 1;
+                         }
+                         $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                     }
+ 
+                     $param_contents = [
+                         $param_content0
+                     ];
 
-                    if($count_fixed_paragraphs >0){
-                        if($k>= $count_fixed_paragraphs){
-                            $k = 1;
-                        }
-                        $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                    //随机图片和段落
+                    $template_custom_paragraph = [];
+                    foreach($template_custom_paragraphs as $custom_paragraph){
+                        $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                        $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                        $template_custom_paragraph[] = [
+                            'identifier'=>$paragraph_tmp->identifier,
+                            'content'=>array_random($paragraph_tmp_content),
+                        ];
                     }
+                    $template_image = array_random($template_images);
 
-                    $param_contents = [
-                        $param_content0
-                    ];
-                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
+                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                     $replace_text = $base_replace_text;
                     $k++;
                     $i++;
                 }
-                break;
-            case 2:
-                $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
-                $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
-                
-                $count_all = count($custom_params_content0)*count($custom_params_content1);
-                foreach($custom_params_content0 as $param_content0){
-                    foreach($custom_params_content1 as $param_content1){
-                        $fixed_paragraphs_file = '';
-                        if($is_fixed_last&&($i == $count_all)){
-                            $is_last = true;
-                        }else{
-                            $is_last = false;
-                        }
+                 break;
+             case 2:
+                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
+                 
+                 $count_all = count($custom_params_content0)*count($custom_params_content1);
+                 foreach($custom_params_content0 as $param_content0){
+                     foreach($custom_params_content1 as $param_content1){
+                         $fixed_paragraphs_file = '';
+                         if($is_fixed_last&&($i == $count_all)){
+                             $is_last = true;
+                         }else{
+                             $is_last = false;
+                         }
+ 
+                         if($count_fixed_paragraphs >0){
+                             if($k>= $count_fixed_paragraphs){
+                                 $k = 1;
+                             }
+                             $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                         }
+     
+                         $param_contents = [
+                             $param_content0,
+                             $param_content1
+                         ];
 
-                        if($count_fixed_paragraphs >0){
-                            if($k>= $count_fixed_paragraphs){
-                                $k = 1;
-                            }
-                            $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                        //随机图片和段落
+                        $template_custom_paragraph = [];
+                        foreach($template_custom_paragraphs as $custom_paragraph){
+                            $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                            $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                            $template_custom_paragraph[] = [
+                                'identifier'=>$paragraph_tmp->identifier,
+                                'content'=>array_random($paragraph_tmp_content),
+                            ];
                         }
-    
-                        $param_contents = [
-                            $param_content0,
-                            $param_content1
-                        ];
-                        GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
+                        $template_image = array_random($template_images);
+
+                        GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                         $replace_text = $base_replace_text;
                         $k++;
                         $i++;
-                    }
-                }
-                break;
-            case 3:
-                $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
-                $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
-                $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
-                
-                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2);
-                foreach($custom_params_content0 as $param_content0){
-                    foreach($custom_params_content1 as $param_content1){
-                        foreach($custom_params_content2 as $param_content2){
-                            $fixed_paragraphs_file = '';
-                            if($is_fixed_last&&($i == $count_all)){
-                                $is_last = true;
-                            }else{
-                                $is_last = false;
-                            }        
+                     }
+                 }
+                 break;
+             case 3:
+                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
+                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
+                 
+                 $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2);
+                 foreach($custom_params_content0 as $param_content0){
+                     foreach($custom_params_content1 as $param_content1){
+                         foreach($custom_params_content2 as $param_content2){
+                             $fixed_paragraphs_file = '';
+                             if($is_fixed_last&&($i == $count_all)){
+                                 $is_last = true;
+                             }else{
+                                 $is_last = false;
+                             }        
+ 
+                             if($count_fixed_paragraphs >0){
+                                 if($k>= $count_fixed_paragraphs){
+                                     $k = 1;
+                                 }
+                                 $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                             }
+         
+                             $param_contents = [
+                                 $param_content0,
+                                 $param_content1,
+                                 $param_content2
+                             ];
 
-                            if($count_fixed_paragraphs >0){
-                                if($k>= $count_fixed_paragraphs){
-                                    $k = 1;
-                                }
-                                $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                             //随机图片和段落
+                            $template_custom_paragraph = [];
+                            foreach($template_custom_paragraphs as $custom_paragraph){
+                                $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                $template_custom_paragraph[] = [
+                                    'identifier'=>$paragraph_tmp->identifier,
+                                    'content'=>array_random($paragraph_tmp_content),
+                                ];
                             }
-        
-                            $param_contents = [
-                                $param_content0,
-                                $param_content1,
-                                $param_content2
-                            ];
-                            GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
+                            $template_image = array_random($template_images);
+
+                            GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                             $replace_text = $base_replace_text;
                             $k++;
                             $i++;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
-                $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
-                $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
-                $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
-                
-                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3);
-                foreach($custom_params_content0 as $param_content0){
-                    foreach($custom_params_content1 as $param_content1){
-                        foreach($custom_params_content2 as $param_content2){
-                            foreach($custom_params_content3 as $param_content3){
-                                $fixed_paragraphs_file = '';
-                                if($is_fixed_last&&($i == $count_all)){
-                                    $is_last = true;
-                                }else{
-                                    $is_last = false;
+                         }
+                     }
+                 }
+                 break;
+             case 4:
+                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
+                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
+                 $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
+                 
+                 $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3);
+                 foreach($custom_params_content0 as $param_content0){
+                     foreach($custom_params_content1 as $param_content1){
+                         foreach($custom_params_content2 as $param_content2){
+                             foreach($custom_params_content3 as $param_content3){
+                                 $fixed_paragraphs_file = '';
+                                 if($is_fixed_last&&($i == $count_all)){
+                                     $is_last = true;
+                                 }else{
+                                     $is_last = false;
+                                 }
+             
+                                 if($count_fixed_paragraphs >0){
+                                     if($k>= $count_fixed_paragraphs){
+                                         $k = 1;
+                                     }
+                                     $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                                 }
+             
+                                 $param_contents = [
+                                     $param_content0,
+                                     $param_content1,
+                                     $param_content2,
+                                     $param_content3,
+                                 ];
+
+                                //随机图片和段落
+                                $template_custom_paragraph = [];
+                                foreach($template_custom_paragraphs as $custom_paragraph){
+                                    $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                    $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                    $template_custom_paragraph[] = [
+                                        'identifier'=>$paragraph_tmp->identifier,
+                                        'content'=>array_random($paragraph_tmp_content),
+                                    ];
                                 }
-            
-                                if($count_fixed_paragraphs >0){
-                                    if($k>= $count_fixed_paragraphs){
-                                        $k = 1;
-                                    }
-                                    $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
-                                }
-            
-                                $param_contents = [
-                                    $param_content0,
-                                    $param_content1,
-                                    $param_content2,
-                                    $param_content3,
-                                ];
-                                GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
+                                $template_image = array_random($template_images);
+
+                                GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                                 $replace_text = $base_replace_text;
                                 $k++;
                                 $i++;
-                            }
-                        }
-                    }
-                }
-                break;
-            case 5:
-                $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
-                $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
-                $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
-                $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
-                $custom_params_content4 = explode("\n",trim($article_custom_params[4]['content']));
-                
-                $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3)*count($custom_params_content4);
-                foreach($custom_params_content0 as $param_content0){
-                    foreach($custom_params_content1 as $param_content1){
-                        foreach($custom_params_content2 as $param_content2){
-                            foreach($custom_params_content3 as $param_content3){
-                                foreach($custom_params_content4 as $param_content4){
-                                    $fixed_paragraphs_file = '';
-                                    if($is_fixed_last&&($i == $count_all)){
-                                        $is_last = true;
-                                    }else{
-                                        $is_last = false;
-                                    }
-                
-                                    if($count_fixed_paragraphs >0){
-                                        if($k>= $count_fixed_paragraphs){
-                                            $k = 1;
-                                        }
-                                        $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
-                                    }
-                
+                             }
+                         }
+                     }
+                 }
+                 break;
+             case 5:
+                 $custom_params_content0 = explode("\n",trim($article_custom_params[0]['content']));
+                 $custom_params_content1 = explode("\n",trim($article_custom_params[1]['content']));
+                 $custom_params_content2 = explode("\n",trim($article_custom_params[2]['content']));
+                 $custom_params_content3 = explode("\n",trim($article_custom_params[3]['content']));
+                 $custom_params_content4 = explode("\n",trim($article_custom_params[4]['content']));
+                 
+                 $count_all = count($custom_params_content0)*count($custom_params_content1)*count($custom_params_content2)*count($custom_params_content3)*count($custom_params_content4);
+                 foreach($custom_params_content0 as $param_content0){
+                     foreach($custom_params_content1 as $param_content1){
+                         foreach($custom_params_content2 as $param_content2){
+                             foreach($custom_params_content3 as $param_content3){
+                                 foreach($custom_params_content4 as $param_content4){
+                                     $fixed_paragraphs_file = '';
+                                     if($is_fixed_last&&($i == $count_all)){
+                                         $is_last = true;
+                                     }else{
+                                         $is_last = false;
+                                     }
+                 
+                                     if($count_fixed_paragraphs >0){
+                                         if($k>= $count_fixed_paragraphs){
+                                             $k = 1;
+                                         }
+                                         $fixed_paragraphs_file = $fixed_paragraphs_files[$k]['uid'];
+                                     }
+                 
                                     $param_contents = [
-                                        $param_content0,
-                                        $param_content1,
-                                        $param_content2,
-                                        $param_content3,
-                                        $param_content4,
+                                         $param_content0,
+                                         $param_content1,
+                                         $param_content2,
+                                         $param_content3,
+                                         $param_content4,
                                     ];
-                                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraphs,$template_image,$fixed_paragraphs_file,$is_last);
+
+                                     //随机图片和段落
+                                    $template_custom_paragraph = [];
+                                    foreach($template_custom_paragraphs as $custom_paragraph){
+                                        $paragraph_tmp = Paragraph::find($custom_paragraph);
+
+                                        $paragraph_tmp_content = explode("\n",trim($paragraph_tmp->content));
+                                        $template_custom_paragraph[] = [
+                                            'identifier'=>$paragraph_tmp->identifier,
+                                            'content'=>array_random($paragraph_tmp_content),
+                                        ];
+                                    }
+                                    $template_image = array_random($template_images);
+
+                                    GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                                     $replace_text = $base_replace_text;
                                     $k++;
                                     $i++;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        };
-        
-    }
+                                 }
+                             }
+                         }
+                     }
+                 }
+                 break;
+             default:
+                 break;
+         };
+         
+     }
 }

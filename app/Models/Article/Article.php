@@ -272,7 +272,7 @@ class Article extends Model
                             'content'=>array_random($paragraph_tmp_content),
                         ];
                     }
-                    $template_image = array_random($template_images);
+                    $template_image = !empty($template_images)?array_random($template_images):'';
 
                     GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                     $replace_text = $base_replace_text;
@@ -317,7 +317,7 @@ class Article extends Model
                                 'content'=>array_random($paragraph_tmp_content),
                             ];
                         }
-                        $template_image = array_random($template_images);
+                        $template_image = !empty($template_images)?array_random($template_images):'';
 
                         GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                         $replace_text = $base_replace_text;
@@ -366,7 +366,7 @@ class Article extends Model
                                     'content'=>array_random($paragraph_tmp_content),
                                 ];
                             }
-                            $template_image = array_random($template_images);
+                            $template_image = !empty($template_images)?array_random($template_images):'';
 
                             GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                             $replace_text = $base_replace_text;
@@ -419,7 +419,7 @@ class Article extends Model
                                         'content'=>array_random($paragraph_tmp_content),
                                     ];
                                 }
-                                $template_image = array_random($template_images);
+                                $template_image = !empty($template_images)?array_random($template_images):'';
 
                                 GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                                 $replace_text = $base_replace_text;
@@ -476,7 +476,7 @@ class Article extends Model
                                             'content'=>array_random($paragraph_tmp_content),
                                         ];
                                     }
-                                    $template_image = array_random($template_images);
+                                    $template_image = !empty($template_images)?array_random($template_images):'';
 
                                     GenerateArticle::dispatch($this->id,$param_contents,$article_custom_params,$replace_text,$province,$city,$county,$car,$template_custom_paragraph,$template_image,$fixed_paragraphs_file,$is_last);
                                     $replace_text = $base_replace_text;
